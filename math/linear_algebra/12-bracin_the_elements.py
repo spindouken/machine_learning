@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import numpy as np
 """numpy does it all for us :)
 All element-wise operations of matrices"""
 
@@ -12,12 +11,12 @@ def np_elementwise(mat1, mat2):
 
     Solutions will be provided in a tuple
     """
-    addition = np.add(mat1, mat2)
+    addition = mat1 + mat2
 
-    subtraction = np.subtract(mat1, mat2)
+    subtraction = mat1 - mat2
 
-    multiplication = np.multiply(mat1, mat2)
+    multiplication = mat1 * mat2
 
-    division = np.divide(mat1, mat2)
+    division = mat1 / mat2
 
     return addition, subtraction, multiplication, division
