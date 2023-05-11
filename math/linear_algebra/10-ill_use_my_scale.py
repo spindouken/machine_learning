@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import numpy as np
 """is easy to calculate matrix shape with numpy :)"""
 
 
