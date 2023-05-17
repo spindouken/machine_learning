@@ -24,10 +24,12 @@ def poly_integral(poly, C=0):
     for i in range(len(poly)):
         if type(poly[i]) not in [int, float]:
             return None
-        integral_coefficients.append(poly[i] / (i + 1))
+        coef = poly[i] / (i + 1)
+        if coef == int(coef):
+            coef = int(coef)
+        integral_coefficients.append(coef)
 
-    for i in range(len(integral_coefficients)):
-        if integral_coefficients[i] == int(integral_coefficients[i]):
-            integral_coefficients[i] = int(integral_coefficients[i])
+    while len(integral_coefficients) > 1 and integral_coefficients[-1] == 0:
+        integral_coefficients.pop()
 
     return integral_coefficients
