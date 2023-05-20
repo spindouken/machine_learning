@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """create class Poisson that represents a poisson distribution"""
-import numpy as numpers
 
 
 class Poisson:
