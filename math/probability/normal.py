@@ -58,3 +58,23 @@ class Normal:
         """
         x_value = z * self.stddev + self.mean
         return x_value
+
+    def pdf(self, x):
+        """
+        calculate the pdf of a given x-value
+
+        x: the x-value to find the probability density from
+        e: base of the natural logoarithm (simplified Euler's number)
+        mu: or μ stands for mean of the distribution
+        sigma: or σ stands for stddev
+        pdf: Probability Density Function (PDF)
+        pdf formula for a normal distribution:
+        (1 / sqrt(2 * pi * sigma^2)) * e^((-1/2) * ((x - mu) / sigma)^2)
+        """
+        pi = 3.1415926536
+        e = 2.7182818285
+        mu = self.mean
+        sigma = self.stddev
+        pdf = (1 / ((2 * pi * sigma ** 2) ** 0.5)) \
+            * e ** ((-1/2) * ((x - mu) / sigma) ** 2)
+        return pdf
