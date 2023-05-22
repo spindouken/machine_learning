@@ -78,3 +78,26 @@ class Normal:
         pdf = (1 / ((2 * pi * sigma ** 2) ** 0.5)) \
             * e ** ((-1/2) * ((x - mu) / sigma) ** 2)
         return pdf
+
+    def cdf(self, x):
+        """
+        calculate the cdf of a given x-value
+
+        x: the x-value to find the cumulative distribution from
+        e: base of the natural logoarithm (simplified Euler's number)
+        mu: or μ stands for mean of the distribution
+        sigma: or σ stands for stddev
+        cdf: Cumulative Distribution Function (CDF)
+        """
+        mu = self.mean
+        sigma = self.stddev
+        z_score = (x - mu) / (sigma * 2 ** 0.5)
+        erf = (2 / 3.1415926536 ** 0.5) * (
+            z_score -
+            (z_score ** 3) / 3 +
+            (z_score ** 5) / 10 -
+            (z_score ** 7) / 42 +
+            (z_score ** 9) / 216
+        )
+        cdf = 0.5 * (1 + erf)
+        return cdf
