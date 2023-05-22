@@ -28,5 +28,4 @@ class Binomial:
             successes = sum(data)
             trials = len(data)
             self.p = successes / trials
-            self.n = round(self.p * trials)
-            self.p = self.n / trials
+            self.n = round(trials)
