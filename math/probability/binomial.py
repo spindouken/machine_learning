@@ -26,6 +26,6 @@ class Binomial:
                 raise ValueError("data must contain multiple values")
 
             trials = len(data)
-            successes = self.p * trials
+            successes = p * trials
             self.p = successes / trials
             self.n = round(trials)
