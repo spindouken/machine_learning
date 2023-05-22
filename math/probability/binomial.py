@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+placeholder
 """
 
 
@@ -26,6 +27,6 @@ class Binomial:
                 raise ValueError("data must contain multiple values")
 
             trials = len(data)
-            successes = p * trials
+            successes = sum(data)
             self.p = successes / trials
-            self.n = round(trials)
+            self.n = round(successes)
