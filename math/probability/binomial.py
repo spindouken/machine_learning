@@ -25,7 +25,7 @@ class Binomial:
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
 
-            successes = sum(data)
             trials = len(data)
+            successes = self.p * trials
             self.p = successes / trials
             self.n = round(trials)
