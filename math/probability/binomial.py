@@ -49,3 +49,27 @@ class Binomial:
             # assign estimates
             self.n = int(round(n_estimate))
             self.p = float(sample_mean/self.n)
+
+    def factorial(self, k):
+        """calculates the factorial of a number"""
+        if k == 0:
+            return 1
+        else:
+            return k * self.factorial(k - 1)
+
+    def combination(self, n, k):
+        """calculates the combination of n and k"""
+        return self.factorial(n) / (self.factorial(k) * self.factorial(n - k))
+
+    def pmf(self, k):
+        """calculates the value of the PMF for a given number of “successes”"""
+        k = int(k)
+
+        if k < 0 or k > self.n:
+            return 0
+
+        # calculate binomial coefficient (n choose k)
+        binomialCoef = self.combination(self.n, k)
+
+        pmf = binomialCoef * (self.p ** k) * ((1 - self.p) ** (self.n - k))
+        return pmf
