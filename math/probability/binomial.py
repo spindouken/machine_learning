@@ -62,7 +62,7 @@ class Binomial:
         return self.factorial(n) / (self.factorial(k) * self.factorial(n - k))
 
     def pmf(self, k):
-        """calculates the value of the PMF for a given number of “successes”"""
+        """calculates the value of the PMF for a given number of successes"""
         k = int(k)
 
         if k < 0 or k > self.n:
@@ -73,3 +73,19 @@ class Binomial:
 
         pmf = binomialCoef * (self.p ** k) * ((1 - self.p) ** (self.n - k))
         return pmf
+
+    def cdf(self, k):
+        """calculates the value of the CDF for a given number of successes
+        k: the number of successes
+        returns the CDF (Cumulative Distribution Function) for int k
+        """
+        if not isinstance(k, int):
+            k = int(k)
+        if k < 0:
+            return 0
+        
+        cdf = 0
+        for i in range(k + 1):
+            cdf += self.pmf(i)
+
+        return cdf
