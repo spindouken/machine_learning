@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """placeholder"""
-import numpy as numpers
+import numpy as np
 
 class Neuron:
     """placeholder"""
@@ -11,6 +11,6 @@ class Neuron:
         if nx < 1:
             raise ValueError("nx must be a positive integer")
 
-        self.W = numpers.random.randn(1, nx)
+        self.W = np.random.randn(1, nx)
         self.b = 0
         self.A = 0
