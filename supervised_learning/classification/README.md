@@ -1,0 +1,2 @@
+GitHub repository: holbertonschool-machine_learning
+Directory: supervised_learning/classification
