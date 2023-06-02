@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""placeholder"""
+"""look pa, I'm makin neurons"""
 import numpy as np
 
 
 class Neuron:
-    """placeholder"""
+    """defines a single neuron performing binary classification"""
     def __init__(self, nx):
-        """placeholder"""
+        """
+        W: The weights vector for the neuron
+        b: The bias for the neuron
+        A: The activated output of the neuron (prediction)
+        """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
