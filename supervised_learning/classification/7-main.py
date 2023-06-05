@@ -2,8 +2,10 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import importlib
 
-Neuron = __import__('7-neuron').Neuron
+NeuronModule = importlib.import_module('7-neuron')
+Neuron = NeuronModule.Neuron
 
 lib_train = np.load('../data/Binary_Train.npz')
 X_train_3D, Y_train = lib_train['X'], lib_train['Y']
