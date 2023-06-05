@@ -96,9 +96,26 @@ class Neuron:
         alpha: the learning rate
         Updates the private attributes __W and __b
         """
+        # m is the number of examples
         m = X.shape[1]
+
+        # dZ is the dif between the activated output and the correct labels
+        # represents the error of the prediction
         dZ = A - Y
+
+        # dW is the change of weights, calculated as the dot product
+        #   of the error and the input data,
+        #   then divided by the number of examples to normalize
         dW = np.dot(dZ, X.T) / m
+
+        # db is the change of bias, calculated as the sum of the error,
+        # then divided by the number of examples to normalize
         db = np.sum(dZ) / m
+
+        # Update the weights by subtracting the weight change * learning rate
+        # learning KNAWLEDGE
         self.__W = self.__W - alpha * dW
+
+        # Update the bias by subtracting the bias change * learning rate
+        # learning KNAWLEDGE
         self.__b = self.__b - alpha * db
