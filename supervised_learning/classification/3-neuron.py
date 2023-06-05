@@ -50,7 +50,7 @@ class Neuron:
         """
         Calculates the cost of the model using logistic regression
         Y: contains the correct labels for the input data...
-        ...and is a numpy.ndarray with shape (1, m) 
+        ...and is a numpy.ndarray with shape (1, m)
         A: contains the activated output of the neuron for each example...
         ...and is a numpy.ndarray with shape (1, m)
         m: the number of examples
@@ -60,7 +60,7 @@ class Neuron:
 
         Cost function for logistic regression:
         cost = -1/m * Σ [Y * log(A) + (1 - Y) * log(1 - A)]
-        """ 
+        """
         m = Y.shape[1]
         cost = -1/m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
         return cost
