@@ -122,13 +122,21 @@ class Neuron:
         self.__b = self.__b - alpha * db
 
     def train(self, X, Y, iterations=5000, alpha=0.05):
-        # Check that iterations is a positive integer
+        """
+        Trains the neuron by updating the private attributes __W and __b
+        X: numpy.ndarray with shape (nx, m) that contains the input data
+        Y: numpy.ndarray with shape (1, m),
+            that contains the correct labels for the input data
+        iterations: number of iterations to train over
+        alpha: learning rate
+        Returns: the evaluation of the training data
+            after set iterations performed
+        """
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
             raise ValueError("iterations must be a positive integer")
 
-        # Check that alpha is a positive float
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
