@@ -13,14 +13,14 @@ class NeuralNetwork:
         initialize a neural network
         nx: the number of input features
         nodes: the number of nodes found in the hidden layer
-        W1: The weights vector for the hidden layer.
+        W1: The weights vector of the hidden layer.
             initialized using a random normal distribution.
-        b1: The bias for the hidden layer. Initialized with 0’s.
-        A1: The activated output for the hidden layer. Initialized to 0.
-        W2: The weights vector for the output neuron.
+        b1: The bias of the hidden layer. Initialized with 0’s.
+        A1: The activated output of the hidden layer. Initialized to 0.
+        W2: The weights vector of the output neuron.
             Initialized using a random normal distribution.
-        b2: The bias for the output neuron. Initialized to 0.
-        A2: The activated output for the output neuron (prediction).
+        b2: The bias of the output neuron. Initialized to 0.
+        A2: The activated output of the output neuron (prediction).
             Initialized to 0.
         """
         if not isinstance(nx, int):
@@ -72,7 +72,7 @@ class NeuralNetwork:
         """
         # Z1 is the result of the dot product
         #   of weights and input data plus the bias
-        # represents the input for the activation function of the hidden layer
+        # represents the input of the activation function of the hidden layer
         Z1 = np.matmul(self.__W1, X) + self.__b1
 
         # Apply the sigmoid activation function to Z1 to get A1
@@ -82,7 +82,7 @@ class NeuralNetwork:
 
         # Z2 is the result of the dot product
         #   of weights and the output of the hidden layer plus the bias
-        # represents the input for the activation function of the output neuron
+        # represents the input of the activation function of the output neuron
         Z2 = np.matmul(self.__W2, self.__A1) + self.__b2
 
         # Apply the sigmoid activation function to Z2 to get A2
@@ -96,9 +96,9 @@ class NeuralNetwork:
         """
         Calculates the cost of the model using logistic regression
         Y: numpy.ndarray with shape (1, m)
-            that contains the correct labels for the input data
+            that contains the correct labels of the input data
         A: numpy.ndarray with shape (1, m)
-            containing the activated output of the neuron for each example
+            containing the activated output of the neuron of each example
         m: number of examples
         Returns the cost of the model
         """
@@ -119,7 +119,7 @@ class NeuralNetwork:
         nx: number of input features to the neuron
         m: number of examples
         Y: numpy.ndarray with shape (1, m)
-            that contains the correct labels for the input data
+            that contains the correct labels of the input data
         Returns the neuron’s prediction and the cost of the network
         """
         # Forward propagation to get the activated output
@@ -129,7 +129,7 @@ class NeuralNetwork:
         cost = self.cost(Y, A2)
 
         # The prediction should be a numpy.ndarray with shape (1, m)
-        # containing the predicted labels for each example
+        # containing the predicted labels of each example
         # The label values should be 1
         #    if the output of the network is >= 0.5 and 0 otherwise
         prediction = np.where(A2 >= 0.5, 1, 0)
