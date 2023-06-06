@@ -37,8 +37,8 @@ class DeepNeuralNetwork:
         self.__weights = {}
         for i in range(self.__L):
             if i == 0:
-                self.__weights['W' + str(i+1)] = np.random.randn(layers[i], nx) \
-                    * np.sqrt(2/nx)
+                self.__weights['W' + str(i+1)] = np.random. \
+                    randn(layers[i], nx) * np.sqrt(2/nx)
             else:
                 self.__weights['W' + str(i+1)] = np.random. \
                     randn(layers[i], layers[i-1]) * np.sqrt(2/layers[i-1])
