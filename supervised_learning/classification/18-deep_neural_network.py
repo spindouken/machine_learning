@@ -65,14 +65,14 @@ class DeepNeuralNetwork:
 
         # Loop over each layer in the network
         for i in range(self.__L):
-            # Retrieve the weights and bias for the current layer
+            # Retrieve the weights and bias of the current layer
             W = self.__weights['W' + str(i+1)]
             b = self.__weights['b' + str(i+1)]
 
             # Retrieve the activations from the previous layer
             A_prev = self.__cache['A' + str(i)]
 
-            # Calculate the weighted sum of inputs and bias for the current layer
+            # Calculate the weighted sum of inputs and bias of the current layer
             Z = np.matmul(W, A_prev) + b
 
             # Apply the sigmoid activation function
