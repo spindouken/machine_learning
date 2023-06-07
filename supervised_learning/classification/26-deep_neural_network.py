@@ -39,11 +39,9 @@ class DeepNeuralNetwork:
         self.__weights = {}
         for i in range(self.__L):
             if i == 0:
-                self.__weights['W' + str(i+1)] = np.random. \
-                    randn(layers[i], nx) * np.sqrt(2/nx)
+                self.__weights['W' + str(i+1)] = np.random.randn(layers[i], nx) * np.sqrt(2/nx)
             else:
-                self.__weights['W' + str(i+1)] = np.random. \
-                    randn(layers[i], layers[i-1]) * np.sqrt(2/layers[i-1])
+                self.__weights['W' + str(i+1)] = np.random.randn(layers[i], layers[i-1]) * np.sqrt(2/layers[i-1])
             self.__weights['b' + str(i+1)] = np.zeros((layers[i], 1))
 
     @property
@@ -57,6 +55,16 @@ class DeepNeuralNetwork:
     @property
     def weights(self):
         return self.__weights
+
+    @staticmethod
+    def sigmoid(Z):
+        """Sigmoid Activation"""
+        return 1 / (1 + np.exp(-Z))
+
+    @staticmethod
+    def sigmoid_derivative(A):
+        """Sigmoid Derivative"""
+        return A * (1 - A)
 
     def forward_prop(self, X):
         """
@@ -79,8 +87,7 @@ class DeepNeuralNetwork:
             Z = np.matmul(W, A_prev) + b
 
             # Apply the sigmoid activation function
-            # The sigmoid function maps any input to a value between 0 and 1
-            A = 1 / (1 + np.exp(-Z))
+            A = self.sigmoid(Z)
 
             # Save the output of the current layer to the cache
             self.__cache['A' + str(i+1)] = A
@@ -155,7 +162,8 @@ class DeepNeuralNetwork:
             # Compute the derivatives
             dW = np.matmul(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
-            dZ = np.matmul(W.T, dZ) * A_prev * (1 - A_prev)
+            if i > 1:
+                dZ = np.matmul(W.T, dZ) * self.sigmoid_derivative(A_prev)
 
             # Update the weights and biases
             self.__weights['W' + str(i)] -= alpha * dW
@@ -165,7 +173,8 @@ class DeepNeuralNetwork:
               verbose=True, graph=True, step=100):
         """
         Trains the deep neural network
-        X: a numpy.ndarray with shape (nx, m) that contains the input data
+        X: a numpy.ndarray with shape
+            (nx, m) that contains the input data
         Y: a numpy.ndarray with shape (1, m)
             that contains the correct labels of the input data
         iterations: the number of iterations to train over
