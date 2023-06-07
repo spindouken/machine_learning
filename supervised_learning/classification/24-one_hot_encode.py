@@ -11,16 +11,10 @@ def one_hot_encode(Y, classes):
     classes: the maximum number of classes found in Y
     Returns a one-hot encoding of Y with shape (classes, m), or None on failure
     """
-    if not isinstance(Y, np.ndarray) or len(Y) == 0:
+    if not isinstance(Y, np.ndarray) or len(Y.shape) != 1:
         return None
-    if not isinstance(classes, int) or classes <= np.max(Y):
+    if not isinstance(classes, int) or classes < np.max(Y) + 1:
         return None
-
-    # Create a new array of zeros with shape (classes, m)
     one_hot = np.zeros((classes, Y.shape[0]))
-
-    # For each class, set the column corresponding to the indices in Y to 1
-    for i, value in enumerate(Y):
-        one_hot[value][i] = 1
-
+    one_hot[Y, np.arange(Y.shape[0])] = 1
     return one_hot
