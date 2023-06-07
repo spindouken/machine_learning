@@ -91,14 +91,14 @@ class DeepNeuralNetwork:
         Y: a numpy.ndarray with shape (1, m)
             that contains the correct labels of the input data
         A: a numpy.ndarray with shape (1, m)
-            containing the activated output of the neuron for each example
+            containing the activated output of the neuron of each example
         Returns the cost of the model as a float
         """
         # m is the number of examples
         m = Y.shape[1]
 
-        # Calculate the loss for each training example
-        #    using the formula for cross-entropy loss
+        # Calculate the loss of each training example
+        #    using the formula of cross-entropy loss
         # The term 1.0000001 - A is used instead of 1 - A
         #    to avoid division by zero errors when A is exactly 1
         loss = - (Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
