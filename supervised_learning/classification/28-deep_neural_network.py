@@ -141,9 +141,15 @@ class DeepNeuralNetwork:
                 gradient = activations_current_layer - Y
             else:
                 # For the hidden layers, gradient is the product of
-                # the derivative of the sigmoid function and previous gradient
-                gradient = gradient_previous_layer * \
-                           self.sigmoid_derivative(activations_current_layer)
+                #   the derivative of activation func and prev gradient
+                if self.__activation == 'sig':
+                    gradient = gradient_previous_layer * \
+                               self.sigmoid_derivative(
+                                activations_current_layer
+                                )
+                elif self.__activation == 'tanh':
+                    gradient = gradient_previous_layer * \
+                               (1 - activations_current_layer ** 2)
             # Compute the gradients of the weights and biases
             gradient_weights = np.dot(
                 gradient, activations_previous_layer.T
