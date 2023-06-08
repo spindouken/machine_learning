@@ -104,7 +104,7 @@ class Neuron:
         self.__b = self.__b - alpha * db
 
     def train(self, X, Y, iterations=5000, alpha=0.05,
-            verbose=True, graph=True, step=100):
+              verbose=True, graph=True, step=100):
         """
         Trains the deep neural network
             by updating the private attributes __A, __W, and __b
@@ -148,9 +148,11 @@ class Neuron:
 
             # If verbose, print the cost every step iterations
             if verbose and i % step == 0:
-                print("Cost after {} iterations: {}".format(i, self.cost(Y, A)))
+                print("Cost after {} iterations: {}".
+                      format(i, self.cost(Y, A)))
 
-            # If not the last iteration, perform gradient descent to update weights and biases
+            # If not the last iteration,
+            # perform gradient descent to update weights and biases
             if i != iterations:
                 self.gradient_descent(X, Y, A, alpha)
 
