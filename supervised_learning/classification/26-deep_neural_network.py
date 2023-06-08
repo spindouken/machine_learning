@@ -1,14 +1,28 @@
 #!/usr/bin/env python3
-"""Class DeepNeuralNetwork"""
-
+"""are you winning at neural networks son?"""
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 class DeepNeuralNetwork:
-    """Defines a deep neural network"""
+    """
+    defines a deep neural network performing binary classification
+    """
     def __init__(self, nx, layers):
+        """
+        L: number of layers in the neural network
+        cache: A dictionary to hold all intermediary values of the network.
+            Upon instantiation, it is set to an empty dictionary
+        weights: A dictionary to hold all weights and biases of the network
+            Upon instantiation,
+            weights initialized using He et al. method
+                and saved in the weights dictionary using the key W{1}
+                    where {1} is the hidden layer the weight belongs to
+            biases initialized to 0's and saved
+                in the weights dictionary using the key b{1}
+                    where {1} is the hiddne layer the bias belongs to
+        """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
@@ -49,20 +63,40 @@ class DeepNeuralNetwork:
         return self.__cache['A' + str(self.__L)], self.__cache
 
     def cost(self, Y, A):
-        """Cost Function"""
+        """
+        Calculates the cost of the model using logistic regression
+        Y: a numpy.ndarray with shape (1, m)
+            that contains the correct labels of the input data
+        A: a numpy.ndarray with shape (1, m)
+            containing the activated output of the neuron of each example
+        Returns the cost of the model as a float
+        """
         m = Y.shape[1]
         cost = -1 / m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
         return cost
 
     def evaluate(self, X, Y):
-        """Evaluates the neural network’s predictions"""
+        """
+        Evaluates the neural network's predictions
+        X: a numpy.ndarray with shape (nx, m) that contains the input data
+        Y: a numpy.ndarray with shape (1, m)
+            that contains the correct labels of the input data
+        Returns the neuron's prediction and the cost of the network
+        """
         A, _ = self.forward_prop(X)
         cost = self.cost(Y, A)
         prediction = np.where(A >= 0.5, 1, 0)
         return prediction, cost
 
     def gradient_descent(self, Y, cache, alpha=0.05):
-        """Gradient Descent"""
+        """
+        Calculates one pass of gradient descent on the neural network
+        Y: a numpy.ndarray with shape (1, m)
+            that contains the correct labels of the input data
+        cache: a dictionary containing all intermediary values of the network
+        alpha: the learning rate
+        Updates the private attribute __weights
+        """
         m = Y.shape[1]
         for i in reversed(range(1, self.__L + 1)):
             A = cache['A' + str(i)]
@@ -81,7 +115,23 @@ class DeepNeuralNetwork:
 
     def train(self, X, Y, iterations=5000,
               alpha=0.05, verbose=True, graph=True, step=100):
-        """Trains the neural network"""
+        """
+        Trains the deep neural network
+        X: a numpy.ndarray with shape
+            (nx, m) that contains the input data
+        Y: a numpy.ndarray with shape (1, m)
+            that contains the correct labels of the input data
+        iterations: the number of iterations to train over
+        alpha: the learning rate
+        verbose: boolean that defines whether or not
+            to print information about the training
+        graph: boolean that defines whether or not
+            to graph information about the training
+        step: the interval of printing information and updating the graph
+        Updates the private attributes __weights and __cache
+        Returns the evaluation of the training data
+            after iterations of training have occurred
+        """
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations < 1:
@@ -123,7 +173,10 @@ class DeepNeuralNetwork:
 
     @staticmethod
     def load(filename):
-        """Loads a pickled DeepNeuralNetwork object"""
+        """
+        Loads a pickled DeepNeuralNetwork object
+        Returns the loaded pickle, or None if filename doesn’t exist
+        """
         try:
             with open(filename, 'rb') as file:
                 return pickle.load(file)
