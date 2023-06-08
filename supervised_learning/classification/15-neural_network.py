@@ -172,7 +172,7 @@ class NeuralNetwork:
         # Update b2
         self.__b2 = self.__b2 - alpha * db2
 
-    def train(self, X, Y, iterations=100,
+    def train(self, X, Y, iterations=5000,
               alpha=0.05, verbose=True, graph=True, step=100):
         """
         Trains the neural network
