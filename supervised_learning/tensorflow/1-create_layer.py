@@ -12,7 +12,8 @@ def create_layer(prev, n, activation):
     Returns the tensor output of the layer
     """
     # He initialization for layer weights
-    initializer = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
+    initializer = tf.contrib.layers. \
+        variance_scaling_initializer(mode="FAN_AVG")
 
     layer = tf.layers.dense(inputs=prev, units=n, activation=activation,
                             kernel_initializer=initializer)
