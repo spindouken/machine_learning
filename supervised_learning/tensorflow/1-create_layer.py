@@ -14,6 +14,6 @@ def create_layer(prev, n, activation):
     # He initialization for layer weights
     initializer = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
 
-    layer = tf.layers.dense(units=n, activation=activation,
+    layer = tf.layers.dense(inputs=prev, units=n, activation=activation,
                             kernel_initializer=initializer, name='layer')
     return layer(prev)
