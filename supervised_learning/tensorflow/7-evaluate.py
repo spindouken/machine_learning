@@ -28,7 +28,7 @@ def evaluate(X, Y, save_path):
         loss = tf.get_collection('loss')[0]
 
         # evaluate network on provided data
-        prediction, network_accuracy, cost = sess.run([y_pred, accuracy, loss], 
+        prediction, network_accuracy, cost = sess.run([y_pred, accuracy, loss],
                                                       feed_dict={x: X, y: Y})
 
     return prediction, network_accuracy, cost
