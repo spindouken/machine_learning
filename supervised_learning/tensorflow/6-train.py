@@ -8,7 +8,8 @@ calculate_loss = __import__('4-calculate_loss').calculate_loss
 create_train_op = __import__('5-create_train_op').create_train_op
 
 
-def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations, alpha, iterations, save_path="/tmp/model.ckpt"):
+def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
+          activations, alpha, iterations, save_path="/tmp/model.ckpt"):
     """
     function that builds, trains, and saves a neural network classifier
     X_train: numpy.ndarray containing the training input data
@@ -50,8 +51,10 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations, alpha, i
     with tf.Session() as sess:
         sess.run(init)
         for i in range(iterations + 1):
-            t_cost, t_accuracy = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
-            v_cost, v_accuracy = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+            t_cost, t_accuracy = sess.run([loss, accuracy],
+                                          feed_dict={x: X_train, y: Y_train})
+            v_cost, v_accuracy = sess.run([loss, accuracy],
+                                          feed_dict={x: X_valid, y: Y_valid})
 
             if i % 100 == 0 or i == iterations:
                 print("After {} iterations:".format(i))
@@ -59,7 +62,7 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations, alpha, i
                 print("\tTraining Accuracy: {}".format(t_accuracy))
                 print("\tValidation Cost: {}".format(v_cost))
                 print("\tValidation Accuracy: {}".format(v_accuracy))
-            
+
             if i < iterations:
                 sess.run(train_op, feed_dict={x: X_train, y: Y_train})
 
