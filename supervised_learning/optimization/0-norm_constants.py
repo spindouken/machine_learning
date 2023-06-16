@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""placeholder"""
+"""calculates the normalization (standardization) constants of a matrix"""
 import numpy as np
 
 
