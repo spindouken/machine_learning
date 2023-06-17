@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Train mini batch
-"""
+"""Train mini batch"""
 import tensorflow as tf
 shuffle_data = __import__('2-shuffle_data').shuffle_data
 
