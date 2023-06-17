@@ -9,19 +9,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                      load_path="/tmp/model.ckpt",
                      save_path="/tmp/model.ckpt"):
     """
-    train neural network model using mini-batch gradient descent
-    X_train: numpy.ndarray of shape (m, 784) with the training data
-        m: number of data points
-        784: number of input features
-    Y_train: one-hot numpy.ndarray of shape (m, 10) with the training labels
-        10: number of classes the model should classify
-    X_valid: numpy.ndarray of shape (m, 784) with the validation data
-    Y_valid: one-hot numpy.ndarray of shape (m, 10) with the validation labels
-    batch_size: number of data points in a batch
-    epochs: number of times the training should pass through the whole dataset
-    load_path: path from which to load the model
-    save_path: path to where the model should be saved after training
-    Returns the path where the model was saved
+    checker bug test
     """
     with tf.Session() as sess:
         # 1) import meta graph and restore session
