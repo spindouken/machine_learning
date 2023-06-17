@@ -9,9 +9,7 @@ def train_mini_batch(X_train, Y_train,
                      batch_size=32, epochs=5,
                      load_path="/tmp/model.ckpt",
                      save_path="/tmp/model.ckpt"):
-    """
-    checker bug test
-    """
+    """checker bug test"""
     with tf.Session() as sess:
         # 1) import meta graph and restore session
         saver = tf.train.import_meta_graph("{}.meta".format(load_path))
