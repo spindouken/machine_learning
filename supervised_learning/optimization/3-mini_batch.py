@@ -10,7 +10,6 @@ def train_mini_batch(X_train, Y_train,
                      load_path="/tmp/model.ckpt",
                      save_path="/tmp/model.ckpt"):
     """checker bug test"""
-
     with tf.Session() as sess:
         # 1) import meta graph and restore session
         saver = tf.train.import_meta_graph("{}.meta".format(load_path))
@@ -27,18 +26,10 @@ def train_mini_batch(X_train, Y_train,
         m = X_train.shape[0]
 
         # calculate and print cost and accuracy before the first epoch
-        train_cost = sess.run(
-            loss, feed_dict={x: X_train, y: Y_train}
-            )
-        train_accuracy = sess.run(
-            accuracy, feed_dict={x: X_train, y: Y_train}
-            )
-        valid_cost = sess.run(
-            loss, feed_dict={x: X_valid, y: Y_valid}
-            )
-        valid_accuracy = sess.run(
-            accuracy, feed_dict={x: X_valid, y: Y_valid}
-            )
+        train_cost = sess.run(loss, feed_dict={x: X_train, y: Y_train})
+        train_accuracy = sess.run(accuracy, feed_dict={x: X_train, y: Y_train})
+        valid_cost = sess.run(loss, feed_dict={x: X_valid, y: Y_valid})
+        valid_accuracy = sess.run(accuracy, feed_dict={x: X_valid, y: Y_valid})
         print("After 0 epochs:")
         print("\tTraining Cost: {}".format(train_cost))
         print("\tTraining Accuracy: {}".format(train_accuracy))
