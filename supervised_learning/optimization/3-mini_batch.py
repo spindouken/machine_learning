@@ -3,7 +3,7 @@
 Train mini batch
 """
 import tensorflow as tf
-import numpy as np
+shuffle_data = __import__('2-shuffle_data').shuffle_data
 
 
 def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
@@ -25,8 +25,6 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
     save_path: path to where the model should be saved after training
     Returns the path where the model was saved
     """
-    shuffle_data = __import__('2-shuffle_data').shuffle_data
-
     with tf.Session() as sess:
         # 1) import meta graph and restore session
         saver = tf.train.import_meta_graph("{}.meta".format(load_path))
