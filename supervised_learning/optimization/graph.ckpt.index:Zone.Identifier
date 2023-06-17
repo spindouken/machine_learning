@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://intranet.hbtn.io/
+HostUrl=https://s3.eu-west-3.amazonaws.com/hbtn.intranet.project.files/holbertonschool-ml/graph.ckpt.index
