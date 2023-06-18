@@ -28,6 +28,6 @@ if __name__ == '__main__':
 
     np.random.seed(0)
     save_path = train_mini_batch(X_train, Y_train_oh, X_valid, Y_valid_oh,
-                                 epochs=10, load_path='./graph.ckpt',
+                                 epochs=1, load_path='./graph.ckpt',
                                  save_path='./model.ckpt')
     print('Model saved in path: {}'.format(save_path))
