@@ -38,7 +38,7 @@ def train_mini_batch(X_train, Y_train,
                 X_batch = X_shuffled[i:i + batch_size]
                 Y_batch = Y_shuffled[i:i + batch_size]
                 sess.run(train_op, feed_dict={x: X_batch, y: Y_batch})
-                if (i // batch_size) % 100 == 0:
+                if (i // batch_size) >= 100 and (i // batch_size) % 100 == 0:
                     cost = sess.run(loss, feed_dict={x: X_batch, y: Y_batch})
                     acc = sess.run(accuracy,
                                    feed_dict={x: X_batch, y: Y_batch})
