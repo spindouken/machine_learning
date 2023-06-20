@@ -50,7 +50,7 @@ def train_mini_batch(X_train, Y_train,
                     Y_batch = Y_shuffled[start:end]
                     sess.run(train_op, feed_dict={x: X_batch, y: Y_batch})
 
-                    if batch % 100 == 0: # Print every 100 batches
+                    if batch != 0 and batch % 100 == 0: # print every 100 batches
                         cost = sess.run(
                             loss, feed_dict={x: X_batch, y: Y_batch}
                             )
