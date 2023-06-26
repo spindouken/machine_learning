@@ -14,4 +14,14 @@ def create_confusion_matrix(labels, logits):
         containing the predicted labels
     Returns a confusion numpy.ndarray of shape (classes, classes)
     """
+    labelsIndices = np.argmax(labels, axis=1)
+    logitsIndices = np.argmax(logits, axis=1)
 
+    classesCount = labels.shape[1]
+
+    confusionMatrix = np.zeros((classesCount, classesCount))
+
+    for i in range(labels.shape[0]):
+        confusionMatrix[labelsIndices[i], logitsIndices[i]] += 1
+
+    return confusionMatrix
