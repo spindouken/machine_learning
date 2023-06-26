@@ -11,7 +11,8 @@ def sensitivity(confusion):
     of shape (classes, classes)
         row indices: re
         classes: number of classes
-    Returns numpy.ndarray: array of shape (classes,) containing the sensitivity of each class
+    Returns numpy.ndarray: array of shape (classes,)
+        containing the sensitivity of each class
     """
     truePositives = np.diag(confusion)
 
