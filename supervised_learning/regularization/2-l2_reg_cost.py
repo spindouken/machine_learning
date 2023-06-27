@@ -12,7 +12,4 @@ def l2_reg_cost(cost):
     Returns a tensor containing the cost
         of the network accounting for L2 regularization
     """
-    regularizer = tf.contrib.layers.l2_regularizer(lambtha)
-    weights = tf.trainable_variables()
-    l2_reg_cost = cost + tf.contrib.layers.apply_regularization(regularizer, weights)
-    return l2_reg_cost
+    return cost + tf.losses.get_regularization_losses()
