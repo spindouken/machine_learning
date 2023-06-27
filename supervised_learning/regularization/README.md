@@ -41,3 +41,16 @@ cache: dictionary of the outputs of each layer of the neural network
 alpha: learning rate
 lambtha: L2 regularization parameter
 L: number of layers of the network
+
+
+L2 Regularization Layer Creation
+2-l2_reg_create_layer.py: This file contains a function l2_reg_create_layer(prev, n, activation, lambtha) that creates a TensorFlow layer with L2 regularization.
+
+The function takes the following parameters:
+
+prev: A tensor containing the output of the previous layer.
+n: The number of nodes the new layer should contain.
+activation: The activation function that should be used on the layer.
+lambtha: The L2 regularization parameter.
+The function returns the output of the new layer. The layer is created with the specified number of nodes, activation function, and L2 regularization. The weights of the layer are initialized using a variance scaling initializer.
+
