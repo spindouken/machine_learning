@@ -30,7 +30,7 @@ def dropout_forward_prop(X, weights, L, keep_prob):
             A *= D
             A /= keep_prob
         else:
-            A = softmax(Z)
+            A = np.softmax(Z)
         cache["A" + str(i)] = A
 
     return cache
