@@ -12,25 +12,33 @@ def dropout_forward_prop(X, weights, L, keep_prob):
         m: number of data points
     weights: dictionary of the weights and biases of the neural network
     L: number of layers in the network
-    keep_prob: the probability that a node will be kept
-    Returns a dictionary containing the outputs of each layer and the dropout
+    keep_prob: the probability that A node will be kept
+    Returns A dictionary containing the outputs of each layer and the dropout
         mask used on each layer
     """
-    cache = {}
-    cache["A0"] = X
+    outputs = {}
+    outputs["A0"] = X
+    for layer in range(1, L+1):
+        W = weights["W{}".format(layer)]
+        A = outputs["A{}".format(layer-1)]
+        B = weights["B{}".format(layer)]
+        Z = np.matmul(W, A) + B
 
-    for i in range(1, L + 1):
-        Z = np.matmul(
-            weights["W" + str(i)], cache["A" + str(i - 1)]
-            ) + weights["b" + str(i)]
-        if i != L:
-            A = np.tanh(Z)
-            D = np.random.rand(A.shape[0], A.shape[1]) < keep_prob
-            cache["D" + str(i)] = D
-            A *= D
-            A /= keep_prob
+        if layer == L:
+            exponentiated_values = np.exp(Z)
+            outputs["A{}".format(layer)] = exponentiated_values / np.sum(
+                exponentiated_values, axis=0
+                )
+
         else:
-            A = np.softmax(Z)
-        cache["A" + str(i)] = A
+            top = np.exp(Z) - np.exp(-Z)
+            bot = np.exp(Z) + np.exp(-Z)
+            A = top / bot
 
-    return cache
+            dx = np.random.rand(A.shape[0], A.shape[1]) < keep_prob
+            outputs["D{}".format(layer)] = dx*1
+            A *= dx
+            A /= keep_prob
+            outputs["A{}".format(layer)] = A
+
+    return outputs
