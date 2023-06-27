@@ -21,8 +21,8 @@ def dropout_forward_prop(X, weights, L, keep_prob):
     for layer in range(1, L+1):
         W = weights["W{}".format(layer)]
         A = outputs["A{}".format(layer-1)]
-        B = weights["B{}".format(layer)]
-        Z = np.matmul(W, A) + B
+        b = weights["b{}".format(layer)]
+        Z = np.matmul(W, A) + b
 
         if layer == L:
             exponentiated_values = np.exp(Z)
