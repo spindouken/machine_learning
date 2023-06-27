@@ -20,4 +20,16 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
         ...last layer uses a softmax activation
     Updates the weights and biases of the network using gradient descent
     """
+    m = Y.shape[1]
+    dZ = cache['A' + str(L)] - Y
 
+    for layerIndex in range(L, 0, -1):
+        activation_of_prev_layer = cache['A' + str(layerIndex - 1)]
+        dW = np.matmul(dZ, activation_of_prev_layer.T) /
+        m + (lambtha / m) * weights['W' + str(layerIndex)]
+        db = np.sum(dZ, axis=1, keepdims=True) / m
+        if layerIndex > 1:
+            dZ = np.matmul(weights['W' + str(layerIndex)].T, dZ) *
+            (1 - activation_of_prev_layer ** 2)
+        weights['W' + str(layerIndex)] -= alpha * dW
+        weights['b' + str(layerIndex)] -= alpha * db
