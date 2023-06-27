@@ -18,7 +18,7 @@ def dropout_forward_prop(X, weights, L, keep_prob):
     """
     outputs = {}
     outputs["A0"] = X
-    for layer in range(1, L+1):
+    for layer in range(1, L + 1):
         W = weights["W{}".format(layer)]
         A = outputs["A{}".format(layer-1)]
         B = weights["B{}".format(layer)]
@@ -27,7 +27,7 @@ def dropout_forward_prop(X, weights, L, keep_prob):
         if layer == L:
             exponentiated_values = np.exp(Z)
             outputs["A{}".format(layer)] = exponentiated_values / np.sum(
-                exponentiated_values, axis=0
+                exponentiated_values, axis = 0
                 )
 
         else:
@@ -35,9 +35,9 @@ def dropout_forward_prop(X, weights, L, keep_prob):
             bot = np.exp(Z) + np.exp(-Z)
             A = top / bot
 
-            dx = np.random.rand(A.shape[0], A.shape[1]) < keep_prob
-            outputs["D{}".format(layer)] = dx*1
-            A *= dx
+            dX = np.random.rand(A.shape[0], A.shape[1]) < keep_prob
+            outputs["D{}".format(layer)] = dX * 1
+            A *= dX
             A /= keep_prob
             outputs["A{}".format(layer)] = A
 
