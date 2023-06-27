@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Function that updates the weights of a neural network with Dropout
-regularization using gradient descent
+updates the weights of a neural network with
+    Dropout regularization using gradient descent
 """
 import numpy as np
 
@@ -16,9 +16,7 @@ def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
     alpha: learning rate
     keep_prob: probability that a node will be kept
     L: number of layers of the network
-    All layers except the last use the tanh activation function
-    The last layer uses the softmax activation function
-    The weights of the network should be updated in place
+    Weights of the network updated in place
     """
     m = Y.shape[1]
     dZ = (cache["A{}".format(L)] - Y)
