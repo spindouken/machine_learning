@@ -13,7 +13,7 @@ def l2_reg_cost(cost, lambtha, weights, L, m):
         (numpy.ndarrays) of the neural network
     L: number of layers in the neural network
     m: number of data points used
-    Returns: the cost of the network accounting for L2 regularization
+    Returns the cost of the network accounting for L2 regularization
     """
     sum_of_squared_weights = 0
 
@@ -25,6 +25,6 @@ def l2_reg_cost(cost, lambtha, weights, L, m):
 
     regularization_term = lambtha / (2 * m) * sum_of_squared_weights
 
-    cost_with_l2_regularization = cost + regularization_term
+    Jreg = cost + regularization_term
 
-    return cost_with_l2_regularization
+    return Jreg
