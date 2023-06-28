@@ -16,6 +16,7 @@ def calculate_accuracy(y, y_pred):
     return tf.reduce_mean(tf.cast(tf.math.equal(true_class_labels,
                           predicted_class_labels), tf.float32))
 
+
 def create_batch_norm_layer(prev, n, activation, last, epsilon):
     """
     prev: activated output of the previous layer
@@ -38,6 +39,7 @@ def create_batch_norm_layer(prev, n, activation, last, epsilon):
     Znorm = tf.nn.batch_normalization(Z, mean, variance, beta, gamma, epsilon)
     return activation(Znorm)
 
+
 def forward_prop(x, epsilon, layer_sizes=[], activations=[]):
     """Forward_prop using tensorflow"""
     pred, last = x, False
@@ -49,11 +51,12 @@ def forward_prop(x, epsilon, layer_sizes=[], activations=[]):
             )
     return pred
 
+
 def model(
     Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
     beta2=0.999, epsilon=1e-8, decay_rate=1, batch_size=32,
     epochs=5, save_path='/tmp/model.ckpt'
-    ):
+        ):
     """
     builds, trains, and saves a neural network model in tensorflow using
     Adam optimization, mini-batch gradient descent, learning rate decay,
