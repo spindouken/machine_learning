@@ -74,4 +74,54 @@ def model(
     save_path: path where the model should be saved to
     Returns the path where the model was saved
     """
-    
+    X_train, Y_train = Data_train
+    X_valid, Y_valid = Data_valid
+    x = tf.placeholder(tf.float32, shape=(None, X_train.shape[1]))
+    y = tf.placeholder(tf.float32, shape=(None, Y_train.shape[1]))
+
+    y_pred = forward_prop(x, epsilon, layers, activations)
+    accuracy = calculate_accuracy(y, y_pred)
+    cost = tf.losses.softmax_cross_entropy(y, y_pred)
+    global_step = tf.Variable(0, trainable=False)
+    alpha = tf.train.inverse_time_decay(alpha, global_step, decay_rate, 1)
+    train_op = tf.train.AdamOptimizer(
+        alpha, beta1, beta2, epsilon
+        ).minimize(cost, global_step=global_step)
+
+    init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
+
+    with tf.Session() as sess:
+        sess.run(init)
+        m = X_train.shape[0]
+        for epoch in range(epochs):
+            cost_train, cost_valid = sess.run(
+                [cost, cost], feed_dict={x: X_train, y: Y_train}
+                ), sess.run(cost, feed_dict={x: X_valid, y: Y_valid})
+            accuracy_train, accuracy_valid = sess.run(
+                [accuracy, accuracy], feed_dict={x: X_train, y: Y_train}
+                ), sess.run(accuracy, feed_dict={x: X_valid, y: Y_valid})
+            print("After {} epochs:".format(epoch))
+            print("\tTraining Cost: {}".format(cost_train))
+            print("\tTraining Accuracy: {}".format(accuracy_train))
+            print("\tValidation Cost: {}".format(cost_valid))
+            print("\tValidation Accuracy: {}".format(accuracy_valid))
+
+            permutation = np.random.permutation(X_train.shape[0])
+            X_train_shuffled = X_train[permutation]
+            Y_train_shuffled = Y_train[permutation]
+
+            for i in range(0, m, batch_size):
+                X_batch = X_train_shuffled[i:i+batch_size]
+                Y_batch = Y_train_shuffled[i:i+batch_size]
+                sess.run(train_op, feed_dict={x: X_batch, y: Y_batch})
+                if (i/batch_size) % 100 == 0:
+                    cost_batch = sess.run(cost, feed_dict={x: X_batch, y: Y_batch})
+                    accuracy_batch = sess.run(
+                        accuracy, feed_dict={x: X_batch, y: Y_batch}
+                        )
+                    print("\tStep {}:".format(int(i/batch_size)))
+                    print("\t\tCost: {}".format(cost_batch))
+                    print("\t\tAccuracy: {}".format(accuracy_batch))
+
+        return saver.save(sess, save_path)
