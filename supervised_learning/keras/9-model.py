@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """save and load model functions in keras"""
 import os.path
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model as K_load_model
 
 
 def save_model(network, filename):
@@ -25,5 +25,5 @@ def load_model(filename):
     filename is the path of the file that the model should be loaded from
     Returns: the loaded model
     """
-    model = load_model(filename)
+    model = K_load_model(filename)
     return model
