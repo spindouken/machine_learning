@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """save and load model functions in keras"""
-import os.path
 import tensorflow.keras as K
 
 
@@ -16,8 +15,8 @@ def save_model(network, filename):
             from exactly where you left off
     Returns: None
     """
-    if os.path.isfile(filename) is False:
-        model.save(filename)
+    network.save(filename)
+
 
 def load_model(filename):
     """
