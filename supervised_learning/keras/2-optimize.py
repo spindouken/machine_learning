@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-sets up Adam optimization for a keras model
-    with categorical crossentropy loss and accuracy metrics
+bug?
 """
 import tensorflow.keras as K
 
