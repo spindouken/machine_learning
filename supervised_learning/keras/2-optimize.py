@@ -5,6 +5,7 @@ sets up Adam optimization for a keras model
 """
 import tensorflow.keras as K
 
+
 def optimize_model(network, alpha, beta1, beta2):
     """
     network is the model to optimize
