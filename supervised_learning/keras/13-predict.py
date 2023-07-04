@@ -9,4 +9,5 @@ def predict(network, data, verbose=False):
     verbose is a boolean that determines if output should be printed during the prediction process
     Returns: the prediction for the data
     """
-
+    return network.predict(x=data,
+                           verbose=verbose)
