@@ -11,7 +11,7 @@ def save_config(network, filename):
         should be saved to
     Returns: None
     """
-    json_string = network.to_json(filename)
+    json_string = network.to_json()
     with open(filename, 'w') as json:
         json.write(json_string)
 
