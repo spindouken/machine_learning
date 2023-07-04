@@ -59,12 +59,16 @@ def train_model(network, data, labels, batch_size,
 
         if save_best:
             checkpoint = K.callbacks.ModelCheckpoint(
-                filepath, monitor='val_loss', verbose=1,
-                save_best_only=True, mode='min'
+                filepath=filepath, monitor='val_loss', verbose=1,
+                save_best_only=save_best, mode='min'
                 )
             callbacks.append(checkpoint)
 
-    history = network.fit(x=data, y=labels, batch_size=batch_size,
-                          epochs=epochs, verbose=verbose, shuffle=shuffle,
-                          validation_data=validation_data, callbacks=callbacks)
+    history = network.fit(x=data, y=labels,
+                          batch_size=batch_size,
+                          epochs=epochs,
+                          verbose=verbose,
+                          shuffle=shuffle,
+                          validation_data=validation_data,
+                          callbacks=callbacks)
     return history
