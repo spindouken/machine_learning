@@ -24,8 +24,8 @@ def convolve_grayscale_same(images, kernel):
     kw = kernel.shape[1]
 
     # calculate padding
-    padH = max((kh - 1) // 2, 0)
-    padW = max((kw - 1) // 2, 0)
+    padH = kh // 2
+    padW = kw // 2
 
     # pad dem images
     padded_images = np.pad(
@@ -36,7 +36,8 @@ def convolve_grayscale_same(images, kernel):
     for x in range(w):
         for y in range(h):
             shredder = padded_images[:, y:y + kh, x:x + kw]
-            convolvedMatrix[:, y, x] = np.tensordot(shredder,
-                                                    kernel,
-                                                    axes=2)
+            if shredder.shape[1:] == kernel.shape:
+                convolvedMatrix[:, y, x] = np.tensordot(shredder,
+                                                        kernel,
+                                                        axes=2)
     return convolvedMatrix
