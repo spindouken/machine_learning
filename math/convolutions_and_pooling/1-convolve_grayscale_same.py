@@ -40,5 +40,5 @@ def convolve_grayscale_same(images, kernel):
                 continue
             convolvedMatrix[:, y, x] = np.tensordot(shredder,
                                                     kernel,
-                                                    axes=2)
+                                                    axes=((1, 2), (0, 1)))
     return convolvedMatrix
