@@ -58,7 +58,7 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     Z = np.zeros((m, h_new, w_new, c_new))
 
     # create A_prev_pad by padding A_prev
-    A_prev_pad = np.pad(A_prev, ((0, 0), (pad_h, pad_h), (pad_w, pad_w), (0, 0)), mode='constant')
+    A_prev_pad = np.pad(A_prev, ((0, 0), (pad_h, pad_h), (pad_w, pad_w), (0, 0)))
 
     # loop over the vertical (height), horizontal (width) and channel axes of the output volume
     for i in range(m):  # loop over the batch size
