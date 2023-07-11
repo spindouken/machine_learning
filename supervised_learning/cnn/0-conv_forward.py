@@ -36,7 +36,7 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     # retrieve dimensions from W's shape
     kh = W.shape[0]
     kw = W.shape[1]
-    c_prev = W.shape[2]
+    kc_prev = W.shape[2]
     c_new = W.shape[3]
 
     # retrieve strides
