@@ -23,8 +23,8 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     if type(padding) is tuple:
         ph, pw = padding
     elif padding == "same":
-        ph = (((ih - 1) * sh) + kh - ih) // 2
-        pw = (((iw - 1) * sw) + kw - iw) // 2
+        ph = (((h_prev - 1) * sh) + kh - h_prev) // 2
+        pw = (((w_prev - 1) * sw) + kw - w_prev) // 2
     elif padding == "valid":
         ph, pw = 0, 0
 
