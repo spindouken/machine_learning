@@ -51,31 +51,46 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     sh = stride[0]
     sw = stride[1]
 
+    # Initialize dA_prev, dW, db with the correct shapes
     dA_prev = np.zeros_like(A_prev)
     dW = np.zeros_like(W)
     db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
 
+    # Compute padding dimensions based on the padding type
     if padding == 'valid':
         pad_h, pad_w = 0, 0
     elif padding == 'same':
         pad_h = (((h_prev - 1) * sh) + kh - h_prev) // 2 + 1
         pad_w = (((w_prev - 1) * sw) + kw - w_prev) // 2 + 1
 
+    # Pad A_prev and dA_prev
     A_prev = np.pad(A_prev, ((0, 0), (pad_h, pad_h), (pad_w, pad_w), (0, 0)),
                     mode='constant', constant_values=0)
     dA = np.pad(dA_prev, ((0, 0), (pad_h, pad_h), (pad_w, pad_w), (0, 0)),
                 mode='constant', constant_values=0)
 
+    # Loop over the vertical (h), then horizontal (w), then over channels (c)
     for image in range(m):
         for h in range(h_new):
             for w in range(w_new):
                 for c in range(c_new):
+                    # Find the corners of the current slice
+                    start_h = h * sh
+                    start_w = w * sw
+                    end_h = start_h + kh
+                    end_w = start_w + kw
+
+                    # Slice A_prev_pad and W
+                    a_slice = A_prev[image, start_h:end_h, start_w:end_w, :]
                     kernel = W[:, :, :, c]
-                    dz = dZ[image, h, w, c]
-                    mat = A_prev[image, sh*h:sh*h+kh, sw*w:sw*w+kw, :]
-                    dW[:, :, :, c] += mat * dz
-                    dA[image, sh*h:sh*h+kh,
-                       sw*w:sw*w+kw, :] += np.multiply(kernel, dz)
+
+                    # Update gradients for the window and the filter's params
+                    dW[:, :, :, c] += a_slice * dZ[image, h, w, c]
+                    dA[image, start_h:end_h, start_w:end_w, :] += kernel * dZ[
+                        image, h, w, c]
+
+    # Unpad dA to avoid excess
     if padding == 'same':
         dA = dA[:, pad_h: -pad_h, pad_w: -pad_w, :]
+
     return dA, dW, db
