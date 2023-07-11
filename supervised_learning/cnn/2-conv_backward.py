@@ -36,7 +36,6 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         to the previous layer (dA_prev), the kernels (dW),
         and the biases (db), respectively
     """
-    # retrieve dimensions from dZ's shape
     m = dZ.shape[0]
     h_new = dZ.shape[1]
     w_new = dZ.shape[2]
@@ -46,59 +45,37 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     w_prev = A_prev.shape[2]
     c_prev = A_prev.shape[3]
 
-    # Retrieve dimensions from W's shape
     kh = W.shape[0]
     kw = W.shape[1]
 
     sh = stride[0]
     sw = stride[1]
 
-    # initialize dA_prev, dW, db with the correct shapes
-    dA_prev = np.zeros((m, h_prev, w_prev, c_prev))
-    dW = np.zeros((kh, kw, c_prev, c_new))
-    db = np.zeros((1, 1, 1, c_new))
+    dA_prev = np.zeros_like(A_prev)
+    dW = np.zeros_like(W)
+    db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
 
-    # Compute padding dimensions
-    if padding == "same":
-        ph = int(np.ceil(((h_prev - 1) * sh + kh - h_prev) / 2))
-        pw = int(np.ceil(((w_prev - 1) * sw + kw - w_prev) / 2))
-    else:  # padding == "valid"
-        ph = pw = 0
+    if padding == 'valid':
+        pad_h, pad_w = 0, 0
+    elif padding == 'same':
+        pad_h = (((h_prev - 1) * sh) + kh - h_prev) // 2 + 1
+        pad_w = (((w_prev - 1) * sw) + kw - w_prev) // 2 + 1
 
-    # pad A_prev and dA_prev
-    A_prev_pad = np.pad(
-        A_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)), 'constant')
-    dA_prev_pad = np.pad(
-        dA_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)), 'constant')
+    A_prev = np.pad(A_prev, ((0, 0), (pad_h, pad_h), (pad_w, pad_w), (0, 0)),
+                    mode='constant', constant_values=0)
+    dA = np.pad(dA_prev, ((0, 0), (pad_h, pad_h), (pad_w, pad_w), (0, 0)),
+                mode='constant', constant_values=0)
 
-    # ;oop over the vertical (h), then horizontal (w), then over channels (c)
-    for i in range(h_new):
-        for j in range(w_new):
-            for k in range(c_new):
-                # find the corners of the current slice
-                start_h = i * sh
-                start_w = j * sw
-                end_h = start_h + kh
-                end_w = start_w + kw
-
-                # update gradients for the window and
-                # the filter's params using the code formulas
-                a_slice = A_prev_pad[:, start_h:end_h, start_w:end_w, :]
-
-                # update gradients of the slice of A_prev_pad (dA_prev_pad)
-                dA_prev_pad[
-                    :, start_h:end_h, start_w:end_w, :
-                    ] += W[:, :, :, k] * dZ[
-                        :, i, j, k, None, None, None
-                        ]
-                dW[:, :, :, k] += np.sum(
-                    a_slice * dZ[:, i, j, k, None, None, None], axis=0)
-                db[:, :, :, k] += np.sum(dZ[:, i, j, k])
-
-    # set the ith training example's dA_prev to the unpaded da_prev_pad
-    if padding == "same":
-        dA_prev = dA_prev_pad[:, ph:-ph, pw:-pw, :]
-    else:
-        dA_prev = dA_prev_pad[:, ph:-ph, pw:-pw, :]
-
-    return dA_prev, dW, db
+    for image in range(m):
+        for h in range(h_new):
+            for w in range(w_new):
+                for c in range(c_new):
+                    kernel = W[:, :, :, c]
+                    dz = dZ[image, h, w, c]
+                    mat = A_prev[image, sh*h:sh*h+kh, sw*w:sw*w+kw, :]
+                    dW[:, :, :, c] += mat * dz
+                    dA[image, sh*h:sh*h+kh,
+                       sw*w:sw*w+kw, :] += np.multiply(kernel, dz)
+    if padding == 'same':
+        dA = dA[:, pad_h: -pad_h, pad_w: -pad_w, :]
+    return dA, dW, db
