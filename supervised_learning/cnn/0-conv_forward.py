@@ -27,53 +27,58 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
         sw: stride for the width
     Returns: the output of the convolutional layer
     """
+    # retrieve dimensions from A_prev's shape
     m = A_prev.shape[0]
     h_prev = A_prev.shape[1]
     w_prev = A_prev.shape[2]
     c_prev = A_prev.shape[3]
 
+    # retrieve dimensions from W's shape
     kh = W.shape[0]
     kw = W.shape[1]
     c_prev = W.shape[2]
     c_new = W.shape[3]
 
+    # retrieve strides
     sh = stride[0]
     sw = stride[1]
     
     # calculate padding for 'same' and 'valid'
     if padding == "same":
-        pad_h = (((h_prev - 1) * sh) + kh - h_prev) // 2
-        pad_w = (((w_prev - 1) * sw) + kw - w_prev) // 2
-
-    elif padding == 'valid':
+        pad_h = max((h_prev - 1) * sh + kh - h_prev, 0) // 2
+        pad_w = max((w_prev - 1) * sw + kw - w_prev, 0) // 2
+    elif padding == "valid":
         pad_h = pad_w = 0
 
-    # calculate output dimensions
-    h_out = (h_prev - kh + 2 * pad_h) // sh + 1
-    w_out = (w_prev - kw + 2 * pad_w) // sw + 1
+    # compute the dimensions of the CONV output volume
+    h_new = (h_prev - kh + 2 * pad_h) // sh + 1
+    w_new = (w_prev - kw + 2 * pad_w) // sw + 1
 
-    # pad the input
+    # initialize the output volume Z with zeros
+    Z = np.zeros((m, h_new, w_new, c_new))
+
+    # create A_prev_pad by padding A_prev
     A_prev_pad = np.pad(A_prev, ((0, 0), (pad_h, pad_h), (pad_w, pad_w), (0, 0)), mode='constant')
 
-    Z = np.zeros((m, h_out, w_out, c_new))
+    # loop over the vertical (height), horizontal (width) and channel axes of the output volume
+    for i in range(m):  # loop over the batch size
+        for h in range(h_new):  # loop over the vertical axis
+            for w in range(w_new):  # loop over the horizontal axis
+                for c in range(c_new):  # loop over the channels
 
-    # loop over the batch of training examples
-    for i in range(m):
-        # loop over vertical axis of the output volume
-        for h in range(h_out):
-            # loop over horizontal axis of the output volume
-            for w in range(w_out):
-                # calculate slice parameters
-                vert_start = h * sh
-                vert_end = vert_start + kh
-                horiz_start = w * sw
-                horiz_end = horiz_start + kw
-                a_slice_prev = A_prev_pad[i, vert_start:vert_end, horiz_start:horiz_end, :]
-                # loop over channels of the output volume
-                for c in range(c_new):
-                    # perform the convolution
-                    Z[i, h, w, c] = np.sum(a_slice_prev * W[:, :, :, c]) + b[0, 0, 0, c]
+                    # find the corners of the current slice
+                    h_start = h * sh
+                    h_end = h_start + kh
+                    w_start = w * sw
+                    w_end = w_start + kw
 
-    # Apply the activation function
+                    # use the corners to define the slice from a_prev_pad
+                    a_slice = A_prev_pad[i, h_start:h_end, w_start:w_end, :]
+
+                    # convolve the slice with the correct filter and bias to get the output neuron
+                    Z[i, h, w, c] = np.sum(a_slice * W[:, :, :, c]) + b[0, 0, 0, c]
+
+    # Applying the activation function
     A = activation(Z)
+
     return A
