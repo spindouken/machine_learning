@@ -23,15 +23,15 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     if type(padding) is tuple:
         ph, pw = padding
     elif padding == "same":
-        ph = (((h_prev - 1) * sh) + kh - h_prev) // 2
-        pw = (((w_prev - 1) * sw) + kw - w_prev) // 2
+        ph = int(np.ceil(((h_prev - 1) * sh + kh - h_prev) / 2))
+        pw = int(np.ceil(((w_prev - 1) * sw + kw - w_prev) / 2))
     elif padding == "valid":
         ph, pw = 0, 0
 
     padded_A_prev = np.pad(A_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)))
 
-    h_out = (h_prev - kh + 2 * ph) // sh + 1
-    w_out = (w_prev - kw + 2 * pw) // sw + 1
+    h_out = (h_prev + 2 * ph - kh) // sh + 1
+    w_out = (w_prev + 2 * pw - kw) // sw + 1
 
     Z = np.zeros((m, h_out, w_out, c_new))
 
