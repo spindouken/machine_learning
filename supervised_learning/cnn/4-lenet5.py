@@ -49,8 +49,8 @@ def lenet5(x, y):
     # second convolutional layer
     # Convolutional layer with 16 kernels of shape 5x5 with valid padding
     conv2 = tf.layers.conv2d(pool1, filters=16, kernel_size=5,
-        padding='valid', activation='relu',
-        kernel_initializer=he_normal_initializer)
+                             padding='valid', activation='relu',
+                             kernel_initializer=he_normal_initializer)
 
     # second pooling layer
     # Max pooling layer with kernels of shape 2x2 with 2x2 strides
@@ -69,12 +69,12 @@ def lenet5(x, y):
     # second fully connected layer
     # fully connected layer with 84 nodes
     fc2 = tf.layers.dense(fc1, units=84, activation='relu',
-        kernel_initializer=he_normal_initializer)
+                          kernel_initializer=he_normal_initializer)
 
     # third fully connected layer
     # fully connected layer with 10 nodes
     fc3 = tf.layers.dense(fc2, units=10,
-        kernel_initializer=he_normal_initializer)
+                          kernel_initializer=he_normal_initializer)
 
     # apply softmax to final fully connected layer
     # this is the final output
