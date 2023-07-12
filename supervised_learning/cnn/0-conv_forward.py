@@ -82,7 +82,6 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
         ph = pw = 0
 
     """
-    output_height and output_width explanation:
     Compute the dimensions of the output volume from the convolution operation
     The output height and width are calculated based on the input dimensions,
         filter size, padding and stride
@@ -112,23 +111,61 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     A_prev_pad = np.pad(
         A_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)), 'constant')
 
+    """
+    Performs Convolution Operation / Filter Application / Kernel Loop
+    Loop over the vertical (height), then horizontal (width),
+        then over channels (c)
+    This is done to apply the filter to every possible position in the input
+    volume for each channel.
+
+    'for h in range(output_height):'
+    iterates over the height of the output volume. For each position,
+    the filter is applied to the corresponding position in the input volume.
+
+    'for w in range(output_width):'
+    iterates over the width of the output volume.
+    Combined with the outer loop,
+        this allows us to cover every position in 2D space of the input volume
+
+    'for c in range(c_new):':
+    iterates over the channels of the output volume. For each channel,
+    a different set of filters is applied.
+    """
     # loop over the vertical (h), then horizontal (w), then over channels (c)
     for h in range(output_height):
         for w in range(output_width):
             for c in range(c_new):
-                # Find the corners of the current slice
-                start_h = h * sh
-                start_w = w * sw
-                end_h = start_h + kh
-                end_w = start_w + kw
+                # calculate the starting position of the filter on the input
+                #   for the current step of the convolution
+                # starting position determined by current step of convolution
+                # (h or w) multiplied by the stride (sh or sw)
+                filter_start_height = h * sh
+                filter_start_width = w * sw
+                # calculate the ending position of the filter on the input
+                #   for current step of the convolution
+                # the ending position is determined by the starting pos
+                #   + the size of the filter (kh or kw)
+                filter_end_height = filter_start_height + kh
+                filter_end_width = filter_start_width + kw
 
+                # Extract a slice from the padded input volume.
+                # The slice is the portion of the input volume that the filter
+                #   will be applied to in the current step.
                 # Use the corners to define the slice from A_prev_pad
-                a_slice_prev = A_prev_pad[:, start_h:end_h, start_w:end_w, :]
+                a_slice_prev = A_prev_pad[
+                    :,
+                    filter_start_height:filter_end_height,
+                    filter_start_width:filter_end_width,
+                    :]
 
-                # Convolve the (3D) slice with the correct filter W and bias b,
-                # to get back one output neuron
+                # Extract the filters and biases for the current channel.
                 weights = W[:, :, :, c]
                 biases = b[0, 0, 0, c]
+
+                # Apply the filter to the slice of the input volume,
+                #   sums up the resultsx and adds the bias.
+                # The result is a single value that is the output of
+                #   the convolution for the current position and channel.
                 Z[:, h, w, c] = np.sum(
                     a_slice_prev * weights, axis=(1, 2, 3)) + biases
 
