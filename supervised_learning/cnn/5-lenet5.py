@@ -7,7 +7,7 @@ import tensorflow.keras as K
 
 def lenet5(x):
     """
-    X is a K.Input of shape (m, 28, 28, 1)
+    x is a K.Input of shape (m, 28, 28, 1)
         ...containing the input images for the network
         m: the number of images
     The model should consist of the following layers in order:
@@ -33,7 +33,7 @@ def lenet5(x):
                             kernel_size=(5, 5),
                             padding='same',
                             activation='relu',
-                            kernel_initializer=he_normal_initializer)(X)
+                            kernel_initializer=he_normal_initializer)(x)
 
     # first pooling layer
     pool1 = K.layers.MaxPooling2D(pool_size=(2, 2),
@@ -69,7 +69,7 @@ def lenet5(x):
                          kernel_initializer=he_normal_initializer,
                          activation='softmax')(fc2)
 
-    # create lenet5 model with X as input and last dense layer as output
+    # create lenet5 model with x as input and last dense layer as output
     lenet5_model = K.models.Model(x, fc3)
 
     # compile mdel with accuracy and cross entropy loss
