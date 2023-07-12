@@ -43,27 +43,57 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     sh = stride[0]
     sw = stride[1]
 
+    """
+    ph: pad height
+    pw: pad width
+    Calculate padding for height (pad_height) and width (pad_width)
+    The padding is calculated such that the output dimensions
+        ...would be the same as input dimensions
+    use np.ceil to round up to nearest whole number
+        (can't have fractional padding)
+    """
     # Compute padding dimensions
     if padding == "same":
         ph = int(np.ceil(((h_prev - 1) * sh + kh - h_prev) / 2))
         pw = int(np.ceil(((w_prev - 1) * sw + kw - w_prev) / 2))
     else:  # padding == "valid"
+        # In case of 'valid' padding, no additional padding is added
         ph = pw = 0
 
-    # Compute the dimensions of the CONV output volume
-    h_new = (h_prev + 2 * ph - kh) // sh + 1
-    w_new = (w_prev + 2 * pw - kw) // sw + 1
+    """
+    output_height and output_width explanation:
+    Compute the dimensions of the output volume from the convolution operation
+    The output height and width are calculated based on the input dimensions,
+        filter size, padding and stride
+    Integer division (//) is used to ensure output dimensions are whole numbers
+
+    OUTPUT HEIGHT FUNCTION
+    h_prev + 2 * ph - kh:
+        calculates effective height of input after padding (2 * ph) is added
+        ...from this, the height of the filter (kh) is subtracted
+        ...this gives the number of valid positions the filter
+            ...can be placed on the input along the height dimension
+    '// sh + 1': integer division by the stride (sh) along the height + 1
+        calculates how many steps the filter can take along height of the input
+        ...(including the initial position)
+        ...each step of the filter results in one output feature
+        ...this gives the height of the output feature map
+    OUTPUT WIDTH FUNCTION:
+    the same logic for output_height is used in calculating output_width
+    """
+    output_height = (h_prev + 2 * ph - kh) // sh + 1
+    output_width = (w_prev + 2 * pw - kw) // sw + 1
 
     # Initialize the output volume Z with zeros
-    Z = np.zeros((m, h_new, w_new, c_new))
+    Z = np.zeros((m, output_height, output_width, c_new))
 
     # Create A_prev_pad by padding A_prev
     A_prev_pad = np.pad(
         A_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)), 'constant')
 
     # loop over the vertical (h), then horizontal (w), then over channels (c)
-    for i in range(h_new):
-        for j in range(w_new):
+    for i in range(output_height):
+        for j in range(output_width):
             for k in range(c_new):
                 # Find the corners of the current slice
                 start_h = i * sh
