@@ -6,6 +6,9 @@ import numpy as np
 
 def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     """
+    function perform forward propagation over a convolutional layer of a neural network
+
+    Function variables explanation:
     A_prev is a numpy.ndarray of shape (m, h_prev, w_prev, c_prev)
         ...containing the output of the previous layer
         m: the number of examples
@@ -44,20 +47,38 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     sw = stride[1]
 
     """
+    Calculate padding for height (ph) and width (pw)
+    padding is calculated such that the output dimensions would be the same
+        as input dimensions
+
     ph: pad height
     pw: pad width
-    Calculate padding for height (pad_height) and width (pad_width)
-    The padding is calculated such that the output dimensions
-        ...would be the same as input dimensions
-    use np.ceil to round up to nearest whole number
-        (can't have fractional padding)
+
+    SAME PADDING CALCULATION:
+    'ph = int(np.ceil(((h_prev - 1) * sh + kh - h_prev) / 2))' explanation:
+    (h_prev - 1) * sh + kh:
+        gives the total height that the input would have if
+        we were to slide the filter across the entire height
+        of the input with the given stride, sh.
+        Subtracting h_prev from this value gives the total amount
+        of extra space needed to be able to do this.
+        Dividing by 2 ensures that this extra space is evenly distributed
+        on both sides (top and bottom) of the input.
+    np.ceil is used to round up to nearest whole number, in case the division
+    results in a fractional number. This is because we can't have a fractional
+    number of pixels for padding.
+    The same logic applies to the calculation of 'pw', the width padding.
+
+    VALID PADDING CALCULATION:
+    In case of 'valid' padding, no additional padding is added.
+    The filter does not go outside the bounds of the input,
+        and every position at which the filter is
+        applied is a 'valid' position within the input.
     """
-    # Compute padding dimensions
     if padding == "same":
         ph = int(np.ceil(((h_prev - 1) * sh + kh - h_prev) / 2))
         pw = int(np.ceil(((w_prev - 1) * sw + kw - w_prev) / 2))
-    else:  # padding == "valid"
-        # In case of 'valid' padding, no additional padding is added
+    else:  # padding == "valid" (no padding applied)
         ph = pw = 0
 
     """
@@ -92,12 +113,12 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
         A_prev, ((0, 0), (ph, ph), (pw, pw), (0, 0)), 'constant')
 
     # loop over the vertical (h), then horizontal (w), then over channels (c)
-    for i in range(output_height):
-        for j in range(output_width):
-            for k in range(c_new):
+    for h in range(output_height):
+        for w in range(output_width):
+            for c in range(c_new):
                 # Find the corners of the current slice
-                start_h = i * sh
-                start_w = j * sw
+                start_h = h * sh
+                start_w = w * sw
                 end_h = start_h + kh
                 end_w = start_w + kw
 
@@ -106,9 +127,9 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
 
                 # Convolve the (3D) slice with the correct filter W and bias b,
                 # to get back one output neuron
-                weights = W[:, :, :, k]
-                biases = b[0, 0, 0, k]
-                Z[:, i, j, k] = np.sum(
+                weights = W[:, :, :, c]
+                biases = b[0, 0, 0, c]
+                Z[:, h, w, c] = np.sum(
                     a_slice_prev * weights, axis=(1, 2, 3)) + biases
 
     # Apply the activation function
