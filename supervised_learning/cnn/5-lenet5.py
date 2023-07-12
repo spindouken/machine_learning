@@ -70,7 +70,7 @@ def lenet5(x):
                          activation='softmax')(fc2)
 
     # create lenet5 model with X as input and last dense layer as output
-    lenet5_model = K.models.Model(X, fc3)
+    lenet5_model = K.models.Model(x, fc3)
 
     # compile mdel with accuracy and cross entropy loss
     lenet5_model.compile(optimizer=K.optimizers.Adam(),
