@@ -37,53 +37,52 @@ def lenet5(x, y):
 
     # first convolutional layer
     # Convolutional layer with 6 kernels of shape 5x5 with same padding
-    conv1 = tf.layers.Conv2D(filters=6,
-                             kernel_size=(5, 5),
-                             padding='same',
-                             activation='relu',
-                             kernel_initializer=he_normal_initializer)(x)
+    conv1 = tf.layers.conv2d(
+        x, filters=6, kernel_size=(5, 5), padding='same',
+        activation=tf.nn.relu, kernel_initializer=he_normal_initializer
+        )
+
     # first pooling layer
     # Max pooling layer with kernels of shape 2x2 with 2x2 strides
-    pool1 = tf.layers.MaxPooling2D(pool_size=(2, 2),
-                                   strides=(2, 2))(conv1)
+    pool1 = tf.layers.max_pooling2d(conv1, pool_size=(2, 2), strides=(2, 2))
+
     # second convolutional layer
     # Convolutional layer with 16 kernels of shape 5x5 with valid padding
-    conv2 = tf.layers.Conv2D(filters=16,
-                             kernel_size=(5, 5),
-                             padding='valid',
-                             activation='relu',
-                             kernel_initializer=he_normal_initializer)(pool1)
+    conv2 = tf.layers.conv2d(pool1, filters=16, kernel_size=(5, 5),
+        padding='valid', activation=tf.nn.relu,
+        kernel_initializer=he_normal_initializer)
+
     # second pooling layer
     # Max pooling layer with kernels of shape 2x2 with 2x2 strides
-    pool2 = tf.layers.MaxPooling2D(pool_size=(2, 2),
-                                   strides=(2, 2))(conv2)
+    pool2 = tf.layers.max_pooling2d(conv2, pool_size=(2, 2), strides=(2, 2))
+
     # flattened output from second pooling layer
-    flattened = tf.layers.Flatten()(pool2)
+    flattened = tf.layers.flatten(pool2)
+
     # fully connected layers
     # first fully connected layer
     # Fully connected layer with 120 nodes
-    fc1 = tf.layers.Dense(units=120,
-                          kernel_initializer=he_normal_initializer,
-                          activation='relu')(flattened)
+    fc1 = tf.layers.dense(
+        flattened, units=120, activation=tf.nn.relu,
+        kernel_initializer=he_normal_initializer)
+
     # second fully connected layer
     # fully connected layer with 84 nodes
-    fc2 = tf.layers.Dense(units=84,
-                          kernel_initializer=he_normal_initializer,
-                          activation='relu')(fc1)
+    fc2 = tf.layers.dense(fc1, units=84, activation=tf.nn.relu,
+        kernel_initializer=he_normal_initializer)
+
     # third fully connected layer
     # fully connected softmax output layer with 10 nodes
-    softmax = tf.layers.Dense(units=10, activation=tf.nn.softmax,
-                          kernel_initializer=he_normal_initializer)(fc2)
+    softmax_output = tf.layers.dense(fc2, units=10, activation=tf.nn.softmax,
+        kernel_initializer=he_normal_initializer)
 
     # get softmax cross entropy loss
-    crossEntropy_loss = tf.losses.softmax_cross_entropy(y, fc3)
+    crossEntropy_loss = tf.losses.softmax_cross_entropy(y, softmax_output)
 
     # training op that utilizes Adam optimzation
-    adamOptimizer = tf.train.AdamOptimizer().minimize(
-        crossEntropy_loss
-        )
+    adamOptimizer = tf.train.AdamOptimizer().minimize(crossEntropy_loss)
 
-    correctPredictions = tf.equal(tf.argmax(softmax, 1), tf.argmax(y, 1))
+    correctPredictions = tf.equal(tf.argmax(softmax_output, 1), tf.argmax(y, 1))
 
     # create tensor for the accuracy of the network
     accuracy = tf.reduce_mean(tf.cast(correctPredictions, tf.float32))
