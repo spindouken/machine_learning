@@ -10,25 +10,22 @@ def inception_network():
     """
     Returns: the keras model
     """
-    initializer = K.initializers.HeNormal()
     input_layer = K.Input(shape=(224, 224, 3))
 
     conv_7x7 = K.layers.Conv2D(filters=64,
-                                padding='same',
-                                activation='relu',
-                                kernel_size=(7, 7),
-                                strides=(2, 2),
-                                kernel_initializer=initializer)(input_layer)
+                               padding='same',
+                               activation='relu',
+                               kernel_size=(7, 7),
+                               strides=(2, 2))(input_layer)
     maxpool_3x3_1 = K.layers.MaxPooling2D(pool_size=(3, 3),
                                           strides=(2, 2),
                                           padding='same')(conv_7x7)
 
     conv_3x3 = K.layers.Conv2D(filters=192,
-                                kernel_size=(3, 3),
-                                strides=(1, 1),
-                                padding='same',
-                                kernel_initializer=initializer,
-                                activation='relu')(maxpool_3x3_1)
+                               kernel_size=(3, 3),
+                               strides=(1, 1),
+                               padding='same',
+                               activation='relu')(maxpool_3x3_1)
     maxpool_3x3_2 = K.layers.MaxPooling2D(pool_size=(3, 3),
                                           strides=(2, 2),
                                           padding='same')(conv_3x3)
@@ -54,8 +51,7 @@ def inception_network():
                                              padding='valid')(inception_5b)
 
     dropout_40 = K.layers.Dropout(rate=(0.4))(avg_pool_7x7)
-    output = K.layers.Dense(units=(1000), activation='softmax',
-                                kernel_initializer=initializer)(dropout_40)
+    output = K.layers.Dense(units=(1000), activation='softmax')(dropout_40)
 
     model = K.Model(inputs=input_layer, outputs=output)
     model.compile(optimizer=K.optimizers.Adam(),
