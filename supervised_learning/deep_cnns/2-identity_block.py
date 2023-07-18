@@ -21,21 +21,25 @@ def identity_block(A_prev, filters):
     # Save the input value... will need later to add back to main path
     X_shortcut = A_prev
 
+    # Define the He Normal (VarianceScaling) initializer
+    he_normal = K.initializers.VarianceScaling(
+        scale=2.0, mode='fan_in', distribution='truncated_normal')
+
     # First component of main path (1x1 convolution, down-sampling)
-    X = K.layers.Conv2D(filters=F11, kernel_size=(
-        1, 1), strides=(1, 1), padding='valid')(A_prev)
+    X = K.layers.Conv2D(filters=F11, kernel_size=(1, 1), strides=(
+        1, 1), padding='valid', kernel_initializer=he_normal)(A_prev)
     X = K.layers.BatchNormalization(axis=3)(X)
     X_downsampled = K.layers.Activation('relu')(X)
 
     # Second component of main path (3x3 convolution, processing)
-    X = K.layers.Conv2D(filters=F3, kernel_size=(
-        3, 3), strides=(1, 1), padding='same')(X_downsampled)
+    X = K.layers.Conv2D(filters=F3, kernel_size=(3, 3), strides=(
+        1, 1), padding='same', kernel_initializer=he_normal)(X_downsampled)
     X = K.layers.BatchNormalization(axis=3)(X)
     X_processed = K.layers.Activation('relu')(X)
 
     # Third component of main path (1x1 convolution, up-sampling)
-    X = K.layers.Conv2D(filters=F12, kernel_size=(
-        1, 1), strides=(1, 1), padding='valid')(X_processed)
+    X = K.layers.Conv2D(filters=F12, kernel_size=(1, 1), strides=(
+        1, 1), padding='valid', kernel_initializer=he_normal)(X_processed)
     X = K.layers.BatchNormalization(axis=3)(X)
     X_upsampled = X
 
