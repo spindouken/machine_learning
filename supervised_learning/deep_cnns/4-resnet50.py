@@ -17,7 +17,6 @@ def resnet50():
     HeNormal = K.initializers.he_normal()
     X_input = K.layers.Input((224, 224, 3))
 
-
     X = K.layers.Conv2D(
         filters=64,
         kernel_size=7,
