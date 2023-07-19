@@ -14,40 +14,58 @@ def resnet50():
     All weights use he normal initialization
     Returns: the keras model
     """
+    HeNormal = K.initializers.he_normal()
     X_input = K.layers.Input((224, 224, 3))
 
-    HeNormal = K.initializers.he_normal(seed=None)
 
-    X = K.layers.Conv2D(64, (7, 7), strides=(2, 2),
-                        padding='same',
-                        kernel_initializer=HeNormal)(X_input)
+    X = K.layers.Conv2D(
+        filters=64,
+        kernel_size=7,
+        strides=2,
+        padding="same",
+        kernel_initializer=HeNormal,
+    )(X_input)
+    # normalize before activation function
     X = K.layers.BatchNormalization(axis=3)(X)
     X = K.layers.Activation('relu')(X)
-    X = K.layers.MaxPooling2D((3, 3),
-                              padding='same',
-                              strides=(2, 2))(X)
+    # pool one
+    X = K.layers.MaxPooling2D(
+        pool_size=3,
+        strides=2,
+        padding="same",
+    )(X)
 
-    X = projection_block(X, [64, 64, 256])
+    # conv2 block
+    X = projection_block(X, [64, 64, 256], s=1)
     X = identity_block(X, [64, 64, 256])
     X = identity_block(X, [64, 64, 256])
 
-    X = projection_block(X, [128, 128, 512])
+    # conv3 block
+    X = projection_block(X, [128, 128, 512], s=2)
     X = identity_block(X, [128, 128, 512])
     X = identity_block(X, [128, 128, 512])
     X = identity_block(X, [128, 128, 512])
 
-    X = projection_block(X, [256, 256, 1024])
+    # conv4 block
+    X = projection_block(X, [256, 256, 1024], s=2)
     X = identity_block(X, [256, 256, 1024])
     X = identity_block(X, [256, 256, 1024])
     X = identity_block(X, [256, 256, 1024])
     X = identity_block(X, [256, 256, 1024])
     X = identity_block(X, [256, 256, 1024])
 
+    # conv5 block
     X = projection_block(X, [512, 512, 2048], s=2)
     X = identity_block(X, [512, 512, 2048])
     X = identity_block(X, [512, 512, 2048])
 
-    X = K.layers.AveragePooling2D(pool_size=(2, 2))(X)
+    # avg pool
+    X = K.layers.AveragePooling2D(
+        pool_size=7,
+        strides=1,
+        padding="valid",
+    )(X)
+    # flatten
     X = K.layers.Flatten()(X)
     X = K.layers.Dense(units=1000, activation='softmax',
                        kernel_initializer=HeNormal)(X)
