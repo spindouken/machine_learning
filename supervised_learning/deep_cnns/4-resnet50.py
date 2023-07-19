@@ -65,11 +65,10 @@ def resnet50():
         strides=1,
         padding="valid",
     )(X)
-    # flatten
-    X = K.layers.Flatten()(X)
+
     X = K.layers.Dense(units=1000, activation='softmax',
                        kernel_initializer=HeNormal)(X)
 
-    model = K.models.Model(inputs=X_input, outputs=X, name='ResNet50')
+    model = K.models.Model(inputs=X_input, outputs=X)
 
     return model
