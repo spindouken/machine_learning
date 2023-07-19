@@ -27,7 +27,6 @@ def resnet50():
                               padding='same',
                               strides=(2, 2))(X)
 
-
     X = projection_block(X, [64, 64, 256])
     X = identity_block(X, [64, 64, 256])
     X = identity_block(X, [64, 64, 256])
@@ -48,10 +47,8 @@ def resnet50():
     X = identity_block(X, [512, 512, 2048])
     X = identity_block(X, [512, 512, 2048])
 
-    X = K.layers.AveragePooling2D(padding='valid',
-                                  strides=(7, 7),
-                                  pool_size=(2, 2))(X)
-
+    X = K.layers.AveragePooling2D(pool_size=(2, 2))(X)
+    X = K.layers.Flatten()(X)
     X = K.layers.Dense(units=1000, activation='softmax',
                        kernel_initializer=HeNormal)(X)
 
