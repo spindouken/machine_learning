@@ -124,7 +124,7 @@ if __name__ == '__main__':
     # Create a learning rate scheduler callback
     lr_scheduler = LearningRateSchedulerCallback()
 
-    # Train the model with early stopping, model checkpointing and data augmentation
+    # Train the model with early stopping, model checkpointing, and data augmentation
     model.fit(datagen.flow(x_train, y_train, batch_size=64),
               steps_per_epoch=len(x_train) / 64, epochs=20,
               validation_data=(x_test, y_test),

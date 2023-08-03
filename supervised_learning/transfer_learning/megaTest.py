@@ -50,7 +50,7 @@ model.evaluate(X_p, Y_p, batch_size=128, verbose=1)
 predictions = model.predict(X_p)
 
 # Display the first 5 predictions
-print("(Fine-tuned) First 5 predictions: ", np.argmax(predictions, axis=1)[:5])
+print("First 5 predictions: ", np.argmax(predictions, axis=1)[:5])
 
 # Visualize the model architecture
-plot_model(model, to_file='lilTinyNet.png', show_shapes=True)
+plot_model(model, to_file='finetuned_model.png', show_shapes=True)

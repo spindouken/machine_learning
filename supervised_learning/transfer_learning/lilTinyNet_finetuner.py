@@ -42,7 +42,7 @@ if __name__ == '__main__':
     datagen.fit(x_train)
 
     # Load the pre-trained model
-    model = K.models.load_model('cifar10_run2.h5')
+    model = K.models.load_model('cifar10_lilTinyNet.h5')
 
     # Unfreeze layers
     for layer in model.layers[-10:]:
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     early_stopping = K.callbacks.EarlyStopping(patience=3, restore_best_weights=True)
 
     # Define model checkpointing for the fine-tuned model
-    model_checkpoint = K.callbacks.ModelCheckpoint('cifar10_finetuned.h5', save_best_only=True)
+    model_checkpoint = K.callbacks.ModelCheckpoint('cifar10_finetuned_lilTinyNet.h5', save_best_only=True)
 
     # Create a learning rate scheduler callback
     lr_scheduler = LearningRateSchedulerCallback()
