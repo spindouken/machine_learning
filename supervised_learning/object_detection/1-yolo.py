@@ -114,13 +114,15 @@ class Yolo:
             #   ...this will normalize the coordinates to range (0, 1)
             box[..., :2] /= (grid_width, grid_height)  # x, y
 
+            # Reshape anchors based on the current output dimensions
+            current_anchors = self.anchors[i].reshape(1, 1, anchor_boxes, 2)
             # Multiply w, h coordinates by anchors
             #   this will scale the coordinates to the dims of the anchors
             #   ...the anchors are given in width, height format
             #   ...the width and height of anchors are scaled to the grid dims
             #   ...the result will be bounding boxes with width and height
             #   ...that are relative to the dimensions of the grid
-            box[..., 2:] *= self.anchors[i]  # w, h
+            box[..., 2:] *= current_anchors
 
             # Calc top-left and bottom-right coordinates of the bounding box
             box[..., 0] -= box[..., 2] / 2  # x1 = x - w/2
