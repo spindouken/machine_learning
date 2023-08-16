@@ -171,15 +171,8 @@ class Yolo:
 
         return boxes, box_confidences, box_class_probs
 
-
-def sigmoid(x):
-    """
-    Sigmoid activation function to transform values to the range (0, 1).
-
-    Args:
-        x (float): Input value.
-
-    Returns:
-        float: Transformed value in the range (0, 1).
-    """
-    return 1 / (1 + np.exp(-x))
+    @staticmethod
+    def sigmoid(x):
+        """Sigmoid activation function to transform
+        values to the range (0, 1)."""
+        return 1 / (1 + np.exp(-x))
