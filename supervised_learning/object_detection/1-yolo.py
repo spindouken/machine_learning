@@ -75,73 +75,31 @@ class Yolo:
         box_class_probs = []
 
         for i, output in enumerate(outputs):
-            # Extracting grid_height and grid_width from the output shape
-            #   The third and fourth dimensions are 'anchor_boxes' and
-            #       (combined) 'features' (4 + 1 + classes)
-            #       and are not needed in the subsequent calculations,
-            #       so they are ignored
-            grid_height, grid_width, anchor_boxes, features = output.shape
-
-            # cell_width and cell_height are calculated
-            #   by dividing image’s original height and width
-            #   by corresponding height and width of the grid
-            # ...this will be used to resize bounding boxes later
+            grid_height, grid_width, anchor_boxes, _ = output.shape
             cell_width = image_size[1] / grid_width
             cell_height = image_size[0] / grid_height
-
-            # DECODING BOUNDING BOXES
-            # extract first four elements along last dimension of the tensor
-            #   In YOLO the output tensor's last dimension includes information
-            #       about bounding box coordinates tx, ty, tw, th
-            #       confidence score, and class probabilities
-            #   By slicing :4 we are extracting the bounding box coordinates
             box = output[..., :4]
-
-            # Apply sigmoid to x,y coordinates (1st two elements in last dim)
-            #   sigmoid will constrain the values to range (0, 1)
-            box[..., :2] = 1 / (1 + np.exp(-box[..., :2]))  # x, y
-
-            # Apply exp to width and height (last two elements in last dim)
-            #   ...During prediction process (training of Darknet),
-            #   the logarithm of the width and height was taken
-            #   ...applying the exponential will reverse that transformation
-            box[..., 2:] = np.exp(box[..., 2:])  # w, h
-
-            # Add grid indices to x, y coordinates
-            box[..., 0] += np.arange(grid_width).reshape(1, grid_width, 1)  # x
+            box[..., :2] = 1 / (1 + np.exp(-box[..., :2]))
+            box[..., 2:] = np.exp(box[..., 2:])
+            box[..., 0] += np.arange(grid_width).reshape(1, grid_width, 1)
             box[..., 1] += np.arange(grid_height).reshape(grid_height, 1, 1)
-
-            # Divide x, y coordinates by grid height and grid width
-            #   ...this will normalize the coordinates to range (0, 1)
-            box[..., :2] /= (grid_width, grid_height)  # x, y
-
-            # Multiply w, h coordinates by anchors
-            #   this will scale the coordinates to the dims of the anchors
-            #   ...the anchors are given in width, height format
-            #   ...the width and height of anchors are scaled to the grid dims
-            #   ...the result will be bounding boxes with width and height
-            #   ...that are relative to the dimensions of the grid
-            box[..., 2:] *= self.anchors[i]  # w, h
-
-            # Calc top-left and bottom-right coordinates of the bounding box
-            box[..., 0] -= box[..., 2] / 2  # x1 = x - w/2
-            box[..., 1] -= box[..., 3] / 2  # y1 = y - h/2
-            box[..., 2] += box[..., 0]  # x2 = x1 + w
-            box[..., 3] += box[..., 1]  # y2 = y1 + h
-
-            # resize bounding boxes to match original image size
-            box[..., [0, 2]] *= cell_width  # Scaling x coordinates
-            box[..., [1, 3]] *= cell_height  # Scaling y coordinates
-
-            # Append boxes, box_confidences, and box_class_probs
-            #   to their respective lists
+            box[..., :2] /= (grid_width, grid_height)
+            box[..., 2:] *= self.anchors[i]
+            box[..., 0] -= box[..., 2] / 2
+            box[..., 1] -= box[..., 3] / 2
+            box[..., 2] += box[..., 0]
+            box[..., 3] += box[..., 1]
+            box[..., [0, 2]] *= cell_width
+            box[..., [1, 3]] *= cell_height
             boxes.append(box)
-            # apply sigmoid to box confidence scores&append to box_confidences
-            box_confidences.append(
-                1 / (1 + np.exp(-output[..., 4, np.newaxis]))
-            )
-            # apply sigmoid to box class scores and append to box_class_probs
-            box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
 
-        # return a tuple of (boxes, box_confidences, box_class_probs)
+            aux = output[:, :, :, 4]
+            conf = 1 / (1 + np.exp(-aux))
+            conf = conf.reshape(grid_height, grid_width, anchor_boxes, 1)
+            box_confidences.append(conf)
+
+            aux = output[:, :, :, 5:]
+            probs = 1 / (1 + np.exp(-aux))
+            box_class_probs.append(probs)
+
         return boxes, box_confidences, box_class_probs
