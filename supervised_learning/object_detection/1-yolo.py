@@ -33,14 +33,20 @@ class Yolo:
 
         for i, output in enumerate(outputs):
             grid_height, grid_width, anchor_boxes, features = output.shape
+            box = np.zeros((grid_height, grid_width, anchor_boxes, 4))
+
+            grid_x = np.tile(
+                np.arange(grid_width), (grid_height, 1, anchor_boxes)
+            ).reshape(grid_height, grid_width, anchor_boxes)
+            grid_y = np.tile(
+                np.arange(grid_height), (grid_width, 1, anchor_boxes)
+            ).T.reshape(grid_height, grid_width, anchor_boxes)
+
             trans_x = output[:, :, :, 0]
             trans_y = output[:, :, :, 1]
             trans_width = output[:, :, :, 2]
             trans_height = output[:, :, :, 3]
-            grid_x_pattern = np.arange(grid_width).reshape(1, grid_width, 1)
-            grid_x = np.tile(grid_x_pattern, (grid_height, 1, anchor_boxes))
-            grid_y_pattern = np.arange(grid_height).reshape(grid_height, 1, 1)
-            grid_y = np.tile(grid_y_pattern, (1, grid_width, anchor_boxes))
+
             box_x = (
                 (1 / (1 + np.exp(-trans_x)) + grid_x) * imgWidth / grid_width
             )
@@ -57,15 +63,25 @@ class Yolo:
                 * self.anchors[i, :, 1]
                 / self.model.input.shape[2]
             ) * imgHeight
+
             x1 = box_x - box_width / 2
             y1 = box_y - box_height / 2
             x2 = box_x + box_width / 2
             y2 = box_y + box_height / 2
-            box = np.stack([x1, y1, x2, y2], axis=-1)
+
+            box[:, :, :, 0] = x1
+            box[:, :, :, 1] = y1
+            box[:, :, :, 2] = x2
+            box[:, :, :, 3] = y2
             boxes.append(box)
-            box_confidences.append(
-                1 / (1 + np.exp(-output[..., 4, np.newaxis]))
-            )
-            box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
+
+            aux = output[:, :, :, 4]
+            conf = 1 / (1 + np.exp(-aux))
+            conf = conf.reshape(grid_height, grid_width, anchor_boxes, 1)
+            box_confidences.append(conf)
+
+            aux = output[:, :, :, 5:]
+            probs = 1 / (1 + np.exp(-aux))
+            box_class_probs.append(probs)
 
         return boxes, box_confidences, box_class_probs
