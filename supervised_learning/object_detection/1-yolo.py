@@ -38,7 +38,13 @@ class Yolo:
     def process_outputs(self, outputs, image_size):
         """
         Iterates through each output in 'outputs' using enumerate
-            to get both the index 'i' and the value 'output'
+            to get both the index 'i' and the value 'output'.
+        Then, it calculates the transformed bounding box
+            coordinates (x1, y1, x2, y2) based on the predicted transformations
+        The grid cell indices are created and used to
+            calculate the final processed bounding box parameters.
+        Sigmoid and exponential functions are applied where necessary to
+            convert the raw outputs into interpretable values.
 
         outputs: contains predictions from Darknet model for a single image
         i: used to access the corresponding anchor box dimensions
@@ -74,74 +80,131 @@ class Yolo:
         box_confidences = []
         box_class_probs = []
 
+        imgHeight, imgWidth = image_size
+
         for i, output in enumerate(outputs):
-            # Extracting grid_height and grid_width from the output shape
-            #   The third and fourth dimensions are 'anchor_boxes' and
-            #       (combined) 'features' (4 + 1 + classes)
-            #       and are not needed in the subsequent calculations,
-            #       so they are ignored
+            # Extracting the dimensions of the grid
+            # -----------------------------------------------------------------
+            #  These are used to normalize the bounding box coordinates
+            # 'features' not currently being utilized
             grid_height, grid_width, anchor_boxes, features = output.shape
 
-            # cell_width and cell_height are calculated
-            #   by dividing image’s original height and width
-            #   by corresponding height and width of the grid
-            # ...this will be used to resize bounding boxes later
-            cell_width = image_size[1] / grid_width
-            cell_height = image_size[0] / grid_height
+            # Extracting predicted transformations for bounding boxes from
+            #   the 'output' tensor
+            # -----------------------------------------------------------------
+            # These transformations are relative changes that need to be
+            #   applied to the anchor boxes to predict the actual
+            #   ...bounding boxes for detected objects.
+            # - trans_x and trans_y: relative shift from anchor box center;
+            #   often passed through a sigmoid function to constrain values.
+            # - trans_width and trans_height: relative scaling of anchor box's
+            #   width and height; transformed using exponential function to
+            #   map from logarithmic to linear scale.
+            # Together, these transformations provide the necessary adjustments
+            # to anchor boxes to accurately encapsulate detected objects
+            trans_x = output[:, :, :, 0]
+            trans_y = output[:, :, :, 1]
+            trans_width = output[:, :, :, 2]
+            trans_height = output[:, :, :, 3]
 
-            # DECODING BOUNDING BOXES
-            # extract first four elements along last dimension of the tensor
-            #   In YOLO the output tensor's last dimension includes information
-            #       about bounding box coordinates tx, ty, tw, th
-            #       confidence score, and class probabilities
-            #   By slicing :4 we are extracting the bounding box coordinates
-            box = output[..., :4]
+            # Creating grid indices to map the
+            #   spatial location of each cell in the grid
+            # -----------------------------------------------------------------
+            # These indices are essential for aligning
+            #   bounding boxes with their spatial context
 
-            # Apply sigmoid to x,y coordinates (1st two elements in last dim)
-            #   sigmoid will constrain the values to range (0, 1)
-            box[..., :2] = 1 / (1 + np.exp(-box[..., :2]))  # x, y
+            # Creating x grid pattern and tiling to match grid dimensions
+            grid_x_pattern = np.arange(grid_width).reshape(1, grid_width, 1)
+            grid_x = np.tile(grid_x_pattern, (grid_height, 1, anchor_boxes))
 
-            # Apply exp to width and height (last two elements in last dim)
-            #   ...During prediction process (training of Darknet),
-            #   the logarithm of the width and height was taken
-            #   ...applying the exponential will reverse that transformation
-            box[..., 2:] = np.exp(box[..., 2:])  # w, h
+            # Creating y grid pattern and tiling to match grid dimensions
+            grid_y_pattern = np.arange(grid_height).reshape(grid_height, 1, 1)
+            grid_y = np.tile(grid_y_pattern, (1, grid_width, anchor_boxes))
 
-            # Add grid indices to x, y coordinates
-            box[..., 0] += np.arange(grid_width).reshape(1, grid_width, 1)  # x
-            box[..., 1] += np.arange(grid_height).reshape(grid_height, 1, 1)
+            # Calculating processed x and y coordinates by applying sigmoid
+            # -----------------------------------------------------------------
+            # Adding grid indices ensures correct
+            #   positioning of bounding boxes in the image
+            # Scaling factors are applied to match original image's dimensions
+            box_x = (
+                (1 / (1 + np.exp(-trans_x)) + grid_x) * imgWidth / grid_width
+            )
+            box_y = (
+                (1 / (1 + np.exp(-trans_y)) + grid_y) * imgHeight / grid_height
+            )
 
-            # Divide x, y coordinates by grid height and grid width
-            #   ...this will normalize the coordinates to range (0, 1)
-            box[..., :2] /= (grid_width, grid_height)  # x, y
+            # Calculating processed x and y coordinates
+            #   by applying sigmoid (to constrain values between 0 and 1)
+            # -----------------------------------------------------------------
+            # Adding grid indices helps to position
+            #   the bounding boxes correctly within the image
+            box_x = (
+                (1 / (1 + np.exp(-trans_x)) + grid_x) * imgWidth / grid_width
+            )
+            box_y = (
+                (1 / (1 + np.exp(-trans_y)) + grid_y) * imgHeight / grid_height
+            )
 
-            # Multiply w, h coordinates by anchors
-            #   this will scale the coordinates to the dims of the anchors
-            #   ...the anchors are given in width, height format
-            #   ...the width and height of anchors are scaled to the grid dims
-            #   ...the result will be bounding boxes with width and height
-            #   ...that are relative to the dimensions of the grid
-            box[..., 2:] *= self.anchors[i]  # w, h
+            # Calculating processed width & height using exponential function;
+            #   reverse logarithm taken during prediction (training of Darknet)
+            # -----------------------------------------------------------------
+            # The anchors are scaled to reflect the actual proportions
+            #   of the bounding boxes in the original image
+            box_width = (
+                np.exp(trans_width)
+                * self.anchors[i, :, 0]
+                / self.model.input.shape[1]
+            ) * imgWidth
+            box_height = (
+                np.exp(trans_height)
+                * self.anchors[i, :, 1]
+                / self.model.input.shape[2]
+            ) * imgHeight
 
-            # Calc top-left and bottom-right coordinates of the bounding box
-            box[..., 0] -= box[..., 2] / 2  # x1 = x - w/2
-            box[..., 1] -= box[..., 3] / 2  # y1 = y - h/2
-            box[..., 2] += box[..., 0]  # x2 = x1 + w
-            box[..., 3] += box[..., 1]  # y2 = y1 + h
+            # Compute the top-left (x1, y1)
+            #   and bottom-right (x2, y2) coordinates
+            #   ...of the bounding boxes to define their boundaries
+            # -----------------------------------------------------------------
+            # These coordinates are relative to the original image
+            #   and can be used for drawing the bounding boxes
 
-            # resize bounding boxes to match original image size
-            box[..., [0, 2]] *= cell_width  # Scaling x coordinates
-            box[..., [1, 3]] *= cell_height  # Scaling y coordinates
+            # Calculate x1, the x-coordinate of the left edge of bounding box
+            #   by subtracting half the width from x coordinate of the center
+            x1 = box_x - box_width / 2
 
-            # Append boxes, box_confidences, and box_class_probs
-            #   to their respective lists
+            # Calculate y1, the y-coordinate of the top edge of bounding box
+            #   by subtracting half the height from y coordinate of the center
+            y1 = box_y - box_height / 2
+
+            # Calculate x2, the x-coordinate of the right edge of bounding box
+            #   by adding half the width to the x coordinate of the center
+            x2 = box_x + box_width / 2
+
+            # Calculate y2, the y-coordinate of the bottom edge of bounding box
+            #   by adding half the height to the y coordinate of the center
+            y2 = box_y + box_height / 2
+
+            # We will use these coordinates later with OpenCV
+            #   to draw the bounding boxes on images
+            # Together, (x1, y1) gives the coordinates of the top-left corner,
+            #   and (x2, y2) gives the coordinates of the bottom-right corner
+            #   ...of the bounding box
+
+            # APPENDING 'boxes', 'box_confidences', 'box_class_probs'
+            # -----------------------------------------------------------------
+            # Appending the bounding box coordinates to the 'boxes' list
+            box = np.stack([x1, y1, x2, y2], axis=-1)
             boxes.append(box)
-            # apply sigmoid to box confidence scores&append to box_confidences
+
+            # Applying sigmoid to box confidence scores
+            #   to constrain them between 0 and 1
             box_confidences.append(
                 1 / (1 + np.exp(-output[..., 4, np.newaxis]))
             )
-            # apply sigmoid to box class scores and append to box_class_probs
+
+            # Applying sigmoid to box class scores
+            #   to constrain them between 0 and 1
             box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
 
-        # return a tuple of (boxes, box_confidences, box_class_probs)
+        # return as tuple
         return boxes, box_confidences, box_class_probs
