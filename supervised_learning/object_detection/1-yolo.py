@@ -6,6 +6,42 @@ import tensorflow.keras as K
 import numpy as np
 
 
+class Yolo:
+    """Yolo class to perform object detection using the YOLOv3 algorithm"""
+
+    def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
+        """
+        placeholder
+        """
+        self.model = K.models.load_model(model_path)
+        with open(classes_path, "r") as file:
+            self.class_names = [line.strip() for line in file.readlines()]
+        self.class_t = class_t
+        self.nms_t = nms_t
+        self.anchors = anchors
+
+    def process_outputs(self, outputs, image_size):
+        """
+        placeholder
+        """
+        boxes, box_confidences, box_class_probs = [], [], []
+
+        for i, output in enumerate(outputs):
+            anchors_for_output = self.anchors[i]
+            boxes.append(
+                process_boxes(
+                    output,
+                    anchors_for_output,
+                    image_size,
+                    self.model.input.shape,
+                )
+            )
+            box_confidences.append(sigmoid(output[..., 4:5]))
+            box_class_probs.append(sigmoid(output[..., 5:]))
+
+        return boxes, box_confidences, box_class_probs
+
+
 def sigmoid(x):
     """function to perform sigmoid transformation"""
     return 1 / (1 + np.exp(-x))
@@ -42,39 +78,3 @@ def process_boxes(output, anchors, image_size, model_shape):
         boxes[..., anchor, :] = np.stack([x1, y1, x2, y2], axis=-1)
 
     return boxes
-
-
-class Yolo:
-    """Yolo class to perform object detection using the YOLOv3 algorithm"""
-
-    def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
-        """
-        placeholder
-        """
-        self.model = K.models.load_model(model_path)
-        with open(classes_path, "r") as file:
-            self.class_names = [line.strip() for line in file.readlines()]
-        self.class_t = class_t
-        self.nms_t = nms_t
-        self.anchors = anchors
-
-    def process_outputs(self, outputs, image_size):
-        """
-        placeholder
-        """
-        boxes, box_confidences, box_class_probs = [], [], []
-
-        for i, output in enumerate(outputs):
-            anchors_for_output = self.anchors[i]
-            boxes.append(
-                process_boxes(
-                    output,
-                    anchors_for_output,
-                    image_size,
-                    self.model.input.shape,
-                )
-            )
-            box_confidences.append(sigmoid(output[..., 4:5]))
-            box_class_probs.append(sigmoid(output[..., 5:]))
-
-        return boxes, box_confidences, box_class_probs
