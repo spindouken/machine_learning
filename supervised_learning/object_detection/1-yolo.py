@@ -12,6 +12,7 @@ def sigmoid(x):
 
 
 def calculate_box(tx, ty, tw, th, pw, ph, grid_width, grid_height, model_shape):
+    """placeholder"""
     bx = sigmoid(tx) + np.arange(grid_width).reshape(-1, 1)
     by = sigmoid(ty) + np.arange(grid_height).reshape(1, -1)
     bw = pw * np.exp(tw)
@@ -24,6 +25,7 @@ def calculate_box(tx, ty, tw, th, pw, ph, grid_width, grid_height, model_shape):
 
 
 def process_boxes(output, anchors, image_size, model_shape):
+    """placeholder"""
     grid_height, grid_width, num_anchors, _ = output.shape
     boxes = np.zeros((grid_height, grid_width, num_anchors, 4))
 
