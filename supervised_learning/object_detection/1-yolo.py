@@ -34,7 +34,8 @@ class Yolo:
             raise FileNotFoundError("Model not found at the provided path.")
         if not isinstance(anchors, np.ndarray) or anchors.shape[-1] != 2:
             raise ValueError(
-                "Anchors must be a numpy.ndarray of shape (outputs, anchor_boxes, 2)."
+                "Anchors must be a numpy.ndarray \
+                of shape (outputs, anchor_boxes, 2)."
             )
 
         self.model = tf.keras.models.load_model(model_path)
@@ -46,6 +47,13 @@ class Yolo:
 
     def process_outputs(self, outputs, image_size):
         """
+        Processes the outputs from the Darknet model for a single image.
+        The nested loops iterate through each grid cell and anchor box to
+            compute the processed boundary box coordinates.
+        The loops handle the conversion of coordinates from the
+            Darknet model's prediction to the
+            coordinates relative to the original image.
+
         outputs: contains predictions from Darknet model for a single image
         i: used to access the corresponding anchor box dimensions
         output: the individual prediction array for processing
@@ -80,35 +88,71 @@ class Yolo:
         box_confidences = []
         box_class_probs = []
 
-        for i, output in enumerate(outputs):
+        for output_index, output in enumerate(outputs):
             grid_height, grid_width, anchor_boxes, _ = output.shape
-            tx = output[..., 0:1]
-            ty = output[..., 1:2]
-            tw = output[..., 2:3]
-            th = output[..., 3:4]
-            box_confidence = 1 / (1 + np.exp(-output[..., 4:5]))
-            box_class_prob = 1 / (1 + np.exp(-output[..., 5:]))
-            box_confidences.append(box_confidence)
-            box_class_probs.append(box_class_prob)
-            for cy in range(grid_height):
-                for cx in range(grid_width):
-                    for b in range(anchor_boxes):
-                        pw, ph = self.anchors[i][b]
-                        bx = (1 / (1 + np.exp(-tx[cy, cx, b]))) + cx
-                        by = (1 / (1 + np.exp(-ty[cy, cx, b]))) + cy
-                        bw = pw * np.exp(tw[cy, cx, b])
-                        bh = ph * np.exp(th[cy, cx, b])
-                        bx /= grid_width
-                        by /= grid_height
-                        bw /= int(self.model.input.shape[1])
-                        bh /= int(self.model.input.shape[2])
-                        x1 = (bx - (bw / 2)) * image_size[1]
-                        y1 = (by - (bh / 2)) * image_size[0]
-                        x2 = (bx + (bw / 2)) * image_size[1]
-                        y2 = (by + (bh / 2)) * image_size[0]
-                        tx[cy, cx, b] = x1
-                        ty[cy, cx, b] = y1
-                        tw[cy, cx, b] = x2
-                        th[cy, cx, b] = y2
-            boxes.append(np.concatenate((tx, ty, tw, th), axis=-1))
+            raw_boundary_box_coords = output[..., :4]
+            rawBoxConfidence = output[..., 4:5]
+            raw_box_class_probabilities = output[..., 5:]
+
+            # Applying sigmoid activation to the box confidence
+            box_confidence_after_sigmoid = 1 / (1 + np.exp(-rawBoxConfidence))
+            box_confidences.append(box_confidence_after_sigmoid)
+
+            # Applying sigmoid activation to the class probabilities
+            box_class_probs_after_sigmoid = 1 / (
+                1 + np.exp(-raw_box_class_probabilities)
+            )
+            box_class_probs.append(box_class_probs_after_sigmoid)
+
+            for cell_y in range(grid_height):
+                for cell_x in range(grid_width):
+                    for anchor_box_index in range(anchor_boxes):
+                        anchor_width, anchor_height = self.anchors[
+                            output_index
+                        ][anchor_box_index]
+                        tx, ty, tw, th = raw_boundary_box_coords[
+                            cell_y, cell_x, anchor_box_index
+                        ]
+
+                        # Applying sigmoid activation and
+                        #   offsetting by grid cell location
+                        boundaryBoxCenter_x = (1 / (1 + np.exp(-tx))) + cell_x
+                        boundaryBoxCenter_y = (1 / (1 + np.exp(-ty))) + cell_y
+
+                        # Applying exponential and scaling by anchor dimensions
+                        boundary_box_width = anchor_width * np.exp(tw)
+                        boundary_box_height = anchor_height * np.exp(th)
+
+                        # Normalizing by grid and model input dimensions
+                        boundaryBoxCenter_x /= grid_width
+                        boundaryBoxCenter_y /= grid_height
+                        boundary_box_width /= int(self.model.input.shape[1])
+                        boundary_box_height /= int(self.model.input.shape[2])
+
+                        # Converting to original image scale
+                        top_left_x = (
+                            boundaryBoxCenter_x - (boundary_box_width / 2)
+                        ) * image_size[1]
+                        top_left_y = (
+                            boundaryBoxCenter_y - (boundary_box_height / 2)
+                        ) * image_size[0]
+                        bottom_right_x = (
+                            boundaryBoxCenter_x + (boundary_box_width / 2)
+                        ) * image_size[1]
+                        bottom_right_y = (
+                            boundaryBoxCenter_y + (boundary_box_height / 2)
+                        ) * image_size[0]
+
+                        # Storing the processed boundary box coordinates
+                        raw_boundary_box_coords[
+                            cell_y, cell_x, anchor_box_index
+                        ] = [
+                            top_left_x,
+                            top_left_y,
+                            bottom_right_x,
+                            bottom_right_y,
+                        ]
+
+            boxes.append(raw_boundary_box_coords)
+
         return (boxes, box_confidences, box_class_probs)
