@@ -80,8 +80,8 @@ class Yolo:
     ):
         bx /= grid_width
         by /= grid_height
-        bw /= self.model.input.shape[1]
-        bh /= self.model.input.shape[2]
+        bw /= self.model.input.shape[1].value
+        bh /= self.model.input.shape[2].value
         x1 = (bx - bw / 2) * image_size[1]
         y1 = (by - bh / 2) * image_size[0]
         x2 = (bx + bw / 2) * image_size[1]
