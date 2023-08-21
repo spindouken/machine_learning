@@ -133,8 +133,8 @@ class Yolo:
             # -----------------------------------------------------------------
             # The anchors are scaled to reflect the actual proportions
             #   of the bounding boxes in the original image
-            box_w /= self.model.input.shape[1]
-            box_h /= self.model.input.shape[2]
+            box_w /= self.model.input.shape[1].value
+            box_h /= self.model.input.shape[2].value
 
             # Compute the top-left (x1, y1)
             #   and bottom-right (x2, y2) coordinates
@@ -165,15 +165,13 @@ class Yolo:
             box[..., 3] = y2
             boxes.append(box)
 
-            # Applying sigmoid to box confidence scores
-            #   to constrain them between 0 and 1
+            box_confidence = sigmoid(output[..., 4])
             box_confidences.append(
-                1 / (1 + np.exp(-output[..., 4, np.newaxis]))
+                box_confidence.reshape(grid_height, grid_width, anchor_boxes, 1)
             )
 
-            # Applying sigmoid to box class scores
-            #   to constrain them between 0 and 1
-            box_class_probs.append(1 / (1 + np.exp(-output[..., 5:])))
+            box_class_prob = sigmoid(output[..., 5:])
+            box_class_probs.append(box_class_prob)
 
         # return as tuple
         return boxes, box_confidences, box_class_probs
