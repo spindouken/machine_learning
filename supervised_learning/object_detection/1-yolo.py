@@ -88,6 +88,7 @@ class Yolo:
             #  These are used to normalize the bounding box coordinates
             # 'features' not currently being utilized
             grid_height, grid_width, anchor_boxes, features = output.shape
+            box = np.zeros((grid_height, grid_width, anchor_boxes, 4))
 
             # Extracting predicted transformations for bounding boxes from
             #   the 'output' tensor
@@ -158,16 +159,10 @@ class Yolo:
             #   by adding half the height to the y coordinate of the center
             y2 = (box_y + box_h / 2) * image_size[0]
 
-            # We will use these coordinates later with OpenCV
-            #   to draw the bounding boxes on images
-            # Together, (x1, y1) gives the coordinates of the top-left corner,
-            #   and (x2, y2) gives the coordinates of the bottom-right corner
-            #   ...of the bounding box
-
-            # APPENDING 'boxes', 'box_confidences', 'box_class_probs'
-            # -----------------------------------------------------------------
-            # Appending the bounding box coordinates to the 'boxes' list
-            box = np.stack([x1, y1, x2, y2], axis=-1)
+            box[..., 0] = x1
+            box[..., 1] = y1
+            box[..., 2] = x2
+            box[..., 3] = y2
             boxes.append(box)
 
             # Applying sigmoid to box confidence scores
