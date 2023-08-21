@@ -2,8 +2,9 @@
 """
 uses the Yolo v3 algorithm to perform object detection
 """
-import tensorflow.keras as K
+from tensorflow.keras.models import load_model
 import numpy as np
+import tensorflow as tf
 
 
 class Yolo:
@@ -28,7 +29,7 @@ class Yolo:
         nms_t: the IOU threshold for non-max suppression
         anchors: the anchor boxes
         """
-        self.model = K.models.load_model(model_path)
+        self.model = tf.keras.models.load_model(model_path)
         with open(classes_path, "r") as f:
             self.class_names = [line.strip() for line in f.readlines()]
         self.class_t = class_t
