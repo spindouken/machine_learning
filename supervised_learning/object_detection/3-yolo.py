@@ -290,7 +290,7 @@ class Yolo:
 
         predicted_box_classes = np.array(predicted_box_classes).astype(int)
         return (
-            np.array(box_predictions),
+            np.array(box_predictions).astype(int),
             predicted_box_classes,
             np.array(predicted_box_scores),
         )
