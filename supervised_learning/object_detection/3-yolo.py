@@ -231,14 +231,14 @@ class Yolo:
                 ordered by class and box score, respectively
         """
         # Concatenate box classes and box scores to sort them together
-        box_classes = box_classes.reshape(-1, 1)
+        box_classes = box_classes.astype(int).reshape(-1, 1)
         box_scores = box_scores.reshape(-1, 1)
         boxes_with_classes_and_scores = np.concatenate(
             (filtered_boxes, box_classes, box_scores), axis=1
         )
 
         # Sort boxes by class and scores
-        sorted_boxes = boxes_with_classes_and_scores[
+        sortedBoxes = boxes_with_classes_and_scores[
             np.lexsort((box_scores.ravel(), box_classes.ravel()))
         ]
 
@@ -248,10 +248,10 @@ class Yolo:
         predicted_box_scores = []
 
         # Iterate through unique classes
-        unique_classes = np.unique(sorted_boxes[:, -2])
+        unique_classes = np.unique(sortedBoxes[:, -2])
         for unique_class in unique_classes:
             # Get boxes of the same class
-            same_class_boxes = sorted_boxes[sorted_boxes[:, -2] == unique_class]
+            same_class_boxes = sortedBoxes[sortedBoxes[:, -2] == unique_class]
 
             # Apply non-max suppression for the same class boxes
             while len(same_class_boxes) > 0:
@@ -288,8 +288,9 @@ class Yolo:
                 # Remove boxes with IoU greater than the threshold
                 same_class_boxes = same_class_boxes[iou < self.nms_t]
 
+        predicted_box_classes = np.array(predicted_box_classes).astype(int)
         return (
             np.array(box_predictions),
-            np.array(predicted_box_classes),
+            predicted_box_classes,
             np.array(predicted_box_scores),
         )
