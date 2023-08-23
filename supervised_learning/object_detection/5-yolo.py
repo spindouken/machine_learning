@@ -300,12 +300,14 @@ class Yolo:
     @staticmethod
     def load_images(folder_path):
         """
-        Loads images from a given folder path.
+        Loads images from a given folder path
 
-        :param folder_path: a string representing the path to the folder holding all the images to load
-        :return: a tuple of (images, image_paths), where
-            - images: a list of images as numpy.ndarrays
-            - image_paths: a list of paths to the individual images in images
+        folder_path: a string representing the path to the
+            folder holding all the images to load
+
+        Returns a tuple of (images, image_paths):
+            images: a list of images as numpy.ndarrays
+            image_paths: a list of paths to the individual images in images
         """
         images = []
         image_paths = []
