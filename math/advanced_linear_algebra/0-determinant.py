@@ -3,8 +3,6 @@
 Calculate the determinant of a matrix using simple operations
 """
 
-import numpy as np
-
 
 def determinant(matrix):
     """
