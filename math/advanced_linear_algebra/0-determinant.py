@@ -57,7 +57,7 @@ def determinant(matrix):
         return a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g)
 
     # Recursive expansion using Laplace's formula
-    determinant = 0
+    detValue = 0
     for elementIndex in range(rows):
         # calculate minor matrix by removing the current row and column
         minorMatrix = [
@@ -68,6 +68,6 @@ def determinant(matrix):
         cofactor = ((-1) ** elementIndex) * matrix[0][elementIndex]
 
         # recursive call to find the determinant of the minor matrix
-        determinant += cofactor * determinant(minorMatrix)
+        detValue += cofactor * determinant(minorMatrix)
 
-    return determinant
+    return detValue
