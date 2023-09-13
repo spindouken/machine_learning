@@ -59,9 +59,17 @@ def determinant(matrix):
     # Recursive expansion using Laplace's formula
     detValue = 0
     for elementIndex in range(rows):
-        # calculate minor matrix by removing the current row and column
+        # calculate minor matrix by removing the first row
+        # with first row removed go through the column value of each row
+        #     while checking if the column index is the same as the element
+        #     index, if it is, skip it
         minorMatrix = [
-            row[:elementIndex] + row[elementIndex + 1:] for row in matrix[1:]
+            [
+                columnValue
+                for columnIndex, columnValue in enumerate(row)
+                if columnIndex != elementIndex
+            ]
+            for row in matrix[1:]
         ]
 
         # calculate cofactor for the current element in the matrix
