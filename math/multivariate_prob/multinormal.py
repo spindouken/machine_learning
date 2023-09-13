@@ -51,10 +51,10 @@ def mean_cov(X):
     # calculate mean for each feature
     #   sum along each feature and divide by total number of data points
     mean = np.sum(X, axis=0) / n
-    mean = mean[:, np.newaxis]  # convert to shape (d, 1) for multinomral class
+    mean = mean.reshape(1, -1)  # convert to shape (d, 1) for multinomral class
 
     # center data by subtracting the mean from each feature
-    Xcentered = X - mean.T
+    Xcentered = X - mean
 
     # calculate the covariance matrix using matrix multiplication
     # -----------------------------------------------------------

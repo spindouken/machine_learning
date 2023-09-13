@@ -40,21 +40,21 @@ def mean_cov(X):
         (n - 1): used for the unbiased estimator
     """
     if type(X) is not np.ndarray or len(X.shape) != 2:
-        raise TypeError("X must be a 2D numpy.ndarray")
+        raise TypeError('X must be a 2D numpy.ndarray')
 
     # Get the number of data points (n) and dimensions (d)
     n, d = X.shape
 
     if n < 2:
-        raise ValueError("X must contain multiple data points")
+        raise ValueError('X must contain multiple data points')
 
     # calculate mean for each feature
     #   sum along each feature and divide by total number of data points
     mean = np.sum(X, axis=0) / n
-    mean = mean[:, np.newaxis]  # convert to shape (d, 1) for multinomral class
+    mean = mean.reshape(1, -1)  # convert to shape (d, 1) for multinomral class
 
     # center data by subtracting the mean from each feature
-    Xcentered = X - mean.T
+    Xcentered = X - mean
 
     # calculate the covariance matrix using matrix multiplication
     # -----------------------------------------------------------
