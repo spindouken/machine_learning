@@ -23,6 +23,9 @@ def definiteness(matrix):
     if not isinstance(matrix, np.ndarray):
         raise TypeError("matrix must be a numpy.ndarray")
 
+    if len(matrix.shape) != 2:
+        return None
+
     rows, columns = matrix.shape
     if rows != columns:
         return None
@@ -32,10 +35,10 @@ def definiteness(matrix):
         return "Positive definite"
     elif all(eigenvalues >= 0):
         return "Positive semi-definite"
-    elif all(eigenvalues <= 0):
-        return "Negative semi-definite"
     elif all(eigenvalues < 0):
         return "Negative definite"
+    elif all(eigenvalues <= 0):
+        return "Negative semi-definite"
     elif any(eigenvalues > 0) and any(eigenvalues < 0):
         return "Indefinite"
     else:
