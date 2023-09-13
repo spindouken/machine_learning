@@ -188,6 +188,7 @@ def cofactor(matrix):
         cofactorMatrix.append(cofactorRow)
     return cofactorMatrix
 
+
 def adjugate(matrix):
     """
     calculates the adjugate matrix of a matrix
