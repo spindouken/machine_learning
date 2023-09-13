@@ -35,7 +35,7 @@ def determinant(matrix):
     # Therefore, the determinant of an empty 0x0 matrix is defined to be 1.
     if matrix == [[]]:
         return 1
-    
+
     # working through rows in calculations
     rows = len(matrix)
 
@@ -77,7 +77,7 @@ def determinant(matrix):
 
 def minor(matrix):
     """
-    calculates the minor matrix of a matrix:
+    calculates the minor matrix of a matrix
 
     matrix is a list of lists whose minor matrix should be calculated
     If matrix is not a list of lists,
@@ -103,7 +103,7 @@ def minor(matrix):
     rows = len(matrix)
 
     if not all(len(row) == rows for row in matrix):
-        raise ValueError("matrix must be a square matrix")
+        raise ValueError("matrix must be a non-empty square matrix")
 
     if rows == 1 and len(matrix[0]) == 1:
         return [[1]]
@@ -117,18 +117,18 @@ def minor(matrix):
             # create sub-matrix by removing the current row and column
             subMatrix = []
             for x in range(rows):
-                if x == i: # skip to next iteration of x = i element in matrix
+                if x == i:  # skip to next iteration of x = i element in matrix
                     continue
-                subRow = [] # create a new row for the sub-matrix
-                for y in range(rows): # loop through column values in row
-                    if y == j: # skip to next iteration if y = j ele in matrix
+                subRow = []  # create a new row for the sub-matrix
+                for y in range(rows):  # loop through column values in row
+                    if y == j:  # skip to next iteration if y = j ele in matrix
                         continue
-                    subRow.append(matrix[x][y]) # add element to sub-row
-                subMatrix.append(subRow) # add sub-row to sub-matrix
-            
+                    subRow.append(matrix[x][y])  # add element to sub-row
+                subMatrix.append(subRow)  # add sub-row to sub-matrix
+
             # Calculate the determinant of the sub-matrix
             minorValue = determinant(subMatrix)
-            minorRow.append(minorValue) # add minor value to minor row
+            minorRow.append(minorValue)  # add minor value to minor row
         # add minor row to minor matrix
         minorMatrix.append(minorRow)
 
