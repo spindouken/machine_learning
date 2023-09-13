@@ -29,6 +29,10 @@ def definiteness(matrix):
     rows, columns = matrix.shape
     if rows != columns:
         return None
+    
+    # check if symmetric
+    if not np.allclose(matrix, matrix.T):
+        return None
 
     eigenvalues = np.linalg.eigvals(matrix)
     if all(eigenvalues > 0):
