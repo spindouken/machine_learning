@@ -203,3 +203,11 @@ def adjugate(matrix):
             matrix must be a non-empty square matrix
     Returns: the adjugate matrix of matrix
     """
+    validateMatrix(matrix)
+
+    if matrix == [[]]:
+        return 1
+    if len(matrix) == 1 and len(matrix[0]) == 1:
+        return [[1]]
+
+    rows = len(matrix)
