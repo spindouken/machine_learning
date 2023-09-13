@@ -29,13 +29,13 @@ def definiteness(matrix):
 
     eigenvalues = np.linalg.eigvals(matrix)
     if all(eigenvalues > 0):
-        return "Positive Definite"
+        return "Positive definite"
     elif all(eigenvalues >= 0):
-        return "Positive Semi-Definite"
+        return "Positive semi-Definite"
     elif all(eigenvalues <= 0):
-        return "Negative Semi-Definite"
+        return "Negative semi-Definite"
     elif all(eigenvalues < 0):
-        return "Negative Definite"
+        return "Negative definite"
     elif any(eigenvalues > 0) and any(eigenvalues < 0):
         return "Indefinite"
     else:
