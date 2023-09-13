@@ -61,7 +61,7 @@ def determinant(matrix):
     for elementIndex in range(rows):
         # calculate minor matrix by removing the current row and column
         minorMatrix = [
-            row[:elementIndex] + row[elementIndex + 1 :] for row in matrix[1:]
+            row[:elementIndex] + row[elementIndex + 1:] for row in matrix[1:]
         ]
 
         # calculate cofactor for the current element in the matrix
