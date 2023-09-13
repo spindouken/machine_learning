@@ -40,13 +40,13 @@ def mean_cov(X):
         (n - 1): used for the unbiased estimator
     """
     if type(X) is not np.ndarray or len(X.shape) != 2:
-        raise TypeError("X must be a 2D numpy.ndarray")
+        raise TypeError('data must be a 2D numpy.ndarray')
 
     # Get the number of data points (n) and dimensions (d)
     n, d = X.shape
 
     if n < 2:
-        raise ValueError("X must contain multiple data points")
+        raise ValueError('data must contain multiple data points')
 
     # calculate mean for each feature
     #   sum along each feature and divide by total number of data points
@@ -67,6 +67,9 @@ def mean_cov(X):
 
 
 class MultiNormal:
+    """
+    represents a Multivariate Normal distribution
+    """
     def __init__(self, data):
         """
         data is a numpy.ndarray of shape (d, n) containing the data set:
@@ -84,7 +87,7 @@ class MultiNormal:
         if not isinstance(data, np.ndarray) or len(data.shape) != 2:
             raise TypeError('data must be a 2D numpy.ndarray')
 
-        n, d = data.shape
+        d, n = data.shape
         if n < 2:
             raise ValueError('data must contain multiple data points')
 
