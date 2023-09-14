@@ -173,20 +173,38 @@ def cofactor(matrix):
                 subRow = []
                 # loop through each column value to create the sub-row
                 for y in range(rows):
-                    if y == j:  # Skip the current column
+                    if y == j:  # skip the current column
                         continue
                     subRow.append(
                         matrix[x][y]
-                    )  # Add the element to the sub-row
+                    )  # add the element to the sub-row
                 subMatrix.append(subRow)  # Add the sub-row to the sub-matrix
 
-            # Calculate the determinant of the sub-matrix
+            # calculate the determinant of the sub-matrix
             minorValue = determinant(subMatrix)
-            # Calculate the cofactor and add it to the cofactor row
+            # calculate the cofactor and add it to the cofactor row
             cofactorRow.append(minorValue * (-1) ** (i + j))
-        # Add the cofactor row to the cofactor matrix
+        # add the cofactor row to the cofactor matrix
         cofactorMatrix.append(cofactorRow)
     return cofactorMatrix
+
+
+def transpose(matrix):
+    """
+    helper function to transpose a matrix
+    """
+    transposedMatrix = []
+    # loop through columns of input matrix
+    for j in range(len(matrix[0])):
+        # initialize empty list for the current column of the transpose
+        Tcolumn = []
+        # loop through rows of input matrix
+        for i in range(len(matrix)):
+            # append element at (i,j) to the current column of the transpose
+            Tcolumn.append(matrix[i][j])
+        # append the current column to the transpose
+        transposedMatrix.append(Tcolumn)
+    return transposedMatrix
 
 
 def adjugate(matrix):
@@ -210,6 +228,11 @@ def adjugate(matrix):
     if len(matrix) == 1 and len(matrix[0]) == 1:
         return [[1]]
 
+    # transpose of the cofactor matrix = adjugate matrix
+    adjugateMatrix = transpose(cofactor(matrix))
+
+    return adjugateMatrix
+
 
 def inverse(matrix):
     """
@@ -231,3 +254,14 @@ def inverse(matrix):
         return 1
     if len(matrix) == 1 and len(matrix[0]) == 1:
         return [[1]]
+
+    adjugateMatrix = adjugate(matrix)
+    determinantMatrix = determinant(matrix)
+
+    if determinantMatrix == 0:
+        return None
+
+    # use the formula inverse = adjugate / determinant
+    inverse = [[x / determinantMatrix for x in row] for row in adjugateMatrix]
+
+    return inverse
