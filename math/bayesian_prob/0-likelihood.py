@@ -49,6 +49,8 @@ def likelihood(x, n, P):
     if np.any(P < 0) or np.any(P > 1):
         raise ValueError('All values in P must be in the range [0, 1]')
 
+    factorial = np.math.factorial
+
     binomialCoefficient = factorial(n) / (factorial(x) * (factorial(n - x)))
 
     # use binomial likelihood formula
@@ -56,11 +58,3 @@ def likelihood(x, n, P):
     likelihoodArray = binomialCoefficient * (P ** x) * ((1 - P) ** (n - x))
 
     return likelihoodArray
-
-
-def factorial(n):
-    """calculate factorial of n recursively"""
-    if n == 0:
-        return 1
-    else:
-        return n * factorial(n-1)
