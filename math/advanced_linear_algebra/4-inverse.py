@@ -252,8 +252,6 @@ def inverse(matrix):
 
     if matrix == [[]]:
         return 1
-    if len(matrix) == 1 and len(matrix[0]) == 1:
-        return [[1]]
 
     adjugateMatrix = adjugate(matrix)
     determinantMatrix = determinant(matrix)
