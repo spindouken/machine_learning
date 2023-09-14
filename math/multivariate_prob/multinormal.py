@@ -120,14 +120,16 @@ class MultiNormal:
         """
         if not isinstance(x, np.ndarray):
             raise TypeError("x must be a numpy.ndarray")
-        if len(x.shape) != 2:
+
+        d = self.cov.shape[0]
+
+        if x.shape != (d, 1):
             raise ValueError("x must have the shape ({d}, 1)")
 
         mean = self.mean
         covariance = self.cov
-        d = self.cov.shape[0]
 
         PDF = (
             1 / (np.sqrt((2 * np.pi) ** d * np.linalg.det(covariance)))
-        ) * np.exp((-1 / 2) * (x - mean).T @ covariance ^ -1 @ (x - mean))
+        ) * np.exp(-0.5 * ((x - mean).T @ np.linalg.inv(covariance) @ (x - mean)))
         return PDF
