@@ -60,3 +60,16 @@ def intersection(x, n, P, Pr):
         raise ValueError('All values in Pr must be in the range [0, 1]')
     if not np.isclose(Pr.sum(), 1):
         raise ValueError('Pr must sum to 1')
+
+    factorial = np.math.factorial
+
+    binomialCoefficient = factorial(n) / (factorial(x) * (factorial(n - x)))
+
+    # use binomial likelihood formula
+    #   P(x|n, P) = (binomialCoefficient) * (P ** x) * ((1 - P) ** (n - x))
+    likelihoodArray = binomialCoefficient * (P ** x) * ((1 - P) ** (n - x))
+
+    # calculate product of the likelihood and the prior for each probability
+    intersectionsArray = likelihoodArray * Pr
+
+    return intersectionsArray
