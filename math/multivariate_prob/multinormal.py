@@ -40,20 +40,19 @@ def mean_cov(X):
         (n - 1): used for the unbiased estimator
     """
     if type(X) is not np.ndarray or len(X.shape) != 2:
-        raise TypeError('data must be a 2D numpy.ndarray')
+        raise TypeError("data must be a 2D numpy.ndarray")
 
     # Get the number of data points (n) and dimensions (d)
     n, d = X.shape
 
     if n < 2:
-        raise ValueError('data must contain multiple data points')
+        raise ValueError("data must contain multiple data points")
 
     # calculate mean for each feature
     #   sum along each feature and divide by total number of data points
     mean = np.sum(X, axis=0) / n
 
     # center data by subtracting the mean from each feature
-    #  broadcasting mean for mean_cov function
     Xcentered = X - mean
 
     # calculate the covariance matrix using matrix multiplication
@@ -70,6 +69,7 @@ class MultiNormal:
     """
     represents a Multivariate Normal distribution
     """
+
     def __init__(self, data):
         """
         data is a numpy.ndarray of shape (d, n) containing the data set:
@@ -85,11 +85,11 @@ class MultiNormal:
                 containing the covariance matrix data
         """
         if not isinstance(data, np.ndarray) or len(data.shape) != 2:
-            raise TypeError('data must be a 2D numpy.ndarray')
+            raise TypeError("data must be a 2D numpy.ndarray")
 
         d, n = data.shape
         if n < 2:
-            raise ValueError('data must contain multiple data points')
+            raise ValueError("data must contain multiple data points")
 
         # transpose data from (d, n) to (n, d) for mean_cov expected input
         mean, covariance = mean_cov(data.T)
@@ -110,8 +110,24 @@ class MultiNormal:
             'x must have the shape ({d}, 1)'
 
         Returns the value of the PDF
+        formula for Multivariate Normal distribution PDF:
+        f(x) = (1 / (sqrt((2 * pi) ** d * det(cov)))) *
+                    exp((-1 / 2) * (x - u).T @ cov^-1 @ (x - u))
+        d: number of dimensions in the Multinomial instance
+        x: data
+        u: mean
+        cov: covariance matrix
         """
         if not isinstance(x, np.ndarray):
-            raise TypeError('x must be a numpy.ndarray')
+            raise TypeError("x must be a numpy.ndarray")
         if len(x.shape) != 2:
-            raise ValueError('x must have the shape ({d}, 1)')
+            raise ValueError("x must have the shape ({d}, 1)")
+
+        mean = self.mean
+        covariance = self.cov
+        d = self.cov.shape[0]
+
+        PDF = (
+            1 / (np.sqrt((2 * np.pi) ** d * np.linalg.det(covariance)))
+        ) * np.exp((-1 / 2) * (x - mean).T @ covariance ^ -1 @ (x - mean))
+        return PDF
