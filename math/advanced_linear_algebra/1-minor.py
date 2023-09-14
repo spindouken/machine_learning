@@ -105,7 +105,7 @@ def minor(matrix):
         raise TypeError("matrix must be a list of lists")
 
     if matrix == [[]]:
-        return 1
+        raise ValueError("matrix must be a non-empty square matrix")
 
     # working through rows in calculations
     rows = len(matrix)
