@@ -129,7 +129,12 @@ class MultiNormal:
         mean = self.mean
         covariance = self.cov
 
-        PDF = (
+        PDFarray = (
             1 / (np.sqrt((2 * np.pi) ** d * np.linalg.det(covariance)))
-        ) * np.exp(-0.5 * ((x - mean).T @ np.linalg.inv(covariance) @ (x - mean)))
-        return PDF
+        ) * np.exp(
+            -0.5 * ((x - mean).T @ np.linalg.inv(covariance) @ (x - mean))
+        )
+
+        PDFvalue = PDFarray[0][0]
+
+        return PDFvalue
