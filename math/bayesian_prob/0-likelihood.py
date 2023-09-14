@@ -19,6 +19,7 @@ def likelihood(x, n, P):
     n: total number of patients observed
     P: 1D numpy.ndarray containing the various hypothetical probabilities
         of developing severe side effects
+
     If n is not a positive integer, raise a ValueError with the message:
         'n must be a positive integer'
     If x is not an integer that is greater than or equal to 0,
@@ -31,6 +32,7 @@ def likelihood(x, n, P):
     If any value in P is not in the range [0, 1], raise a ValueError with the
         message:
         'All values in P must be in the range [0, 1]'
+
     Returns: a 1D numpy.ndarray containing the likelihood of obtaining the
         data, x and n, for each probability in P, respectively
     """
@@ -46,3 +48,19 @@ def likelihood(x, n, P):
         raise TypeError('P must be a 1D numpy.ndarray')
     if np.any(P < 0) or np.any(P > 1):
         raise ValueError('All values in P must be in the range [0, 1]')
+
+    binomialCoefficient = factorial(n) / (factorial(x) * (factorial(n - x)))
+
+    # use binomial likelihood formula
+    #   P(x|n, P) = (binomialCoefficient) * (P ** x) * ((1 - P) ** (n - x))
+    likelihoodArray = binomialCoefficient * (P ** x) * ((1 - P) ** (n - x))
+
+    return likelihoodArray
+
+
+def factorial(n):
+    """calculate factorial of n recursively"""
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
