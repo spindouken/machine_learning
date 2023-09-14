@@ -124,7 +124,7 @@ class MultiNormal:
         d = self.cov.shape[0]
 
         if x.shape != (d, 1):
-            raise ValueError("x must have the shape ({d}, 1)")
+            raise ValueError(f"x must have the shape ({d}, 1)")
 
         mean = self.mean
         covariance = self.cov
