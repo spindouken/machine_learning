@@ -3,6 +3,7 @@
 calculates the probability density function of a Gaussian distribution
 """
 import numpy as np
+pdf = __import__('5-pdf').pdf
 
 
 def pdf(X, m, S):
