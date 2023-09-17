@@ -22,10 +22,11 @@ def kmeans(X, k, iterations=1000):
     Returns: C, clss, or None, None on failure
     C is a numpy.ndarray of shape (k, d) containing the centroid means for
             each cluster
-        clss is a numpy.ndarray of shape (n,) containing the index of the cluster
-            in C that each data point belongs to
+        clss is a numpy.ndarray of shape (n,) containing
+            the index of the cluster
+                in C that each data point belongs to
     """
-    if not isinstance (X, np.ndarray) or not isinstance(k, int):
+    if not isinstance(X, np.ndarray) or not isinstance(k, int):
         return None
     if len(X.shape) != 2 or k < 1:
         return None
