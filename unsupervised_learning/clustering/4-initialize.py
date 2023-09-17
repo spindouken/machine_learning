@@ -3,6 +3,7 @@
 initializes variables for a Gaussian Mixture Model
 """
 import numpy as np
+kmeans = __import__('1-kmeans').kmeans
 
 
 def initialize(X, k):
