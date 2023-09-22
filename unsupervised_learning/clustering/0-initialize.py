@@ -19,3 +19,14 @@ def initialize(X, k):
         return None
     if len(X.shape) != 2 or k < 1:
         return None
+
+    n, d = X.shape
+
+    minValues = np.min(X, axis=0)
+    maxValues = np.max(X, axis=0)
+
+    # multivariate uniform distribution
+    centroids = np.random.uniform(minValues, maxValues, (k, d))
+
+    # return initialized centroids
+    return centroids
