@@ -65,6 +65,8 @@ def kmeans(X, k, iterations=1000):
         return None, None
 
     clusterCentroids = initialize(X, k)
+    if clusterCentroids is None:
+        return None, None
 
     # retrieve minimum and maximum values 4 each dimension of each data point
     minValues = np.min(X, axis=0)
@@ -105,7 +107,7 @@ def kmeans(X, k, iterations=1000):
         clusterCentroids = newCentroids  # update cluster centroids
 
         # break if convergence is reached
-        if np.allclose(initialCentroids, clusterCentroids, atol=1e-8):
+        if np.array_equal(clusterCentroids, initialCentroids):
             break
 
     return clusterCentroids, clss
