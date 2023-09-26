@@ -21,5 +21,5 @@ def initialize(X, k):
     """
     if not isinstance(X, np.ndarray) or not isinstance(k, int):
         return None, None, None
-    if k < 1:
+    if k < 1 or len(X.shape) != 2:
         return None, None, None
