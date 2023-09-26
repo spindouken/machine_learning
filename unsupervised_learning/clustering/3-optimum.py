@@ -33,7 +33,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         return None, None
     if len(X.shape) != 2 or kmin < 1 or kmax < 1 or iterations < 1:
         return None, None
-    if kmax < kmin:
+    if kmax <= kmin:
         return None, None
 
     clusterResults = []
@@ -44,13 +44,9 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     for k in range(kmin, kmax + 1):
         # run K-means algorithm
         centroids, labels = kmeans(X, k, iterations)
-        if centroids is None:
-            return None, None
 
         # calculate and store the current variance
         currentVariance = variance(X, centroids)
-        if currentVariance is None:
-            return None, None
 
         # if k is kmin, set current variance
         #   as base variance and append 0 to varianceDiffs
