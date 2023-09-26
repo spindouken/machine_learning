@@ -3,8 +3,9 @@
 tests 4 the optimum number of clusters by variance
 """
 import numpy as np
-kmeans = __import__('1-kmeans').kmeans
-variance = __import__('2-variance').variance
+
+kmeans = __import__("1-kmeans").kmeans
+variance = __import__("2-variance").variance
 
 
 def optimum_k(X, kmin=1, kmax=None, iterations=1000):
@@ -26,15 +27,17 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     """
     if (
         not isinstance(X, np.ndarray)
+        or len(X.shape) != 2
         or not isinstance(kmin, int)
+        or kmin < 1
         or not isinstance(kmax, int)
+        or kmax < 1
         or not isinstance(iterations, int)
+        or iterations < 1
+        or kmax <= kmin
     ):
         return None, None
-    if len(X.shape) != 2 or kmin < 1 or kmax < 1 or iterations < 1:
-        return None, None
-    if kmax <= kmin:
-        return None, None
+
     if kmax is None:
         kmax = X.shape[0]
 
@@ -61,7 +64,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
 
         # append K-means results 4 the current k
         clusterResults.append((centroids, labels))
-    
+
     results = clusterResults
     d_vars = varianceDiffs
 

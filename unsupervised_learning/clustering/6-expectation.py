@@ -26,7 +26,7 @@ def expectation(X, pi, m, S):
         or not isinstance(m, np.ndarray)
         or not isinstance(S, np.ndarray)
     ):
-        return None
+        return None, None
 
     if (
         len(X.shape) != 2
@@ -34,4 +34,4 @@ def expectation(X, pi, m, S):
         or len(m.shape) != 2
         or len(S.shape) != 3
     ):
-        return None
+        return None, None
