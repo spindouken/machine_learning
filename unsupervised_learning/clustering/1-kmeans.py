@@ -33,27 +33,6 @@ def initialize(X, k):
     return centroids
 
 
-def updateCentroids(X, clss, k, minValues, maxValues):
-    """
-    update centroids based on the points in each cluster
-    if a cluster has no points, reinitialize its centroid
-    """
-    d = X.shape[1]
-    newCentroids = np.zeros((k, d))
-
-    # iterate through each cluster centroid and update
-    for x in range(k):
-        # retrieve all data points in the current cluster
-        clusterPoints = X[clss == x]
-        # if cluster contains no data points, reinitialize cluster centroid
-        if len(clusterPoints) == 0:
-            newCentroids[x] = np.random.uniform(minValues, maxValues, d)
-        else:
-            # otherwise, update cluster centroid to mean of all data points
-            newCentroids[x] = np.mean(clusterPoints, axis=0)
-    return newCentroids
-
-
 def kmeans(X, k, iterations=1000):
     """
     X is a numpy.ndarray of shape (n, d) containing the dataset
@@ -93,8 +72,17 @@ def kmeans(X, k, iterations=1000):
         # make a copy to check for convergence later
         initialCentroids = clusterCentroids.copy()
 
-        # update centroids
-        clusterCentroids = updateCentroids(X, clss, k, minValues, maxValues)
+        newCentroids = np.zeros((k, d))
+        for i in range(k):
+            # retrieve all data points in the current cluster
+            clusterPoints = X[clss == i]
+            # if cluster is empty, reinitialize its centroid
+            if len(clusterPoints) == 0:
+                newCentroids[i] = np.random.uniform(minValues, maxValues, d)
+            else:
+                # otherwise, update cluster centroid to mean of its points
+                newCentroids[i] = np.mean(clusterPoints, axis=0)
+        clusterCentroids = newCentroids
 
         # break if convergence is reached
         if np.all(initialCentroids == clusterCentroids):
