@@ -33,6 +33,46 @@ def initialize(X, k):
     return centroids
 
 
+def calculateDistances(X, centroids):
+    """
+    calculate distances between each data point and cluster centroid
+    and store in dataDistances matrix
+    returns dataDistances
+        (each row x contains distances from X[x] to each centroid)
+    """
+    n, k = X.shape[0], centroids.shape[0]
+    dataDistances = np.zeros((n, k))
+
+    # iterate through each cluster centroid and calculate distances
+    for x in range(k):
+        # calculate distance from each data point to current centroid
+        distances = np.linalg.norm(X - centroids[x], axis=1)
+        # store distances in dataDistances matrix
+        dataDistances[:, x] = distances
+    return dataDistances
+
+
+def updateCentroids(X, clss, k, minValues, maxValues):
+    """
+    update centroids based on the points in each cluster
+    if a cluster has no points, reinitialize its centroid
+    """
+    d = X.shape[1]
+    newCentroids = np.zeros((k, d))
+
+    # iterate through each cluster centroid and update
+    for x in range(k):
+        # retrieve all data points in the current cluster
+        clusterPoints = X[clss == x]
+        # if cluster contains no data points, reinitialize cluster centroid
+        if len(clusterPoints) == 0:
+            newCentroids[x] = np.random.uniform(minValues, maxValues, d)
+        else:
+            # otherwise, update cluster centroid to mean of all data points
+            newCentroids[x] = np.mean(clusterPoints, axis=0)
+    return newCentroids
+
+
 def kmeans(X, k, iterations=1000):
     """
     X is a numpy.ndarray of shape (n, d) containing the dataset
@@ -63,37 +103,22 @@ def kmeans(X, k, iterations=1000):
     n, d = X.shape
 
     # iterate through assigned maximum number of iterations
-    for i in range(iterations):
-        dataDistances = np.zeros((n, k))
+    for x in range(iterations):
+        # calculate distances and assign classes
+        dataDistances = calculateDistances(X, clusterCentroids)
 
-        # calculate distances between each data point and cluster centroid
-        #   and store in dataDistances matrix
-        for x in range(n):
-            for y in range(k):
-                dataDistances[x, y] = np.linalg.norm(
-                    X[x] - clusterCentroids[y]
-                    )
         # holds index of cluster centroid with minimum distance to each point
         clss = np.argmin(dataDistances, axis=1)
+
         # make a copy of clusterCentroids to check for convergence later
         initialCentroids = clusterCentroids.copy()
 
-        # iterate through each cluster
-        for x in range(k):
-            # retrieve all data points in current cluster
-            clusterPoints = X[clss == x]
-            # if cluster contains no data points, reinitialize cluster centroid
-            if len(clusterPoints) == 0:
-                clusterCentroids[x] = np.random.uniform(
-                    minValues, maxValues, (1, d)
-                )
-            else:
-                # otherwise, update cluster centroid to mean of all data points
-                clusterCentroids[x] = np.mean(clusterPoints, axis=0)
+        # update centroids
+        clusterCentroids = updateCentroids(X, clss, k, minValues, maxValues)
 
-        # cconvergence occurs when clusterCentroids no longer change
+        # convergence occurs when clusterCentroids no longer change
         #   between iterations, so we return the current clusterCentroids
         if np.all(initialCentroids == clusterCentroids):
-            return clusterCentroids, clss
+            break
 
     return clusterCentroids, clss
