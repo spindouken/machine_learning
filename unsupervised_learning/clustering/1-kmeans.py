@@ -58,10 +58,6 @@ def kmeans(X, k, iterations=1000):
         return None, None
     if len(X.shape) != 2 or k < 1 or iterations < 1:
         return None, None
-    if X.shape[0] < k:
-        return None, None
-    if not isinstance(iterations, int) or iterations <= 0:
-        return None, None
 
     clusterCentroids = initialize(X, k)
 
@@ -104,7 +100,7 @@ def kmeans(X, k, iterations=1000):
         clusterCentroids = newCentroids  # update cluster centroids
 
         # break if convergence is reached
-        if np.all(initialCentroids == clusterCentroids):
+        if np.allclose(initialCentroids, clusterCentroids, atol=1e-8):
             break
 
     return clusterCentroids, clss
