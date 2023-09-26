@@ -59,10 +59,10 @@ def kmeans(X, k, iterations=1000):
         or not isinstance(k, int)
         or not isinstance(iterations, int)
     ):
-        return None, None, None
+        return None, None
 
     if len(X.shape) != 2 or k < 1 or iterations < 1:
-        return None, None, None
+        return None, None
 
     clusterCentroids = initialize(X, k)
 
