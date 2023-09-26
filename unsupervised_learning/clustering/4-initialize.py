@@ -20,6 +20,6 @@ def initialize(X, k):
             matrices for each cluster, initialized as identity matrices
     """
     if not isinstance(X, np.ndarray) or not isinstance(k, int):
-        return None
-    if len(X.shape) != 2 or k < 1:
-        return None
+        return None, None, None
+    if k < 1:
+        return None, None, None
