@@ -72,17 +72,27 @@ def kmeans(X, k, iterations=1000):
         # make a copy to check for convergence later
         initialCentroids = clusterCentroids.copy()
 
-        newCentroids = np.zeros((k, d))
-        for i in range(k):
-            # retrieve all data points in the current cluster
-            clusterPoints = X[clss == i]
-            # if cluster is empty, reinitialize its centroid
-            if len(clusterPoints) == 0:
-                newCentroids[i] = np.random.uniform(minValues, maxValues, d)
-            else:
-                # otherwise, update cluster centroid to mean of its points
-                newCentroids[i] = np.mean(clusterPoints, axis=0)
-        clusterCentroids = newCentroids
+        # find empty clusters by checking
+        #   if cluster indices are missing in 'clss'
+        mask = np.isin(np.arange(k), clss)
+        emptyClusters = np.where(np.logical_not(mask))[0]
+
+        # reinitialize centroids for empty clusters
+        clusterCentroids[emptyClusters] = np.random.uniform(
+            minValues, maxValues, (len(emptyClusters), d)
+        )
+
+        # calculate new centroids for non-empty clusters
+        newCentroids = np.array(
+            [
+                X[clss == i].mean(axis=0)
+                if i not in emptyClusters
+                else clusterCentroids[i]
+                for i in range(k)
+            ]
+        )
+
+        clusterCentroids = newCentroids  # update cluster centroids
 
         # break if convergence is reached
         if np.all(initialCentroids == clusterCentroids):
