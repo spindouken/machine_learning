@@ -23,10 +23,10 @@ def maximization(X, g):
         not isinstance(X, np.ndarray)
         or not isinstance(g, np.ndarray)
     ):
-        return None
+        return None, None, None
 
     if (
         len(X.shape) != 2
         or len(g.shape) != 2
     ):
-        return None
+        return None, None, None
