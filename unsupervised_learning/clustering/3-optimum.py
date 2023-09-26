@@ -38,7 +38,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
 
     clusterResults = []
     varianceDiffs = []
-    baseVariance = None  # reference variance 4 k = kmin
+    baseVariance = 0  # reference variance 4 k = kmin
 
     # loop through range of cluster sizes
     for k in range(kmin, kmax + 1):
