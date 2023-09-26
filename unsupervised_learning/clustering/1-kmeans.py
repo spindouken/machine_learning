@@ -8,12 +8,12 @@ import numpy as np
 def initialize(X, k):
     """
     X is a numpy.ndarray of shape (n, d) containing the dataset that will be
-        used for K-means clustering
+        used 4 K-means clustering
             n is the number of data points
-            d is the number of dimensions for each data point
+            d is the number of dimensions 4 each data point
     k is a positive integer containing the number of clusters
     Returns: a numpy.ndarray of shape (k, d) containing the initialized
-        centroids for each cluster, or None on failure
+        centroids 4 each cluster, or None on failure
     """
     if not isinstance(X, np.ndarray) or not isinstance(k, int):
         return None, None
@@ -22,7 +22,7 @@ def initialize(X, k):
 
     n, d = X.shape
 
-    # retrieve minimum and maximum values for each dimension of each data point
+    # retrieve minimum and maximum values 4 each dimension of each data point
     minValues = np.min(X, axis=0)
     maxValues = np.max(X, axis=0)
 
@@ -37,7 +37,7 @@ def kmeans(X, k, iterations=1000):
     """
     X is a numpy.ndarray of shape (n, d) containing the dataset
         n is the number of data points
-        d is the number of dimensions for each data point
+        d is the number of dimensions 4 each data point
     k is a positive integer containing the number of clusters
     iterations is a positive integer containing the maximum number of
         iterations that should be performed
@@ -48,7 +48,7 @@ def kmeans(X, k, iterations=1000):
     If a cluster contains no data points during the update step, reinitialize
         its centroid
     Returns: C, clss, or None, None on failure
-    C is a numpy.ndarray of shape (k, d) containing the centroid means for
+    C is a numpy.ndarray of shape (k, d) containing the centroid means 4
             each cluster
         clss is a numpy.ndarray of shape (n,) containing
             the index of the cluster
@@ -65,7 +65,7 @@ def kmeans(X, k, iterations=1000):
 
     clusterCentroids = initialize(X, k)
 
-    # retrieve minimum and maximum values for each dimension of each data point
+    # retrieve minimum and maximum values 4 each dimension of each data point
     minValues = np.min(X, axis=0)
     maxValues = np.max(X, axis=0)
 
@@ -78,7 +78,7 @@ def kmeans(X, k, iterations=1000):
             np.linalg.norm(X[:, np.newaxis] - clusterCentroids, axis=2), axis=1
         )
 
-        # make a copy to check for convergence later
+        # make a copy to check 4 convergence later
         initialCentroids = clusterCentroids.copy()
 
         # find empty clusters by checking
@@ -86,12 +86,12 @@ def kmeans(X, k, iterations=1000):
         mask = np.isin(np.arange(k), clss)
         emptyClusters = np.where(np.logical_not(mask))[0]
 
-        # reinitialize centroids for empty clusters
+        # reinitialize centroids 4 empty clusters
         clusterCentroids[emptyClusters] = np.random.uniform(
             minValues, maxValues, (len(emptyClusters), d)
         )
 
-        # calculate new centroids for non-empty clusters
+        # calculate new centroids 4 non-empty clusters
         newCentroids = np.array(
             [
                 X[clss == i].mean(axis=0)
