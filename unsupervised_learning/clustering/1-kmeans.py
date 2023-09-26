@@ -16,9 +16,9 @@ def initialize(X, k):
         centroids for each cluster, or None on failure
     """
     if not isinstance(X, np.ndarray) or not isinstance(k, int):
-        return None
+        return None, None
     if len(X.shape) != 2 or k < 1:
-        return None
+        return None, None
 
     n, d = X.shape
 
@@ -54,6 +54,15 @@ def kmeans(X, k, iterations=1000):
             the index of the cluster
                 in C that each data point belongs to
     """
+    if not isinstance(X, np.ndarray) or not isinstance(k, int):
+        return None, None
+    if len(X.shape) != 2 or k < 1 or iterations < 1:
+        return None, None
+    if X.shape[0] < k:
+        return None, None
+    if not isinstance(iterations, int) or iterations <= 0:
+        return None, None
+
     clusterCentroids = initialize(X, k)
 
     # retrieve minimum and maximum values for each dimension of each data point
