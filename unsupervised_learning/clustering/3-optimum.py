@@ -30,6 +30,36 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         or not isinstance(kmax, int)
         or not isinstance(iterations, int)
     ):
-        return None
+        return None, None
     if len(X.shape) != 2 or kmin < 1 or kmax < 1 or iterations < 1:
-        return None
+        return None, None
+
+    clusterResults = []
+    varianceDiffs = []
+    baseVariance = None  # reference variance for k = kmin
+
+    # loop through range of cluster sizes
+    for k in range(kmin, kmax + 1):
+        # run K-means algorithm
+        centroids, labels = kmeans(X, k, iterations)
+        if centroids is None:
+            return None, None
+
+        # calculate and store the current variance
+        currentVariance = variance(X, centroids)
+        if currentVariance is None:
+            return None, None
+
+        # if k is kmin, set current variance
+        #   as base variance and append 0 to varianceDiffs
+        if k == kmin:
+            baseVariance = currentVariance
+            varianceDiffs.append(0.0)  # variance difference is 0 for k = kmin
+        else:
+            # calculate and store the difference from the base variance
+            varianceDiffs.append(baseVariance - currentVariance)
+
+        # append K-means results for the current k
+        clusterResults.append((centroids, labels))
+
+    return clusterResults, varianceDiffs
