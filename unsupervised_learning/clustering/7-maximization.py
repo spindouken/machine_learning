@@ -22,17 +22,11 @@ def maximization(X, g):
     if (
         not isinstance(X, np.ndarray)
         or not isinstance(g, np.ndarray)
-        or not isinstance(pi, np.ndarray)
-        or not isinstance(m, np.ndarray)
-        or not isinstance(S, np.ndarray)
     ):
         return None, None, None
 
     if (
         len(X.shape) != 2
         or len(g.shape) != 2
-        or len(pi.shape) != 1
-        or len(m.shape) != 2
-        or len(S.shape) != 3
     ):
         return None, None, None
