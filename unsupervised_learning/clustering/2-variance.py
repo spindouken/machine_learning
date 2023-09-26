@@ -18,3 +18,17 @@ def variance(X, C):
         return None
     if len(X.shape) != 2 or len(C.shape) != 2:
         return None
+
+    # reshape X for broadcasting with C
+    reshapeX = np.reshape(X, (X.shape[0], 1, X.shape[1]))
+
+    # calculate the squared distance from each point to each centroid
+    squaredDistances = np.sum((reshapeX - C) ** 2, axis=2)
+    
+    # find the minimum squared distance to any centroid for each point
+    minSquaredDistances = np.min(squaredDistances, axis=1)
+
+    # sum up the minimum squared distances to get the total variance
+    variance = np.sum(minSquaredDistances)
+    
+    return variance
