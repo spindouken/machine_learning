@@ -33,25 +33,6 @@ def initialize(X, k):
     return centroids
 
 
-def calculateDistances(X, centroids):
-    """
-    calculate distances between each data point and cluster centroid
-    and store in dataDistances matrix
-    returns dataDistances
-        (each row x contains distances from X[x] to each centroid)
-    """
-    n, k = X.shape[0], centroids.shape[0]
-    dataDistances = np.zeros((n, k))
-
-    # iterate through each cluster centroid and calculate distances
-    for x in range(k):
-        # calculate distance from each data point to current centroid
-        distances = np.linalg.norm(X - centroids[x], axis=1)
-        # store distances in dataDistances matrix
-        dataDistances[:, x] = distances
-    return dataDistances
-
-
 def updateCentroids(X, clss, k, minValues, maxValues):
     """
     update centroids based on the points in each cluster
@@ -102,22 +83,20 @@ def kmeans(X, k, iterations=1000):
 
     n, d = X.shape
 
-    # iterate through assigned maximum number of iterations
-    for x in range(iterations):
-        # calculate distances and assign classes
-        dataDistances = calculateDistances(X, clusterCentroids)
+    # iterate through the maximum number of iterations
+    for _ in range(iterations):
+        # calculate distances and assign classes using broadcasting
+        clss = np.argmin(
+            np.linalg.norm(X[:, np.newaxis] - clusterCentroids, axis=2), axis=1
+        )
 
-        # holds index of cluster centroid with minimum distance to each point
-        clss = np.argmin(dataDistances, axis=1)
-
-        # make a copy of clusterCentroids to check for convergence later
+        # make a copy to check for convergence later
         initialCentroids = clusterCentroids.copy()
 
         # update centroids
         clusterCentroids = updateCentroids(X, clss, k, minValues, maxValues)
 
-        # convergence occurs when clusterCentroids no longer change
-        #   between iterations, so we return the current clusterCentroids
+        # break if convergence is reached
         if np.all(initialCentroids == clusterCentroids):
             break
 
