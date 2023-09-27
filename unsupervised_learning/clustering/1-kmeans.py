@@ -91,7 +91,7 @@ def kmeans(X, k, iterations=1000):
             np.linalg.norm(X[:, np.newaxis] - newCentroids, axis=2), axis=1
         )
 
-        # check for convergence
+        # check 4 convergence
         if np.array_equal(newCentroids, clusterCentroids):
             break
 
