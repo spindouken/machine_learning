@@ -9,14 +9,8 @@ def pca(X, var=0.95):
     """
     X is a numpy.ndarray of shape (n, d) where:
     """
-    # mean centering the data for PCA
-    # first center the dataset around the origin
-    #   by subtracting the mean of each feature from all data points
-    featureMeans = np.mean(X, axis=0)
-    B = X - featureMeans
-
     # singular value decomposition (SVD) on mean centered data
-    U, S, Vt = np.linalg.svd(B, full_matrices=False)
+    U, S, Vt = np.linalg.svd(X, full_matrices=False)
 
     # summing up the squares of singular values to get total variance
     totalVariance = np.sum(S ** 2)
