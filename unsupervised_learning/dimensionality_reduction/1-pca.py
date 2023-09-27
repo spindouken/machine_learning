@@ -14,6 +14,10 @@ def pca(X, ndim):
     Returns: T, a numpy.ndarray of shape (n, ndim) containing the transformed
         version of X
     """
+    # mean center the data
+    mean = np.mean(X, axis=0)
+    X -= mean
+
     # singular Value Decomposition (SVD)
     U, S, Vt = np.linalg.svd(X, full_matrices=False)
 
