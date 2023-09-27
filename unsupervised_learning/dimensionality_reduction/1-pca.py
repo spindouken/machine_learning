@@ -14,3 +14,15 @@ def pca(X, ndim):
     Returns: T, a numpy.ndarray of shape (n, ndim) containing the transformed
         version of X
     """
+    # singular Value Decomposition (SVD)
+    U, S, Vt = np.linalg.svd(X, full_matrices=False)
+
+    # select the top 'ndim' right singular vectors
+    #   these vectors form our weights matrix W
+    W = Vt[:ndim].T
+
+    # transform the original dataset
+    #   perform matrix multiplication between X and W to get T
+    T = np.dot(X, W)
+
+    return T
