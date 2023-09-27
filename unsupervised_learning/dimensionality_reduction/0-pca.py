@@ -13,18 +13,13 @@ def pca(X, var=0.95):
     U, S, Vt = np.linalg.svd(X, full_matrices=False)
 
     # summing up the squares of singular values to get total variance
-    totalVariance = np.sum(S ** 2)
+    totalVariance = np.sum(S**2)
 
-    retainedVariance = 0
-    numComponents = 0
+    # calculate the retained variance for each component
+    retainedVariance = np.cumsum(S**2) / totalVariance
 
-    # loop through each singular value in 'S'
-    for singularValue in S:
-        retainedVariance += (singularValue ** 2) / totalVariance
-        numComponents += 1
-        # stop when we hit the required variance
-        if retainedVariance >= var:
-            break
+    # find the number of components needed to retain the given variance
+    numComponents = np.argmax(retainedVariance >= var) + 1
 
     # grab the top 'numComponents' columns from
     #   Vt's transpose for our weight matrix W
