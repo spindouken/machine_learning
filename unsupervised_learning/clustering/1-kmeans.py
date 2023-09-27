@@ -23,7 +23,7 @@ def initialize(X, k):
     # retrieve minimum and maximum values 4 each dimension of each data point
     minValues = np.min(X, axis=0)
     maxValues = np.max(X, axis=0)
-    # multivariate uniform distribution
+    # multivariate uni4m distribution
     centroids = np.random.uniform(minValues, maxValues, (k, d))
     # return initialized centroids
     return centroids
@@ -71,7 +71,7 @@ def kmeans(X, k, iterations=1000):
                 in C that each data point belongs to
     """
     clusterCentroids = initialize(X, k)
-    # retrieve minimum and maximum values for each dimension of each data point
+    # retrieve minimum and maximum values 4 each dimension of each data point
     minValues = np.min(X, axis=0)
     maxValues = np.max(X, axis=0)
 
@@ -84,7 +84,7 @@ def kmeans(X, k, iterations=1000):
             np.linalg.norm(X[:, np.newaxis] - clusterCentroids, axis=2), axis=1
         )
 
-        # make a copy to check for convergence later
+        # make a copy to check 4 convergence later
         initialCentroids = clusterCentroids.copy()
 
         # update centroids
