@@ -29,25 +29,6 @@ def initialize(X, k):
     return centroids
 
 
-def calculateDistances(X, centroids):
-    """
-    calculate distances between each data point and cluster centroid
-    and store in dataDistances matrix
-    returns dataDistances
-        (each row x contains distances from X[x] to each centroid)
-    """
-    n, k = X.shape[0], centroids.shape[0]
-    dataDistances = np.zeros((n, k))
-
-    # iterate through each cluster centroid and calculate distances
-    for x in range(k):
-        # calculate distance from each data point to current centroid
-        distances = np.linalg.norm(X - centroids[x], axis=1)
-        # store distances in dataDistances matrix
-        dataDistances[:, x] = distances
-    return dataDistances
-
-
 def updateCentroids(X, clss, k, minValues, maxValues):
     """
     update centroids based on the points in each cluster
@@ -55,7 +36,6 @@ def updateCentroids(X, clss, k, minValues, maxValues):
     """
     d = X.shape[1]
     newCentroids = np.zeros((k, d))
-
     # iterate through each cluster centroid and update
     for x in range(k):
         # retrieve all data points in the current cluster
@@ -73,7 +53,7 @@ def kmeans(X, k, iterations=1000):
     """
     X is a numpy.ndarray of shape (n, d) containing the dataset
         n is the number of data points
-        d is the number of dimensions 4 each data point
+        d is the number of dimensions for each data point
     k is a positive integer containing the number of clusters
     iterations is a positive integer containing the maximum number of
         iterations that should be performed
@@ -84,34 +64,33 @@ def kmeans(X, k, iterations=1000):
     If a cluster contains no data points during the update step, reinitialize
         its centroid
     Returns: C, clss, or None, None on failure
-    C is a numpy.ndarray of shape (k, d) containing the centroid means 4
+    C is a numpy.ndarray of shape (k, d) containing the centroid means for
             each cluster
         clss is a numpy.ndarray of shape (n,) containing
             the index of the cluster
                 in C that each data point belongs to
     """
     clusterCentroids = initialize(X, k)
-    # retrieve minimum and maximum values 4 each dimension of each data point
+    # retrieve minimum and maximum values for each dimension of each data point
     minValues = np.min(X, axis=0)
     maxValues = np.max(X, axis=0)
+
     n, d = X.shape
 
-    # iterate through assigned maximum number of iterations
-    for x in range(iterations):
-        # calculate distances and assign classes
-        dataDistances = calculateDistances(X, clusterCentroids)
+    # iterate through the maximum number of iterations
+    for _ in range(iterations):
+        # calculate distances and assign classes using broadcasting
+        clss = np.argmin(
+            np.linalg.norm(X[:, np.newaxis] - clusterCentroids, axis=2), axis=1
+        )
 
-        # holds index of cluster centroid with minimum distance to each point
-        clss = np.argmin(dataDistances, axis=1)
-
-        # make a copy of clusterCentroids to check 4 convergence later
+        # make a copy to check for convergence later
         initialCentroids = clusterCentroids.copy()
 
         # update centroids
         clusterCentroids = updateCentroids(X, clss, k, minValues, maxValues)
 
-        # convergence occurs when clusterCentroids no longer change
-        #   between iterations, so we return the current clusterCentroids
+        # break if convergence is reached
         if np.all(initialCentroids == clusterCentroids):
             break
 
