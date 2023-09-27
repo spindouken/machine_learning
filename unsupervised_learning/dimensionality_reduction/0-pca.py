@@ -14,9 +14,10 @@ def pca(X, var=0.95):
     var is the fraction of the variance that the PCA transformation should
         maintain
 
+    variables:
     U, S, Vt: result of SVD on centeredData
         S' contains the singular values, indicating
-            the importance of corresponding vectors in Vt
+            the weight of corresponding vectors in Vt
     totalVariance: sum of the squares of all singular values
         represents total data variance
     retainedVariance: cccumulates the variance
@@ -24,6 +25,11 @@ def pca(X, var=0.95):
     numComponents: Counts the number of singular values
         (principal components) needed to achieve the desired 'var'
         Used to construct 'W'
+
+    result of singular value decomposition (SVD) on mean centered data:
+        U: left singular vectors
+        S: singular values
+        Vt: right singular vectors
 
     Returns: the weights matrix, W, that maintains var fraction of X‘s
         original variance
