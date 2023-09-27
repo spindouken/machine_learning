@@ -68,10 +68,6 @@ def kmeans(X, k, iterations=1000):
     if clusterCentroids is None:
         return None, None
 
-    # retrieve minimum and maximum values 4 each dimension of each data point
-    minValues = np.min(X, axis=0)
-    maxValues = np.max(X, axis=0)
-
     n, d = X.shape
 
     # iterate through the maximum number of iterations
@@ -81,33 +77,25 @@ def kmeans(X, k, iterations=1000):
             np.linalg.norm(X[:, np.newaxis] - clusterCentroids, axis=2), axis=1
         )
 
-        # make a copy to check 4 convergence later
-        initialCentroids = clusterCentroids.copy()
-
-        # find empty clusters by checking
-        #   if cluster indices are missing in 'clss'
-        mask = np.isin(np.arange(k), clss)
-        emptyClusters = np.where(np.logical_not(mask))[0]
-
-        # reinitialize centroids 4 empty clusters
-        clusterCentroids[emptyClusters] = np.random.uniform(
-            minValues, maxValues, (len(emptyClusters), d)
-        )
-
         # calculate new centroids 4 non-empty clusters
-        newCentroids = np.array(
-            [
-                X[clss == i].mean(axis=0)
-                if i not in emptyClusters
-                else clusterCentroids[i]
-                for i in range(k)
-            ]
+        newCentroids = np.zeros((k, d))
+        for i in range(k):
+            clusterPoints = X[clss == i]
+            if clusterPoints.size == 0:
+                newCentroids[i] = initialize(X, 1)
+            else:
+                newCentroids[i] = np.mean(clusterPoints, axis=0)
+
+        # recalculate cluster assignments
+        clss = np.argmin(
+            np.linalg.norm(X[:, np.newaxis] - newCentroids, axis=2), axis=1
         )
 
-        clusterCentroids = newCentroids  # update cluster centroids
-
-        # break if convergence is reached
-        if np.array_equal(clusterCentroids, initialCentroids):
+        # check for convergence
+        if np.array_equal(newCentroids, clusterCentroids):
             break
+
+        # update centroids
+        clusterCentroids = newCentroids
 
     return clusterCentroids, clss
