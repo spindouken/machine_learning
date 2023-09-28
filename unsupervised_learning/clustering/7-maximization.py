@@ -20,13 +20,9 @@ def maximization(X, g):
             covariance matrices for each cluster
     """
     if (
-        not isinstance(X, np.ndarray)
-        or not isinstance(g, np.ndarray)
-    ):
-        return None, None, None
-
-    if (
-        len(X.shape) != 2
-        or len(g.shape) != 2
+        not isinstance(X, np.ndarray) or not isinstance(g, np.ndarray)
+        or len(X.shape) != 2 or len(g.shape) != 2
+        or not np.array_equal(X.shape[0], g.shape[1])
+        or not np.allclose(g.sum(axis=0), 1.0)
     ):
         return None, None, None
