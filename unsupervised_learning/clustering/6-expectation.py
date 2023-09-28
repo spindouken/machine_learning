@@ -25,13 +25,13 @@ def expectation(X, pi, m, S):
         or not isinstance(pi, np.ndarray)
         or not isinstance(m, np.ndarray)
         or not isinstance(S, np.ndarray)
-    ):
-        return None, None
-
-    if (
-        len(X.shape) != 2
+        or len(X.shape) != 2
         or len(pi.shape) != 1
         or len(m.shape) != 2
         or len(S.shape) != 3
+        or not np.isclose(pi.sum(), 1)
+        or m.shape[1] != S.shape[1]
+        or S.shape[1] != S.shape[2]
+        or m.shape[0] != S.shape[0]
     ):
         return None, None
