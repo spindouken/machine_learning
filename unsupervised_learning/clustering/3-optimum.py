@@ -32,17 +32,13 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         or kmin < 1
         or not isinstance(iterations, int)
         or iterations < 1
+        or (kmax is not None and (not isinstance(kmax, int) or kmax <= 0))
+        or (kmax is not None and kmax <= kmin)
     ):
         return None, None
 
     if kmax is None:
         kmax = X.shape[0]
-    
-    if kmax <= kmin:
-        return None, None
-
-    if kmax < 1 or kmax < kmin:
-        return None, None
 
     clusterResults = []
     varianceDiffs = []
