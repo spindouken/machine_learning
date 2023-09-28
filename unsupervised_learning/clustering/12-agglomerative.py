@@ -17,3 +17,12 @@ def agglomerative(X, dist):
     Returns: clss, a numpy.ndarray of shape (n,) containing the cluster
         indices for each data point
     """
+    # calculate linkage matrix using ward linkage
+    linkageMatrix = scipy.cluster.hierarchy.linkage(X, 'ward')
+    # generate cluster labels for data points
+    clss = scipy.cluster.hierarchy.fcluster(linkageMatrix, dist, 'distance')
+    # create dendrogram
+    scipy.cluster.hierarchy.dendrogram(linkageMatrix, color_threshold=dist)
+    plt.show()
+
+    return clss

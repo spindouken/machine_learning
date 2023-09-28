@@ -3,6 +3,7 @@
 performs K-means on a dataset
 """
 import sklearn.cluster
+import numpy as np
 
 
 def kmeans(X, k):
@@ -19,3 +20,7 @@ def kmeans(X, k):
         return None
     if not isinstance(k, int) or k <= 0:
         return None
+
+    cluster = sklearn.cluster
+    C, clss, _ = cluster.k_means(X, k)
+    return C, clss
