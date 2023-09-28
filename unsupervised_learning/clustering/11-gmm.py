@@ -3,7 +3,6 @@
 calculates a GMM from a dataset
 """
 import sklearn.mixture
-import numpy as np
 
 
 def gmm(X, k):
@@ -20,12 +19,6 @@ def gmm(X, k):
         bic is a numpy.ndarray of shape (kmax - kmin + 1) containing the BIC
             value for each cluster size tested
     """
-    if not isinstance(X, np.ndarray) or not isinstance(k, int):
-        return None, None, None, None, None
-
-    if len(X.shape) != 2 or len(X.shape) < 1 or k < 1:
-        return None, None, None, None, None
-
     GMM = sklearn.mixture.GaussianMixture(k).fit(X)
 
     return (
