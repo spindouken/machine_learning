@@ -16,7 +16,7 @@ def regular(P):
     """
     if len(P.shape) != 2 or P.shape[0] != P.shape[1]:
         return None
-    
+
     if not np.allclose(P.sum(axis=1), 1):
         return None
 
@@ -39,6 +39,17 @@ def regular(P):
     # normalize the eigenvector
     #   s=v/(sum(v))
     steadyStateProbs = eigen_vOne / eigen_vOne.sum()
-    steadyStateProbs = steadyStateProbs.reshape((1, -1))
 
-    return steadyStateProbs
+    maxIterations = 100
+    power = 2  # start with power of 2
+
+    for _ in range(maxIterations):
+        # raise the matrix to the current power iteration
+        transitionMatrixCurrentPower = np.linalg.matrix_power(P, power)
+        # check for regularity
+        if np.any(np.all(transitionMatrixCurrentPower > 1e-9, axis=1)):
+            steadyStateProbs = steadyStateProbs.reshape((1, -1))
+            return steadyStateProbs
+        power += 1  # increment the power for the next iteration
+    # return None if maxIterations is reached without finding regularity
+    return None
