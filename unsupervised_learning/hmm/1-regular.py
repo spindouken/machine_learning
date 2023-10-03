@@ -14,3 +14,24 @@ def regular(P):
     Returns: a numpy.ndarray of shape (1, n) containing the steady state
         probabilities, or None on failure
     """
+    eigenvalues, eigenvectors = np.linalg.eig(P.T)
+    # np.abs(eigenvalues - 1) creates an array containing
+    #   the absolute value differences between each eigenvalue and 1
+    # np.argmin() then finds the index of the smallest value in that array
+    # this is why we use closestToOneIdx
+    #   (the index of the eigenvalue closest to 1)
+    closestToOneIdx = np.argmin(np.abs(eigenvalues - 1))
+
+    # extract the eigenvector corresponding to the eigenvalue closest to 1
+    # we use this index (of a columns' row numbers) to slice
+    #   the eigenvectors array and obtain the relevant eigenvector
+    eigen_vOne = eigenvectors[:, closestToOneIdx]
+
+    if eigen_vOne.size == 0:
+        return None
+
+    # normalize the eigenvector
+    #   s=v/(sum(v))
+    steadyStateProbs = eigen_vOne / eigen_vOne.sum()
+
+    return steadyStateProbs
