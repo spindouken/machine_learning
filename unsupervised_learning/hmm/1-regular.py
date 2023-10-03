@@ -14,6 +14,12 @@ def regular(P):
     Returns: a numpy.ndarray of shape (1, n) containing the steady state
         probabilities, or None on failure
     """
+    if len(P.shape) != 2 or P.shape[0] != P.shape[1]:
+        return None
+    
+    if not np.allclose(P.sum(axis=1), 1):
+        return None
+
     eigenvalues, eigenvectors = np.linalg.eig(P.T)
     # np.abs(eigenvalues - 1) creates an array containing
     #   the absolute value differences between each eigenvalue and 1
