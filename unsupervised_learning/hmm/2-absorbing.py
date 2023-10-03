@@ -13,3 +13,17 @@ def absorbing(P):
         n is the number of states in the markov chain
     Returns: True if it is absorbing, or False on failure
     """
+    n = P.shape[0]
+    # np.diag(P) extracts the diagonal of P and enumerate gives
+    #   the index of each element in the diagonal and the element itself
+    # if the element is 1, it is an absorbing state
+    #   and is added to list absorbingStates
+    absorbingStates = [
+        stateIndex for stateIndex, value in enumerate(np.diag(P)) if value == 1
+    ]
+
+    # if no absorbing states, return False
+    if len(absorbingStates) == 0:
+        return False
+
+    return True
