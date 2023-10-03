@@ -33,5 +33,6 @@ def regular(P):
     # normalize the eigenvector
     #   s=v/(sum(v))
     steadyStateProbs = eigen_vOne / eigen_vOne.sum()
+    steadyStateProbs = steadyStateProbs.reshape((1, -1))
 
     return steadyStateProbs
