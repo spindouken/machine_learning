@@ -29,3 +29,22 @@ def forward(Observation, Emission, Transition, Initial):
             F[i, j] is the probability of being in hidden state i at time j
             given the previous observations
     """
+    # retrieve T: number of observations
+    T = Observation.shape[0]
+    # retrieve N: number of hidden states
+    N, M = Emission.shape
+
+    # create forward path prob matrix F[N, T]
+    F = np.zeros((N, T))
+
+    # fill first column of F using Initial and first Observation
+    F[:, 0] = Initial.T * Emission[:, Observation[0]]
+
+    # recursion to update forward probabilities
+    for t in range(1, T):
+        F[:, t] = F[:, t-1] @ Transition * Emission[:, Observation[t]]
+
+    # sum up the forward probabilities in the last column of F
+    P = np.sum(F[:, -1])
+
+    return P, F
