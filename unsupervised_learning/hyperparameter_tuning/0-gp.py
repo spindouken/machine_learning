@@ -25,6 +25,10 @@ class GaussianProcess:
         Sets the public instance attribute K, representing
             the current covariance kernel matrix for the Gaussian process
         """
+        self.X = X_init
+        self.Y = Y_init
+        self.l = l
+        self.sigma_f = sigma_f
 
     def kernel(self, X1, X2):
         """
@@ -35,3 +39,5 @@ class GaussianProcess:
         Returns: the covariance kernel matrix as a numpy.ndarray
             of shape (m, n)
         """
+        X1 = np.array(X1)
+        X2 = np.array(X2)
