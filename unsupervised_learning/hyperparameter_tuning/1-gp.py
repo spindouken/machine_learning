@@ -25,6 +25,11 @@ class GaussianProcess:
         Sets the public instance attribute K, representing
             the current covariance kernel matrix for the Gaussian process
         """
+        self.X = X_init
+        self.Y = Y_init
+        self.l = l
+        self.sigma_f = sigma_f
+        self.K = self.kernel(X_init, X_init)
 
     def kernel(self, X1, X2):
         """
@@ -35,6 +40,20 @@ class GaussianProcess:
         Returns: the covariance kernel matrix as a numpy.ndarray
             of shape (m, n)
         """
+        # calculate sum of squares for each row in X1
+        #   and reshape to column vector
+        X1sum = np.sum(X1**2, 1).reshape(-1, 1)
+        # calculate sum of squares for each row in X2
+        X2sum = np.sum(X2**2, 1)
+        # compute squared Euclidean distance
+        #   between each pair of points in X1 and X2
+        squaredDistance = X1sum + X2sum - 2 * (X1 @ X2.T)
+        # calculate the covariance kernel matrix using the RBF kernel formula
+        #   RBF = K(x_i, x_j) = sigma_f^2 * exp(-0.5 / l^2 * squaredDistance)
+        covarianceKernelMatrix = (self.sigma_f**2) * np.exp(
+            -0.5 / (self.l**2) * squaredDistance
+        )
+        return covarianceKernelMatrix
 
     def predict(self, X_s):
         """
@@ -49,3 +68,32 @@ class GaussianProcess:
             sigma is a numpy.ndarray of shape (s,) containing the standard
                 deviation for each point in X_s, respectively
         """
+        # calculate covariance matrix between training data and sample points
+        # (used to compute relationship betwn new sample points&existing data)
+        K_s = self.kernel(self.X, X_s)
+
+        # calculate the inverse of the training data covariance matrix
+        # (required to find the mean and covariance of predictions)
+        K_inv = np.linalg.inv(self.K)
+
+        # calculate covariance matrix for sample points K_ss
+        # (required to account for inherent variability in prediction)
+        K_ss = self.kernel(X_s, X_s)
+
+        # compute intermediate mean vector using formula:
+        #   mu_s = K_s^T * K_inv * Y
+        # (computes predicted mean values for new points)
+        mu = K_s.T @ K_inv @ self.Y
+
+        # reshape mean vector to match output shape
+        mu = mu.reshape(-1)
+
+        # compute covariance matrix for sample points using formula:
+        #   cov_s = K_ss - K_s^T * K_inv * K_s
+        # (required for capturing how predictions vary around the mean)
+        cov_s = K_ss - (K_s.T @ K_inv @ K_s)
+
+        # extract variances (diagonal of the covariance matrix)
+        # (essential for providing standard deviation of predictions)
+        sigma = np.diag(cov_s)
+        return mu, sigma
