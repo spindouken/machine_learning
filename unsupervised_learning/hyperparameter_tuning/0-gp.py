@@ -40,3 +40,15 @@ class GaussianProcess:
         Returns: the covariance kernel matrix as a numpy.ndarray
             of shape (m, n)
         """
+        # calculate sum of squares for each row in X1 and reshape to column vector
+        X1sum = np.sum(X1 ** 2, 1).reshape(-1, 1)
+        # calculate sum of squares for each row in X2
+        X2sum = np.sum(X2 ** 2, 1)
+        # compute squared Euclidean distance between each pair of points in X1 and X2
+        squaredDistance = X1sum + X2sum - 2 * (X1 @ X2.T)
+        # calculate the covariance kernel matrix using the RBF kernel formula
+        #   RBF = K(x_i, x_j) = sigma_f^2 * exp(-0.5 / l^2 * squaredDistance)
+        covarianceKernelMatrix = (self.sigma_f**2) * np.exp(
+            -0.5 / (self.l**2) * squaredDistance
+        )
+        return covarianceKernelMatrix
