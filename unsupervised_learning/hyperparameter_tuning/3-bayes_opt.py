@@ -49,3 +49,8 @@ class BayesianOptimization:
             xsi: the exploration-exploitation factor
             minimize: a bool for minimization versus maximization
         """
+        self.f = f
+        self.gp = GP(X_init, Y_init, l, sigma_f)
+        self.X_s = X_init
+        self.xsi = xsi
+        self.minimize = minimize
