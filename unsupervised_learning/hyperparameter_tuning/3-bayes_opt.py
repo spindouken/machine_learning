@@ -4,13 +4,15 @@ create the class BayesianOptimization that performs Bayesian optimization
     on a noiseless 1D Gaussian process
 """
 import numpy as np
-GP = __import__('2-gp').GaussianProcess
+
+GP = __import__("2-gp").GaussianProcess
 
 
 class BayesianOptimization:
     """
     performs Bayesian optimization
     """
+
     def __init__(
         self,
         f,
@@ -51,6 +53,8 @@ class BayesianOptimization:
         """
         self.f = f
         self.gp = GP(X_init, Y_init, l, sigma_f)
-        self.X_s = np.linspace(bounds[0], bounds[1], num=ac_samples).reshape(-1, 1)
+        self.X_s = np.linspace(bounds[0], bounds[1], num=ac_samples).reshape(
+            -1, 1
+        )
         self.xsi = xsi
         self.minimize = minimize
