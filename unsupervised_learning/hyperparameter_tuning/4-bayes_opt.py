@@ -4,6 +4,8 @@ create the class BayesianOptimization that performs Bayesian optimization
     on a noiseless 1D Gaussian process
 """
 import numpy as np
+from scipy.stats import norm
+
 GP = __import__('2-gp').GaussianProcess
 
 
@@ -49,6 +51,47 @@ class BayesianOptimization:
             xsi: the exploration-exploitation factor
             minimize: a bool for minimization versus maximization
         """
+        self.f = f
+        self.gp = GP(X_init, Y_init, l, sigma_f)
+        self.X_s = np.linspace(bounds[0], bounds[1], ac_samples).reshape(-1, 1)
+        self.xsi = xsi
+        self.minimize = minimize
+
+    def calculateExpectedImprovement(
+        self, predictedMean, predictedStandardDeviation
+    ):
+        """
+        calculate the expected improvement (EI)
+            based on predicted mean and standard deviation
+
+        EI formula:
+        EI = (improvement) * CDF(Z) + (predicted standard deviation) * PDF(Z)
+            Z = improvement / predicted standard deviation
+
+        Returns:
+            numpy.ndarray: containing the EI for each sample point
+        """
+        # determine the optimal sample based on the goal
+        #   (minimization or maximization)
+        optimalSample = (
+            np.min(self.gp.Y) if self.minimize else np.max(self.gp.Y)
+        )
+
+        # calculate improvement based on the goal
+        improvement = (
+            optimalSample - predictedMean - self.xsi
+            if self.minimize
+            else predictedMean - optimalSample - self.xsi
+        )
+
+        # calculate expected improvement
+        with np.errstate(divide="warn"):
+            Z = improvement / predictedStandardDeviation
+            EI = improvement * norm.cdf(
+                Z
+            ) + predictedStandardDeviation * norm.pdf(Z)
+            EI[predictedStandardDeviation == 0.0] = 0.0
+        return EI
 
     def acquisition(self):
         """
@@ -60,4 +103,16 @@ class BayesianOptimization:
             EI is a numpy.ndarray of shape (ac_samples,) containing
                 the expected improvement of each potential sample
         """
+        predictedMean, predictedStandardDeviation = self.gp.predict(self.X_s)
+
+        EI = self.calculateExpectedImprovement(
+            predictedMean, predictedStandardDeviation
+        )
+
+        # find next best sample point based on the goal
+        #   (minimization or maximization)
+        bestSampleidx = np.argmax(EI) if self.minimize else np.argmin(EI)
+        # find the next best sample point
+        X_next = self.X_s[bestSampleidx]
+
         return X_next, EI
