@@ -2,7 +2,7 @@
 """
 creates a variational autoencoder
 """
-import tensorflow.keras as K
+import tensorflow.keras as keras
 import tensorflow as tf
 
 
