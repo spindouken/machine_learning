@@ -8,30 +8,27 @@ import tensorflow.keras as keras
 def buildEncoder(input_dims, hidden_layers, latent_dims):
     """build encoder"""
     encoderInput = keras.Input(shape=(input_dims,))
+    x = encoderInput
 
-    x = keras.layers.Dense(units=hidden_layers[0], activation="relu")(
-        encoderInput
-    )
-
-    for units in hidden_layers[1:]:
+    for units in hidden_layers:
         x = keras.layers.Dense(units=units, activation="relu")(x)
 
     encoderOutput = keras.layers.Dense(
         units=latent_dims, activation="relu"
     )(x)
 
-    return keras.Model(inputs=encoderInput, outputs=encoderOutput)
+    return (
+        keras.Model(inputs=encoderInput, outputs=encoderOutput),
+        encoderInput,
+    )
 
 
 def buildDecoder(latent_dims, hidden_layers, output_dims):
     """build decoder"""
     decoderInput = keras.Input(shape=(latent_dims,))
+    x = decoderInput
 
-    x = keras.layers.Dense(units=hidden_layers[-1], activation="relu")(
-        decoderInput
-    )
-
-    for units in reversed(hidden_layers[:-1]):
+    for units in reversed(hidden_layers):
         x = keras.layers.Dense(units=units, activation="relu")(x)
 
     decoderOutput = keras.layers.Dense(
@@ -39,20 +36,6 @@ def buildDecoder(latent_dims, hidden_layers, output_dims):
     )(x)
 
     return keras.Model(inputs=decoderInput, outputs=decoderOutput)
-
-
-def assembleAutoencoder(encoder, decoder):
-    """assemble autoencoder from parts (encoder, decoder))"""
-    auto = keras.Sequential()
-
-    for layer in encoder.layers:
-        auto.add(layer)
-
-    for layer in decoder.layers[1:]:
-        auto.add(layer)
-
-    auto.compile(optimizer="adam", loss="binary_crossentropy")
-    return auto
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
@@ -75,7 +58,15 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
         except for the last layer in the decoder,
         which should use sigmoid
     """
-    encoder = buildEncoder(input_dims, hidden_layers, latent_dims)
+    encoder, encoderInput = buildEncoder(
+        input_dims, hidden_layers, latent_dims
+    )
     decoder = buildDecoder(latent_dims, hidden_layers, input_dims)
-    auto = assembleAutoencoder(encoder, decoder)
+
+    encodedOutput = encoder(encoderInput)
+    decodedOutput = decoder(encodedOutput)
+
+    auto = keras.Model(inputs=encoderInput, outputs=decodedOutput)
+    auto.compile(optimizer="adam", loss="binary_crossentropy")
+
     return encoder, decoder, auto
