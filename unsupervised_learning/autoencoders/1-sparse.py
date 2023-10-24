@@ -12,11 +12,7 @@ def buildEncoder(input_dims, hidden_layers, latent_dims, lambtha):
     x = encoderInput
 
     for units in hidden_layers:
-        x = keras.layers.Dense(
-            units=units,
-            activation="relu",
-            activity_regularizer=regularizer,
-        )(x)
+        x = keras.layers.Dense(units=units, activation="relu")(x)
 
     encoderOutput = keras.layers.Dense(
         units=latent_dims,
