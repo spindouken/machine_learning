@@ -43,12 +43,15 @@ def buildDecoder(latent_dims, hidden_layers, output_dims):
 
 def assembleAutoencoder(encoder, decoder):
     """assemble autoencoder from parts (encoder, decoder))"""
-    autoencoderInput = encoder.input
-    autoencoderOutput = decoder(encoder.output)
+    auto = keras.Sequential()
 
-    auto = keras.Model(inputs=autoencoderInput, outputs=autoencoderOutput)
+    for layer in encoder.layers:
+        auto.add(layer)
+
+    for layer in decoder.layers[1:]:
+        auto.add(layer)
+
     auto.compile(optimizer="adam", loss="binary_crossentropy")
-
     return auto
 
 
