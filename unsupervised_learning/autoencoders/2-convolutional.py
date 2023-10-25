@@ -5,6 +5,46 @@ creates a convolutional autoencoder
 import tensorflow.keras as keras
 
 
+def buildEncoder(input_dims, filters):
+    """build encoder"""
+    encoderInput = keras.Input(shape=input_dims)
+    x = encoderInput
+
+    for f in filters:
+        x = keras.layers.Conv2D(
+            f, (3, 3), activation="relu", padding="same"
+        )(x)
+        x = keras.layers.MaxPooling2D((2, 2), padding="same")(x)
+
+    encoderOutput = x
+
+    return (
+        keras.Model(inputs=encoderInput, outputs=encoderOutput),
+        encoderInput,
+    )
+
+
+def buildDecoder(latent_dims, filters):
+    """build decoder"""
+    decoderInput = keras.Input(shape=latent_dims)
+    x = decoderInput
+
+    for f in reversed(filters[:-1]):
+        x = keras.layers.Conv2D(
+            f, (3, 3), activation="relu", padding="same"
+        )(x)
+        x = keras.layers.UpSampling2D((2, 2))(x)
+
+    x = keras.layers.Conv2D(filters[-1], (3, 3), activation="relu")(x)
+    x = keras.layers.UpSampling2D((2, 2))(x)
+
+    decoderOutput = keras.layers.Conv2D(
+        1, (3, 3), activation="sigmoid", padding="same"
+    )(x)
+
+    return keras.Model(inputs=decoderInput, outputs=decoderOutput)
+
+
 def autoencoder(input_dims, filters, latent_dims):
     """
     input_dims is a tuple of integers containing the dimensions of the model
@@ -31,3 +71,13 @@ def autoencoder(input_dims, filters, latent_dims):
     The autoencoder model should be compiled using adam optimization and
         binary cross-entropy loss
     """
+    encoder, encoderInput = buildEncoder(input_dims, filters)
+    decoder = buildDecoder(latent_dims, filters)
+
+    encodedOutput = encoder(encoderInput)
+    decodedOutput = decoder(encodedOutput)
+
+    auto = keras.Model(inputs=encoderInput, outputs=decodedOutput)
+    auto.compile(optimizer="adam", loss="binary_crossentropy")
+
+    return encoder, decoder, auto
