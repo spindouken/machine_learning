@@ -72,9 +72,7 @@ def autoencoder(input_dims, filters, latent_dims):
         binary cross-entropy loss
     """
     encoder, encoderInput = buildEncoder(input_dims, filters)
-
-    decoderFilters = filters[::-1]
-    decoder = buildDecoder(latent_dims, decoderFilters)
+    decoder = buildDecoder(latent_dims, filters)
 
     encodedOutput = encoder(encoderInput)
     decodedOutput = decoder(encodedOutput)
