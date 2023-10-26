@@ -39,6 +39,7 @@ def buildDecoder(latent_dims, hidden_layers, outputDims):
 
 
 class VAELossLayer(keras.layers.Layer):
+    """VAE loss layer"""
     @staticmethod
     def VAELoss(x, xDecodedMean, zLogSigma, zMean):
         """calculate VAE loss"""
