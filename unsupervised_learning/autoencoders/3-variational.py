@@ -40,7 +40,6 @@ def buildDecoder(latent_dims, hidden_layers, outputDims):
 
 class VAELossLayer(keras.layers.Layer):
     """VAE loss layer"""
-
     @staticmethod
     def VAELoss(x, xDecodedMean, zLogSigma, zMean):
         """calculate VAE loss"""
@@ -94,20 +93,16 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
         latent_dims, hidden_layers, input_dims
     )
 
-    encoder = keras.Model(inputs=encoderInput, outputs=[zMean, zLogSigma])
-    decoder = keras.Model(inputs=decoderInput, outputs=decoderOutput)
+    z = keras.layers.Lambda(sampling)([zMean, zLogSigma])
+    encoder = keras.Model(encoderInput, [z, zMean, zLogSigma])
+    decoder = keras.Model(decoderInput, decoderOutput)
 
-    autoInput = keras.Input(shape=(input_dims,))
-    zMeanAuto, zLogSigmaAuto = encoder(autoInput)
-
-    z = keras.layers.Lambda(sampling)([zMeanAuto, zLogSigmaAuto])
-
-    autoOutput = decoder(z)
+    encoderOutput = encoder(encoderInput)[-1]
+    autoOutput = decoder(encoderOutput)
     vaeLossLayer = VAELossLayer()(
-        [autoInput, autoOutput, zLogSigmaAuto, zMeanAuto]
+        [encoderInput, autoOutput, zLogSigma, zMean]
     )
-
-    auto = keras.Model(inputs=autoInput, outputs=vaeLossLayer)
+    auto = keras.Model(encoderInput, vaeLossLayer)
     auto.compile(optimizer="adam")
 
     return encoder, decoder, auto
