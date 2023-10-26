@@ -38,6 +38,36 @@ def buildDecoder(latent_dims, hidden_layers, outputDims):
     return decoderInput, decoderOutput
 
 
+class VAELossLayer(keras.layers.Layer):
+    @staticmethod
+    def VAELoss(x, xDecodedMean, zLogSigma, zMean):
+        """calculate VAE loss"""
+        xLoss = keras.backend.binary_crossentropy(x, xDecodedMean)
+        xLoss = keras.backend.sum(xLoss, axis=1)
+        klLoss = -0.5 * keras.backend.mean(
+            1
+            + zLogSigma
+            - keras.backend.square(zMean)
+            - keras.backend.exp(zLogSigma),
+            axis=-1,
+        )
+        return keras.backend.mean(xLoss + klLoss)
+
+    def call(self, inputs):
+        """call method to calculate VAE loss and add it to the layer"""
+        x, xDecodedMean, zLogSigma, zMean = inputs
+        loss = self.VAELoss(x, xDecodedMean, zLogSigma, zMean)
+        self.add_loss(loss, inputs=inputs)
+        return x
+
+
+def sampling(args):
+    """perform sampling"""
+    zMean, zLogSigma = args
+    epsilon = keras.backend.random_normal(shape=keras.backend.shape(zMean))
+    return zMean + keras.backend.exp(zLogSigma / 2) * epsilon
+
+
 def autoencoder(input_dims, hidden_layers, latent_dims):
     """
     input_dims is an integer containing the dimensions of the model input
@@ -55,3 +85,23 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     All layers should use a relu activation except for the last layer in the
         decoder, which should use sigmoid
     """
+    encoderInput, zMean, zLogSigma = buildEncoder(
+        input_dims, hidden_layers, latent_dims
+    )
+    decoderInput, decoderOutput = buildDecoder(
+        latent_dims, hidden_layers, input_dims
+    )
+
+    z = keras.layers.Lambda(sampling)([zMean, zLogSigma])
+    encoder = keras.Model(encoderInput, [z, zMean, zLogSigma])
+    decoder = keras.Model(decoderInput, decoderOutput)
+
+    encoderOutput = encoder(encoderInput)[-1]
+    autoOutput = decoder(encoderOutput)
+    vaeLossLayer = VAELossLayer()(
+        [encoderInput, autoOutput, zLogSigma, zMean]
+    )
+    auto = keras.Model(encoderInput, vaeLossLayer)
+    auto.compile(optimizer="adam")
+
+    return encoder, decoder, auto
