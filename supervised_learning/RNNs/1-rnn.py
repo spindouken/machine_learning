@@ -21,3 +21,19 @@ def rnn(rnn_cell, X, h_0):
         H is a numpy.ndarray containing all of the hidden states
         Y is a numpy.ndarray containing all of the outputs
     """
+    t, m, i = X.shape
+    _, h = h_0.shape
+
+    H = np.zeros((t + 1, m, h))
+    H[0] = h_0  # initial hidden state
+
+    _, o = rnn_cell.Wy.shape
+    Y = np.zeros((t, m, o))
+
+    for timeStep in range(t):
+        # update hidden state and output using RNNCell's forward method
+        H_out, Y_out = rnn_cell.forward(H[timeStep], X[timeStep])
+        H[timeStep + 1] = H_out
+        Y[timeStep] = Y_out
+
+    return H, Y
