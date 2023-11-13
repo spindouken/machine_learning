@@ -49,19 +49,19 @@ class GRUCell:
         """
         # update Gate
         #   combines input and previous hidden state to update cell's memory
-        updateInput = x_t @ self.Wz[h_prev.shape[1] :, :]
-        updateHidden = h_prev @ self.Wz[: h_prev.shape[1], :]
+        updateInput = x_t @ self.Wz[h_prev.shape[1]:, :]
+        updateHidden = h_prev @ self.Wz[:h_prev.shape[1], :]
         updateGate = self.sigmoid(updateInput + updateHidden + self.bz)
 
         # reset gate
         #   determines how much past information to forget
-        resetInput = x_t @ self.Wr[h_prev.shape[1] :, :]
+        resetInput = x_t @ self.Wr[h_prev.shape[1]:, :]
         resetHidden = h_prev @ self.Wr[: h_prev.shape[1], :]
         resetGate = self.sigmoid(resetInput + resetHidden + self.br)
 
         # candidate hidden state
         #   combination of new input and the previous hidden state
-        candidateInput = x_t @ self.Wh[h_prev.shape[1] :, :]
+        candidateInput = x_t @ self.Wh[h_prev.shape[1]:, :]
         candidateHidden = (h_prev * resetGate) @ self.Wh[: h_prev.shape[1], :]
         candidateState = np.tanh(candidateInput + candidateHidden + self.bh)
 
