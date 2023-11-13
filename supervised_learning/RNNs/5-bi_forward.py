@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-create the class BidirectionalCell that represents a bidirectional cell of an RNN
+create class BidirectionalCell that represents a bidirectional cell of an RNN
 """
 import numpy as np
 
