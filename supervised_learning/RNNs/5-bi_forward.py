@@ -43,7 +43,7 @@ class BidirectionalCell:
         Returns: h_next, the next hidden state
         """
         # combine previous hidden state with input
-        h_x = np.concatenate((h_prev, x_t), axis=1)
-        # apply activation function to the product of h_x and Whf plus
-        h_next = np.tanh(h_x @ self.Whf + self.bhf)
+        combined = np.concatenate((h_prev, x_t), axis=1)
+        # apply activation function to the product of combined and Whf plus
+        h_next = np.tanh(combined @ self.Whf + self.bhf)
         return h_next
