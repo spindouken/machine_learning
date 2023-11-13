@@ -68,4 +68,4 @@ def deep_rnn(rnn_cells, X, h_0):
                 Y[timeStep] = y
 
     # return all hidden states (excluding the initial state) and outputs
-    return H[1:], Y
+    return H, Y
