@@ -2,7 +2,7 @@
 """
 creates a bag of words embedding matrix
 """
-from sklearn.feature_extraction.text import CountVectorizer
+import string
 
 
 def bag_of_words(sentences, vocab=None):
@@ -18,21 +18,38 @@ def bag_of_words(sentences, vocab=None):
             f is the number of features analyzed
         features is a list of the features used for embeddings
     """
-    features = vocab  # if vocab is not None, use it as features
+    # normalize sentences: lowercase, remove punctuation,
+    #   and exclude single-character words
+    normalizedSentences = [
+        " ".join(
+            [
+                word.lower().strip(string.punctuation)
+                for word in sentence.split()
+                if len(word) > 1
+            ]
+        )
+        for sentence in sentences
+    ]
+
     # use all words in the sentences if vocab is not provided
     if vocab is None:
         # create a set of unique words (features) from all the sentences
         #   by splitting each sentence into words and adding them to the set,
         #   ensuring each word is included only once
-        features = set(word for sentence in sentences for word in sentence.split())
+        features = set(
+            word for sentence in normalizedSentences
+            for word in sentence.split()
+        )
+    else:
+        features = vocab  # if vocab is not None, set it as the features
 
     # convert the set to a list to have a consistent order
-    features = list(features)
+    features = sorted(features)
 
     embeddings = []
 
-    # loop through each sentence in the list of sentences
-    for sentence in sentences:
+    # loop through each normalized sentence
+    for sentence in normalizedSentences:
         # split the sentence into individual words
         sentenceWords = sentence.split()
 
