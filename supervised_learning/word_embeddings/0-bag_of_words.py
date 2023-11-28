@@ -37,11 +37,9 @@ def bag_of_words(sentences, vocab=None):
             word for sentence in normalizedSentences
             for word in sentence.split()
         )
+        features = sorted(features)
     else:
         features = vocab  # if vocab is not None, set it as the features
-
-    # convert the set to a list to have a consistent order
-    features = sorted(features)
 
     embeddings = []
 
