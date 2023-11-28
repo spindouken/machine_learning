@@ -19,15 +19,11 @@ def bag_of_words(sentences, vocab=None):
         features is a list of the features used for embeddings
     """
     # normalize sentences: lowercase, remove punctuation,
-    #   and exclude single-character words
+    #   and handle possessives before splitting the sentences into words
     normalizedSentences = [
-        " ".join(
-            [
-                word.lower().strip(string.punctuation)
-                for word in sentence.split()
-                if len(word) > 1
-            ]
-        )
+        sentence.lower()
+        .replace("'s", "")
+        .translate(str.maketrans("", "", string.punctuation))
         for sentence in sentences
     ]
 
