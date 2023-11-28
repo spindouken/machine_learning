@@ -18,16 +18,29 @@ def bag_of_words(sentences, vocab=None):
             f is the number of features analyzed
         features is a list of the features used for embeddings
     """
-    # condition to check if vocab is None, if not None, use vocab words
-    #     if None, use all words
-    if vocab is not None:
-        countVectorizer = CountVectorizer(vocabulary=vocab)
-    else:
-        countVectorizer = CountVectorizer()
-    # fit model to the data (sentences), then transform it into
-    #     a bag of words embedding matrix
-    embeddings = countVectorizer.fit_transform(sentences).toarray()
-    # get the feature names (words) [feature names will be columns of matrix]
-    features = countVectorizer.get_feature_names_out()
+    features = vocab  # if vocab is not None, use it as features
+    # use all words in the sentences if vocab is not provided
+    if vocab is None:
+        # create a set of unique words (features) from all the sentences
+        #   by splitting each sentence into words and adding them to the set,
+        #   ensuring each word is included only once
+        features = set(word for sentence in sentences for word in sentence.split())
+
+    # convert the set to a list to have a consistent order
+    features = list(features)
+
+    embeddings = []
+
+    # loop through each sentence in the list of sentences
+    for sentence in sentences:
+        # split the sentence into individual words
+        sentenceWords = sentence.split()
+
+        # create a vector for a sentence where each element counts
+        #   how many times a vocab word appears in the sentence
+        sentenceVectorized = [sentenceWords.count(word) for word in features]
+
+        # add created vector to the list of all embeddings
+        embeddings.append(sentenceVectorized)
 
     return embeddings, features
