@@ -3,7 +3,7 @@
 creates a bag of words embedding matrix
 """
 import string
-from sklearn.feature_extraction.text import CountVectorizer
+import numpy as np
 
 
 def bag_of_words(sentences, vocab=None):
@@ -56,9 +56,6 @@ def bag_of_words(sentences, vocab=None):
 
         # add created vector to the list of all embeddings
         embeddings.append(sentenceVectorized)
-
-    embeddings = CountVectorizer(
-                 vocabulary=features
-                 ).fit_transform(normalizedSentences).toarray()
+    embeddings = np.array(embeddings)
 
     return embeddings, features
