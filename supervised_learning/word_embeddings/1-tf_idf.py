@@ -4,6 +4,7 @@ creates a tf-idf embedding
 """
 import numpy as np
 import string
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def tf_idf(sentences, vocab=None):
@@ -31,46 +32,17 @@ def tf_idf(sentences, vocab=None):
     # use all words in the sentences if vocab is not provided
     if vocab is None:
         # Create a set of unique words from all sentences if vocab not provided
-        features = sorted(set(
-            word for sentence in normalizedSentences
-            for word in sentence.split()
-        ))
+        features = sorted(
+            set(word for sentence in normalizedSentences
+                for word in sentence.split())
+        )
     else:
-        features = sorted(vocab)  # if vocab is not None, set it as the features
+        features = sorted(vocab)  # if vocab is not None, set as the features
 
-    # initialize tf (term frequency) matrix
-    tf = []
-
-    # loop through each normalized sentence
-    for sentence in normalizedSentences:
-        # split the sentence into individual words
-        sentenceWords = sentence.split()
-
-        # calculate term frequency
-        sentenceTF = [
-            sentenceWords.count(word) / len(sentenceWords)
-            if len(sentenceWords) > 0
-            else 0
-            for word in features
-        ]
-
-        tf.append(sentenceTF)
-
-    tf = np.array(tf)
-
-    # calculate inverse document frequency
-    idf = np.log(len(sentences) / (1 + np.sum(tf > 0, axis=0))) + 1
-
-    # calculate tf-idf
-    embeddings = tf * idf
-
-    # normalize tf-idf embeddings
-    embeddingsNormalized = np.linalg.norm(embeddings, axis=1, keepdims=True)
-    embeddings = np.divide(
-        embeddings,
-        embeddingsNormalized,
-        out=np.zeros_like(embeddings),
-        where=embeddingsNormalized != 0,
+    embedding = (
+        TfidfVectorizer(vocabulary=features)
+        .fit_transform(normalizedSentences)
+        .toarray()
     )
 
-    return embeddings, features
+    return embedding, features
