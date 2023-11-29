@@ -37,7 +37,7 @@ def tf_idf(sentences, vocab=None):
                 for word in sentence.split())
         )
     else:
-        features = sorted(vocab)  # if vocab is not None, set as the features
+        features = vocab  # if vocab is not None, set as the features
 
     embedding = (
         TfidfVectorizer(vocabulary=features)
