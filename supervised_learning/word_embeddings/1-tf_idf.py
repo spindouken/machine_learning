@@ -31,12 +31,12 @@ def tf_idf(sentences, vocab=None):
     # use all words in the sentences if vocab is not provided
     if vocab is None:
         # Create a set of unique words from all sentences if vocab not provided
-        features = set(
+        features = sorted(set(
             word for sentence in normalizedSentences
             for word in sentence.split()
-        )
+        ))
     else:
-        features = vocab  # if vocab is not None, set it as the features
+        features = sorted(vocab)  # if vocab is not None, set it as the features
 
     # initialize tf (term frequency) matrix
     tf = []
@@ -48,8 +48,12 @@ def tf_idf(sentences, vocab=None):
 
         # calculate term frequency
         sentenceTF = [
-            sentenceWords.count(word) / len(sentenceWords) for word in features
+            sentenceWords.count(word) / len(sentenceWords)
+            if len(sentenceWords) > 0
+            else 0
+            for word in features
         ]
+
         tf.append(sentenceTF)
 
     tf = np.array(tf)
@@ -61,7 +65,12 @@ def tf_idf(sentences, vocab=None):
     embeddings = tf * idf
 
     # normalize tf-idf embeddings
-    embeddings = embeddings / np.linalg.norm(embeddings, axis=1, keepdims=True)
-    embeddings = np.nan_to_num(embeddings)  # replace NaNs with zeros
+    embeddingsNormalized = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    embeddings = np.divide(
+        embeddings,
+        embeddingsNormalized,
+        out=np.zeros_like(embeddings),
+        where=embeddingsNormalized != 0,
+    )
 
     return embeddings, features
