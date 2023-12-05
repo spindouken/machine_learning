@@ -12,7 +12,7 @@ def generateNgrams(words, n):
     uses the zip function along with list slicing to create n-grams
     each n-gram is a tuple of 'n' consecutive words
         from the list, where 'n' is defined by the parameter
-        
+
     creates n-grams by pairing consecutive words using the zip function
         ...zip iterates over multiple list-like objects simultaneously
     here, zip is applied to sliced versions of the original word list
