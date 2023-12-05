@@ -29,8 +29,8 @@ def uni_bleu(references, sentence):
 
     unigrams: single words
 
-    what is BLUE?
-    BLUE = Bilingual Evaluation Understudy
+    what is BLEU?
+    BLEU = Bilingual Evaluation Understudy
     BLEU provides a numeric score (ranging typically between 0 and 1)
         as a measure of the quality of machine translation,
         with higher scores indicating better translations
@@ -110,5 +110,5 @@ def uni_bleu(references, sentence):
 
     # calculate the final BLEU score by multiplying
     #   the precision by the brevity penalty
-    BLUEscore = brevityPenalty * precision
-    return BLUEscore
+    BLEUscore = brevityPenalty * precision
+    return BLEUscore
