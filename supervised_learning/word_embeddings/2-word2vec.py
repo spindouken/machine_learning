@@ -25,3 +25,34 @@ def word2vec_model(sentences, size=100, min_count=5,
     workers is the number of worker threads to train the model
     Returns: the trained model
     """
+    from gensim.models import Word2Vec
+
+    # if cbow boolean input variable is set to True, training is CBOW
+    if cbow is True:
+        yaya = 0
+    else:
+        # if cbow parameter input is not boolean True,
+        #   training type is skip-gram
+        yaya = 1
+
+    # compile word2vec model using function parameter inputs
+    model = Word2Vec(
+        sentences,
+        vector_size=size,
+        min_count=min_count,
+        window=window,
+        negative=negative,
+        sg=yaya,
+        seed=seed,
+        workers=workers,
+        )
+
+    # train gensim word2vec model
+    model.train(
+        sentences,
+        total_examples=model.corpus_count,
+        epochs=iterations
+        )
+
+    # return trained gensim word2vec model
+    return model
