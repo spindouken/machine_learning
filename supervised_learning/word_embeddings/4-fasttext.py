@@ -30,3 +30,37 @@ def fasttext_model(
     workers is the number of worker threads to train the model
     Returns: the trained model
     """
+    from gensim.models import FastText
+
+    # if cbow boolean input variable is set to True, training is CBOW
+    if cbow is True:
+        yaya = 0
+    else:
+        # if cbow parameter input is not boolean True,
+        #   training type is skip-gram
+        yaya = 1
+
+    # compile gensim fasttext model using function paramter inputs
+    model = FastText(
+        vector_size=size,
+        min_count=min_count,
+        negative=negative,
+        window=window,
+        sg=yaya,
+        epochs=iterations,
+        seed=seed,
+        workers=workers
+        )
+
+    # must build vocab before training
+    model.build_vocab(corpus_iterable=sentences)
+
+    # train gensim fastText model
+    model.train(
+        corpus_iterable=sentences,
+        total_examples=len(sentences),
+        epochs=model.epochs
+        )
+
+    # return trained gensim fastText model
+    return model
