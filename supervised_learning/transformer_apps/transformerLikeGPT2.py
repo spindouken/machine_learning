@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -28,7 +27,7 @@ lr_values = [0.001, 0.0001]
 
 # read the data
 with open(
-    "processed_stories.txt", "r", encoding="utf-8"
+    "/content/drive/MyDrive/GPT_maker/processed_stories.txt", "r", encoding="utf-8"
 ) as f:
     text = f.read()
 
@@ -301,7 +300,7 @@ for step in range(max_iters):
                 break
 
 # Save the best model after training
-model_save_path = "/GPT_maker/20ksteps_contextInc"
+model_save_path = "/content/drive/MyDrive/GPT_maker/20ksteps_contextInc"
 model.save(model_save_path)
 print(f"Best model saved successfully at: {model_save_path}!")
 
