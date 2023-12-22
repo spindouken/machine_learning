@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 calculates the n-gram BLEU score for a sentence
+
+an n-gram is a contiguous sequence of n words
 """
 import numpy as np
 
@@ -9,8 +11,23 @@ def generateNgrams(words, n):
     """
     generate n-grams from a list of words
 
+    uses the zip function along with list slicing to create n-grams
+    each n-gram is a tuple of 'n' consecutive words
+        from the list, where 'n' is defined by the parameter
+
+    creates n-grams by pairing consecutive words using the zip function
+        ...zip iterates over multiple list-like objects simultaneously
+    here, zip is applied to sliced versions of the original word list
+    each slice starts from a different position in the list,
+        offset by the n-gram size, creating overlapping segments of words
+    in a trigram (n=3) scenario:
+        zip combines word[0], word[1], and word[2] from the first iteration,
+            then word[1], word[2], and word[3] in the next, &so on
+    this effectively groups every set of 'n' consecutive words into a tuple,
+        forming an n-gram
+
     words: list of words to generate n-grams from
-    n: The size of the n-gram
+    n: The size of the ngram
 
     returns: list of n-grams
     """
@@ -22,6 +39,8 @@ def generateNgrams(words, n):
 def countNgrams(ngrams):
     """
     count the n-grams in a list
+
+    tallies the occurrences of each unique n-gram in the given list
 
     ngrams: list of n-grams to count
 
@@ -36,7 +55,7 @@ def countNgrams(ngrams):
 
 def calculateClippedCounts(sentenceNgramCounts, references, n):
     """
-    takes the n-gram counts of a sentence and clips them
+    takes the ngram counts of a sentence and clips them
         based on their occurrences in reference translations
     first, it finds the maximum count of each ngram across all references,
         then it clips the sentence's ngram counts to these maxima
@@ -54,20 +73,20 @@ def calculateClippedCounts(sentenceNgramCounts, references, n):
     for reference in references:
         # first, we make ngrams out of the current reference
         referenceNgrams = generateNgrams(reference, n)
-        # next, we count how many times each n-gram shows up in this reference
+        # next, we count how many times each ngram shows up in this reference
         referenceNgramCounts = countNgrams(referenceNgrams)
         # for each ngram, we want to keep the maximum count from any reference
         # loop through each ngram we found in our sentence
         for ngram in sentenceNgramCounts:
-            # did we see this n-gram in the current reference?
+            # did we see this ngram in the current reference?
             # if yes, let's see if it's the new high score
-            #   for this n-gram across all references
+            #   for this ngram across all references
             maxRefNgramCounts[ngram] = max(
                 maxRefNgramCounts.get(ngram, 0),
                 referenceNgramCounts.get(ngram, 0)
             )
 
-    # all references are checked, now clip the counts in the sentence
+    # all references are checked, so clip the counts in the sentence
     # can't score more than the highest score an ngram got in the references
     clippedCounts = {
         ngram: min(count, maxRefNgramCounts.get(ngram, 0))
@@ -86,7 +105,6 @@ def findClosestLength(sentenceLength, referenceLengths):
         that is closest to the sentence length
     this is useful in calculating brevity penalty in BLEU score calculation,
         where matching the lengths closely impacts the penalty factor
-
 
     sentenceLength: length of the sentence being evaluated
     referenceLengths: list of lengths of reference translations
@@ -138,6 +156,25 @@ def calculateBrevityPenalty(sentenceLength, referenceLengths):
 def ngram_bleu(references, sentence, n):
     """
     calculates the n-gram BLEU score for a sentence
+
+    what is BLEU?
+    BLEU = Bilingual Evaluation Understudy
+    BLEU provides a numeric score (ranging typically between 0 and 1)
+        as a measure of the quality of machine translation,
+        with higher scores indicating better translations
+
+    BLEU assesses translation quality by comparing n-grams
+        (contiguous sequences of n items from a given sample of text or speech)
+        in the machine-translated text to n-grams in a reference translation
+    it counts the matches, adjusting for coincidental matches with
+        a brevity penalty
+
+    brevity penalty:
+    the brevity penalty is applied to prevent overly short translations
+        from receiving high scores
+    it penalizes translations that are much shorter than
+        their reference translations
+
     references is a list of reference translations
         each reference translation is a list of the words in the translation
     sentence is a list containing the model proposed sentence
@@ -153,10 +190,14 @@ def ngram_bleu(references, sentence, n):
     if not sentenceNgramCounts:
         return 0
 
-    # trim the counts of ngrams based on what's in the references
+    # clip each word count in the sentence by
+    #   its max count found in the references
+    # this prevents inflating the score by repeating common words
     clippedCounts = calculateClippedCounts(sentenceNgramCounts, references, n)
-    # looking at the proportion of n-grams in sentence
-    #   that match those in the references
+    # calculate precision as the ratio of clipped counts
+    #   to total counts in the sentence
+    # this measures how accurately the sentence captures common
+    #   unigrams in the references
     precision = sum(clippedCounts.values()) / sum(sentenceNgramCounts.values())
 
     # gather lengths of all our reference translations
@@ -165,7 +206,7 @@ def ngram_bleu(references, sentence, n):
     brevityPenalty = calculateBrevityPenalty(len(sentence), referenceLengths)
 
     # finally, calculate BLEU score!
-    BLUEscore = brevityPenalty * precision
+    BLEUscore = brevityPenalty * precision
 
     # return sentence's ngram BLEU score
-    return BLUEscore
+    return BLEUscore

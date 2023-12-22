@@ -1,0 +1,27 @@
+InputLayer
+[(None, 4, 4, 8)]
+Conv2D
+relu
+(None, 4, 4, 8)
+(None, 4, 4, 8)
+UpSampling2D
+(None, 4, 4, 8)
+(None, 8, 8, 8)
+Conv2D
+relu
+(None, 8, 8, 8)
+(None, 8, 8, 8)
+UpSampling2D
+(None, 8, 8, 8)
+(None, 16, 16, 8)
+Conv2D
+relu
+(None, 16, 16, 8)
+(None, 14, 14, 16)
+UpSampling2D
+(None, 14, 14, 16)
+(None, 28, 28, 16)
+Conv2D
+sigmoid
+(None, 28, 28, 16)
+(None, 28, 28, 1)
