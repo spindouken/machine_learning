@@ -1,28 +1,42 @@
-#!/usr/bin/env python3
 """
 answers questions from a reference text
 """
 import tensorflow as tf
-import tensorflow_hub as hub
 from transformers import BertTokenizer
-
-question_answer = __import__("0-qa").question_answer
 
 
 def answer_loop(reference):
     """
-    answers questions from a reference text
-
     reference is the reference text
+
+    takes user input from CLI, initializes it as a question,
+        formats it as lowercase with .lower(),
+        strips any leading or trailing whitespace with .strip(),
+        and checks to see if it is in the `exitWords` list
+    If the question is in the `exitWords` list,
+        responds with "Goodbye"
+    If the question is not in the `exitWords` list,
+        calls the `question_answer` function
+
     If the answer cannot be found in the reference text,
-        respond with Sorry, I do not understand your question.
+        responds with "Sorry, I do not understand your question."
     """
-    while True:
+    ender = 1
+    while ender == 1:
+        # takes user input from CLI and identifies it as the question
         question = input("Q: ")
-        if question.lower() in ["exit", "quit", "goodbye", "bye"]:
+        exitWords = ["exit", "quit", "goodbye", "bye"]
+
+        # process user input to account for character cases and whitespaces,
+        #   then check if it is in the exitWords list
+        if question.lower().strip() in exitWords:
             print("A: Goodbye")
-            break
-        answer = question_answer(question, reference)
-        if answer is None:
-            answer = "Sorry, I do not understand your question."
-        print("A: {}".format(answer))
+            # if it is in the list, ender counter will go to zero, breaking the loop
+            ender = 0
+        else:
+            # if the user input was not an exit word, call question_answer function
+            answer = question_answer(question, reference)
+            if answer is None:
+                answer = "Sorry, I do not understand your question."
+            # provide answer to user in CLI
+            print("A: {}".format(answer))

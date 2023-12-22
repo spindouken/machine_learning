@@ -1,58 +1,41 @@
 #!/usr/bin/env python3
-"""
-performs semantic search on a corpus of documents
-"""
-import os
-import numpy as np
-import tensorflow_hub as hub
+"""   performs semantic search on a corpus of documents"""
 import tensorflow as tf
-from transformers import BertTokenizer
+import tensorflow_hub as hub
+import numpy as np
+import os
+
 
 def semantic_search(corpus_path, sentence):
     """
-    performs semantic search on a corpus of documents
     corpus_path is the path to the corpus of reference documents on which
     to perform semantic search
     sentence is the sentence from which to perform semantic search
+
     Returns: the reference text of the document most similar to sentence
     """
-    # load bert tokenizer
-    tokenizer = BertTokenizer.from_pretrained(
-        'bert-base-uncased',
-        do_lower_case=True
-    )
+    # include the query sentence in the documents list
+    documents = [sentence]
 
-    # load bert model
-    model = hub.load('https://tfhub.dev/google/universal-sentence-encoder-large/5')
-
-    # load corpus
-    references = [sentence]
+    # read documents from the corpus path
     for filename in os.listdir(corpus_path):
-        if not filename.endswith('.md'):
-            continue
-        with open(corpus_path + '/' + filename, 'r', encoding='utf-8') as f:
-            references.append(f.read())
+        if filename.endswith(".md"):
+            with open(os.path.join(corpus_path, filename), "r", encoding="utf-8") as f:
+                documents.append(f.read())
 
-    # tokenize
-    tokens = tokenizer(references, padding=True, truncation=True, return_tensors='tf')
+    # load the semantic search model
+    model = hub.load("https://tfhub.dev/google/universal-sentence-encoder-large/5")
 
-    # get embeddings
-    embeddings = model(tokens)
+    # create embeddings for the documents
+    embeddings = model(documents)
 
-    # get query embedding
-    query = tf.constant([sentence])
-    query_embedding = model(query)
+    # calculate the correlation matrix for the embeddings
+    correlationMatrix = np.inner(embeddings, embeddings)
 
-    # compute dot product
-    dot_product = tf.matmul(query_embedding, tf.transpose(embeddings))
+    # find the index of the document most similar to the input sentence
+    closestDocIndex = np.argmax(correlationMatrix[0, 1:])
 
-    # compute softmax
-    softmax = tf.nn.softmax(dot_product, axis=1)
+    # retrieve the reference text of the document most similar to input sentence
+    mostSimilarDoc = documents[closestDocIndex + 1]
 
-    # get argmax
-    argmax = tf.argmax(softmax, axis=1)
-
-    # get result
-    result = references[argmax.numpy()[0]]
-
-    return result
+    return mostSimilarDoc
