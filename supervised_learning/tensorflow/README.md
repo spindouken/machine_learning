@@ -8,7 +8,7 @@
 
 ## Project Overview
 
-This project focuses on building and training a neural network using TensorFlow. It covers essential concepts in neural network architecture, including placeholders, layers, forward propagation, loss calculation, accuracy assessment, training operations, model training, and evaluation. By implementing a series of tasks, you'll gain hands-on experience in constructing a neural network and understanding its components.
+This project focuses on building and training a neural network using TensorFlow. It covers essential concepts in neural network architecture, including placeholders, layers, forward propagation, loss calculation, accuracy assessment, training operations, model training, and evaluation.
 
 ## Key Features
 
