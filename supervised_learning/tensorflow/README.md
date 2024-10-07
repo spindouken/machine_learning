@@ -8,50 +8,50 @@
 
 ## Project Overview
 
-This project focuses on building and training a neural network using TensorFlow. It covers essential concepts in neural network architecture, including placeholders, layers, forward propagation, loss calculation, accuracy assessment, training operations, model training, and evaluation.
+This project involved building and training a neural network using TensorFlow. The primary goals were to implement essential concepts such as creating placeholders, defining layers, executing forward propagation, and managing training operations. It focused on evaluating model performance through accuracy and loss calculations.
 
 ## Key Features
 
-- **Placeholders**: Define inputs and outputs using TensorFlow's placeholder functionality.
-- **Custom Layers**: Create neural network layers with specific configurations and activation functions.
-- **Forward Propagation**: Build a forward propagation graph to enable data flow through the network.
-- **Accuracy Measurement**: Implement a method to calculate the prediction accuracy against true labels.
-- **Loss Function**: Utilize softmax cross-entropy loss for effective training.
-- **Training Operations**: Optimize network weights using gradient descent.
-- **Model Training**: Train the neural network on provided datasets, monitoring performance metrics.
-- **Model Evaluation**: Assess the trained model on unseen data to evaluate its performance.
+- **Placeholders**: Utilized TensorFlow placeholders for flexible input data and one-hot encoded label management during training.
+- **Layer Creation**: Developed a function to construct neural network layers, specifying the number of nodes and activation functions while using He initialization for weights to enhance training efficiency.
+- **Forward Propagation**: Built the forward propagation graph, connecting layers to enable the flow of data through the network, facilitating the transformation from input to output.
+- **Accuracy Calculation**: Implemented a method to compute prediction accuracy by comparing the model's outputs to actual labels, which aids in assessing model performance.
+- **Loss Function**: Defined a function to compute softmax cross-entropy loss, providing a measure of the discrepancy between predicted outputs and actual labels, essential for model training.
+- **Training Operation**: Created a training operation that employs gradient descent for optimizing network parameters based on the calculated loss.
+- **Model Training**: Managed the training process using provided datasets, capturing training and validation costs and accuracies at specified intervals, with functionality for model saving.
+- **Model Evaluation**: Evaluated the trained model on test data, returning predictions, accuracy, and loss, while enabling model loading from a specified path for testing.
 
 ## Prerequisites
 
-To run this project, ensure you have the following installed:
+To run this project, the following software and libraries are required:
 
 - Python 3.x
-- TensorFlow (version 2.x recommended)
+- TensorFlow (version compatible with the project)
 - NumPy
-- Matplotlib (for visualization)
+- Matplotlib (optional, for visualizations)
 
 ## Task Summaries
 
-1. **Placeholders**:  
-   Create two placeholders, `x` for input data and `y` for one-hot encoded labels, using TensorFlow.
+0. **Placeholders**:
+   Created placeholders for input data and one-hot encoded labels using TensorFlow.
 
-2. **Layers**:  
-   Implement a function to create a neural network layer, specifying the number of nodes and activation function, while using He initialization for weights.
+1. **Layers**:
+   Implemented a function to create neural network layers with specified nodes and activation functions, incorporating He initialization for weights.
 
-3. **Forward Propagation**:  
-   Build the forward propagation graph for the neural network by connecting layers based on specified sizes and activation functions.
+2. **Forward Propagation**:
+   Built the forward propagation graph for the neural network by connecting layers based on specified sizes and activation functions.
 
-4. **Accuracy**:  
-   Calculate the prediction accuracy by comparing the predicted outputs with the actual labels, returning a tensor with the accuracy value.
+3. **Accuracy**:
+   Calculated prediction accuracy by comparing the predicted outputs with actual labels, returning a tensor with the accuracy value.
 
-5. **Loss**:  
-   Define a function to compute the softmax cross-entropy loss between predicted outputs and actual labels, returning the loss value as a tensor.
+4. **Loss**:
+   Defined a function to compute softmax cross-entropy loss between predicted outputs and actual labels, returning the loss value as a tensor.
 
-6. **Train Operation**:  
-   Create a training operation that utilizes gradient descent to optimize the network based on the calculated loss and a given learning rate.
+5. **Train Operation**:
+   Created a training operation utilizing gradient descent to optimize the network based on the calculated loss and a given learning rate.
 
-7. **Train**:  
-   Construct and train the neural network using provided training and validation datasets, outputting training and validation costs and accuracies at specified iterations, and saving the trained model.
+6. **Train**:
+   Constructed and trained the neural network using provided training and validation datasets, outputting training and validation costs and accuracies at specified iterations.
 
-8. **Evaluate**:  
-   Evaluate the trained model on test data, returning predictions, accuracy, and loss while loading the model from a specified path.
+7. **Evaluate**:
+   Evaluated the trained model on test data, returning predictions, accuracy, and loss while loading the model from a specified path.
