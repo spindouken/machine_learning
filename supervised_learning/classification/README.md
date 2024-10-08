@@ -29,7 +29,7 @@ To run this project, the following software and libraries are required:
 - Matplotlib (for graphing cost during training)
 - Jupyter Notebook (optional, for running the code interactively)
 
-## Task Summaries
+## File Summaries
 
 0. **0-neuron.py**:  
    Created a `Neuron` class for binary classification, initializing weights and bias, with error handling for input features.
