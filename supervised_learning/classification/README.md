@@ -10,6 +10,8 @@
 
 This project involved building a neural network system for binary classification from scratch. The development progressed from a simple neuron model to a deep neural network with multiple layers, focusing on implementing key neural network components such as forward propagation, cost functions, gradient descent, and training methods. Additional features like verbosity, graphing options, and error handling were added to enhance model training and evaluation.
 
+The files build on each other starting with 0. The main files import and implement/test each of their associated numbered files (ex. 0-main.py imports and 
+
 ## Key Features
 
 - **Single Neuron Model**: Implements a perceptron model for binary classification with forward propagation, cost function, and gradient descent training.
@@ -29,89 +31,89 @@ To run this project, the following software and libraries are required:
 
 ## Task Summaries
 
-0. **Task 0 (0-main.py, 0-neuron.py)**:  
+0. **0-neuron.py**:  
    Created a `Neuron` class for binary classification, initializing weights and bias, with error handling for input features.
 
-1. **Task 1 (1-main.py, 1-neuron.py)**:  
+1. **1-neuron.py**:  
    Privatized the `Neuron` class attributes (weights, bias, activated output) and provided getter methods for these values.
 
-2. **Task 2 (2-main.py, 2-neuron.py)**:  
+2. **2-neuron.py**:  
    Added a `forward_prop` method to the `Neuron` class to compute forward propagation using a sigmoid function, updating and returning the activated output.
 
-3. **Task 3 (3-main.py, 3-neuron.py)**:  
+3. **3-neuron.py**:  
    Implemented a `cost` method in the `Neuron` class to calculate the logistic regression cost, ensuring numerical stability.
 
-4. **Task 4 (4-main.py, 4-neuron.py)**:  
+4. **4-neuron.py**:  
    Created an `evaluate` method in the `Neuron` class to assess the predictions and return both predictions and cost.
 
-5. **Task 5 (5-main.py, 5-neuron.py)**:  
+5. **5-neuron.py**:  
    Added a `gradient_descent` method to perform gradient descent and update the weights and bias of the neuron.
 
-6. **Task 6 (6-main.py, 6-neuron.py)**:  
+6. **6-neuron.py**:  
    Introduced a `train` method to the `Neuron` class for iterative training using gradient descent with error handling for input parameters.
 
-7. **Task 7 (7-main.py, 7-neuron.py)**:  
+7. **7-neuron.py**:  
    Enhanced the `train` method to include verbosity and graphing options to visualize training progress and cost reduction over time.
 
-8. **Task 8 (8-main.py, 8-neural_network.py)**:  
+8. **8-neural_network.py**:  
    Defined a `NeuralNetwork` class with one hidden layer, initializing weights and biases for both layers.
 
-9. **Task 9 (9-main.py, 9-neural_network.py)**:  
+9. **9-neural_network.py**:  
    Privatized the attributes of the `NeuralNetwork` class and provided getter methods to access them.
 
-10. **Task 10 (10-main.py, 10-neural_network.py)**:  
+10. **10-neural_network.py**:  
     Implemented a `forward_prop` method to compute forward propagation through both layers of the neural network.
 
-11. **Task 11 (11-main.py, 11-neural_network.py)**:  
+11. **11-neural_network.py**:  
     Added a `cost` method to compute the cost of the neural network’s predictions, based on logistic regression.
 
-12. **Task 12 (12-main.py, 12-neural_network.py)**:  
+12. **12-neural_network.py**:  
     Created an `evaluate` method to return both predictions and cost for a given input dataset.
 
-13. **Task 13 (13-main.py, 13-neural_network.py)**:  
+13. **13-neural_network.py**:  
     Implemented a `gradient_descent` method to update the weights and biases of both layers using backpropagation.
 
-14. **Task 14 (14-main.py, 14-neural_network.py)**:  
+14. **14-neural_network.py**:  
     Introduced a `train` method to manage the training process over multiple iterations with appropriate error handling.
 
-15. **Task 15 (15-main.py, 15-neural_network.py)**:  
+15. **15-neural_network.py**:  
     Enhanced the `train` method by adding options for verbosity and graphing, allowing real-time monitoring and visualization of the training process.
 
-16. **Task 16 (16-main.py, 16-deep_neural_network.py)**:  
-    Created a `DeepNeuralNetwork` class for binary classification with He initialization of weights for deep networks.
+16. **16-deep_neural_network.py**:  
+    Created a `DeepNeuralNetwork` class for binary classification, initializing input features and layers with He initialization and validation.
 
-17. **Task 17 (17-main.py, 17-deep_neural_network.py)**:  
-    Privatized the `DeepNeuralNetwork` attributes and ensured proper initialization with getter methods for the private attributes.
+17. **17-deep_neural_network.py**:  
+    Privatized the attributes of the `DeepNeuralNetwork` class, including `L`, `cache`, and `weights`, and added getter methods.
 
-18. **Task 18 (18-main.py, 18-deep_neural_network.py)**:  
-    Added a `forward_prop` method to perform forward propagation across multiple layers of the deep neural network.
+18. **18-deep_neural_network.py**:  
+    Added a `forward_prop` method to compute forward propagation for the deep neural network and update the cache.
 
-19. **Task 19 (19-main.py, 19-deep_neural_network.py)**:  
-    Implemented a `cost` method to calculate the cost of the deep neural network using logistic regression.
+19. **19-deep_neural_network.py**:  
+    Implemented a `cost` method to calculate the logistic regression cost for the deep neural network.
 
-20. **Task 20 (20-main.py, 20-deep_neural_network.py)**:  
-    Created an `evaluate` method for the deep neural network to return both predictions and cost for a given input dataset.
+20. **20-deep_neural_network.py**:  
+    Created an `evaluate` method to return both predictions and cost for the deep neural network.
 
-21. **Task 21 (21-main.py, 21-deep_neural_network.py)**:  
-    Added a `gradient_descent` method to the deep neural network for updating weights and biases across all layers.
+21. **21-deep_neural_network.py**:  
+    Added a `gradient_descent` method for backpropagation, updating weights for each layer of the deep neural network.
 
-22. **Task 22 (22-main.py, 22-deep_neural_network.py)**:  
-    Introduced a `train` method to manage training iterations for the deep neural network, with error handling and validation.
+22. **22-deep_neural_network.py**:  
+    Introduced a `train` method for training the deep neural network, managing iterations and updating parameters with error handling.
 
-23. **Task 23 (23-main.py, 23-deep_neural_network.py)**:  
-    Enhanced the `train` method with verbosity and graphing options for tracking performance during training.
+23. **23-deep_neural_network.py**:  
+    Enhanced the `train` method with verbosity and graphing options for monitoring the deep neural network’s performance during training.
 
-24. **Task 24 (24-main.py, 24-one_hot_encode.py)**:  
-    Implemented a one-hot encoding function to preprocess categorical data for the neural network.
+24. **24-one_hot_encode.py**:  
+    Implemented a function to perform one-hot encoding for classification labels.
 
-25. **Task 25 (25-main.py, 25-one_hot_decode.py)**:  
-    Developed a one-hot decoding function to convert predictions back into original label format.
+25. **25-one_hot_decode.py**:  
+    Created a function to decode one-hot encoded labels back into their original form.
 
-26. **Task 26 (26-main.py, 26-deep_neural_network.py)**:  
-    Improved the deep neural network training process with additional functionality for validation.
+26. **26-deep_neural_network.py**:  
+    Further optimized the `DeepNeuralNetwork` class by adding additional layer functions for flexible architectures.
 
-27. **Task 27 (27-main.py, 27-deep_neural_network.py)**:  
-    Added model persistence to save and load trained deep neural networks for future use.
+27. **27-deep_neural_network.py**:  
+    Improved performance of the `DeepNeuralNetwork` by implementing more efficient matrix operations during forward propagation.
 
-28. **Task 28 (28-main.py, 28-deep_neural_network.py)**:  
-    Enhanced the deep neural network to support batch training for improved performance on large datasets.
+28. **28-deep_neural_network.py**:  
+    Finalized the `DeepNeuralNetwork` implementation with hyperparameter tuning options and further enhancements for training stability.
