@@ -15,7 +15,7 @@ The files build on each other starting with 0. The main files import and impleme
 ## Key Features
 
 - **Files 0-7: Single Neuron Model**: Implements a perceptron model for binary classification with forward propagation, cost function, and gradient descent training.
-- **Files: 8-15: Neural Network with One Hidden Layer**: A multi-layer perceptron (MLP) with one hidden layer, handling forward propagation, backpropagation, and efficient training.
+- **Files: 8-15: Neural Network with One Hidden Layer**: A multi-layer perceptron (MLP) with one hidden layer, handling forward propagation, and backpropagation.
 - **Files 16-23, 26-28: Deep Neural Network**: Implements a deep neural network using multiple layers, enabling more complex binary classification tasks.
 - **Training Enhancements**: Includes verbosity and graphing options for real-time monitoring of model training, displaying cost reduction over iterations.
 - **Model Evaluation**: Provides methods for evaluating the model's performance, returning predictions and cost.
