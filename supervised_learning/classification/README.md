@@ -67,7 +67,7 @@ To run this project, the following software and libraries are required:
 **11-neural_network.py**:  
     Added a `cost` method to compute the cost of the neural network’s predictions, based on logistic regression.
 
-12. **12-neural_network.py**:  
+**12-neural_network.py**:  
     Created an `evaluate` method to return both predictions and cost for a given input dataset.
 
 **13-neural_network.py**:  
