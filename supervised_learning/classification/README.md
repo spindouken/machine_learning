@@ -1,4 +1,4 @@
-# Neural Network Implementation for Binary Classification
+# Buidling a Neural Network from Scratch for Binary Classification
 
 ## Table of Contents
 - [Project Overview](#project-overview)
