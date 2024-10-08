@@ -4,7 +4,7 @@
 - [Project Overview](#project-overview)
 - [Key Features](#key-features)
 - [Prerequisites](#prerequisites)
-- [Task Summaries](#task-summaries)
+- [File Summaries](#file-summaries)
 
 ## Project Overview
 
