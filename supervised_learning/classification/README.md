@@ -10,7 +10,7 @@
 
 This project involved building a neural network system for binary classification from scratch. The development progressed from a simple neuron model to a deep neural network with multiple layers, focusing on implementing key neural network components such as forward propagation, cost functions, gradient descent, and training methods. Additional features like verbosity, graphing options, and error handling were added to enhance model training and evaluation.
 
-The files build on each other starting with 0. The main files import and implement/test each of their associated numbered files (ex. 0-main.py imports and 
+The files build on each other starting with 0. The main files import and implement/test each of their associated numbered files (ex. 0-main.py imports and tests 0-neuron.py)
 
 ## Key Features
 
