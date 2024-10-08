@@ -30,7 +30,7 @@ To run this project, the following software and libraries are required:
 - Jupyter Notebook (optional, for running the code interactively)
 
 ## File Summaries
-
+_**Single Neuron Model**_
 **0-neuron.py**:  
    Created a `Neuron` class for binary classification, initializing weights and bias, with error handling for input features.
 
@@ -55,6 +55,7 @@ To run this project, the following software and libraries are required:
 **7-neuron.py**:  
    Enhanced the `train` method to include verbosity and graphing options to visualize training progress and cost reduction over time.
 
+_**Neural Network with One Hidden Layer**_
 **8-neural_network.py**:  
    Defined a `NeuralNetwork` class with one hidden layer, initializing weights and biases for both layers.
 
@@ -79,6 +80,7 @@ To run this project, the following software and libraries are required:
 **15-neural_network.py**:  
     Enhanced the `train` method by adding options for verbosity and graphing, allowing real-time monitoring and visualization of the training process.
 
+_**Deep Neural Network**_
 **16-deep_neural_network.py**:  
     Created a `DeepNeuralNetwork` class for binary classification, initializing input features and layers with He initialization and validation.
 
