@@ -29,28 +29,21 @@ This project covers data visualization concepts using line graphs, scatter plots
 
 1. **Line Graph**: 
     - Create a line graph of \( y = x^3 \) from 0 to 10 using a solid red line.
-    - **Tools**: NumPy, Matplotlib
 
 2. **Scatter**: 
     - Plot a scatter graph of height vs. weight with labeled axes and magenta points.
-    - **Tools**: NumPy, Matplotlib
 
 3. **Change of Scale**: 
     - Plot a line graph representing exponential decay of C-14, with a logarithmic y-axis.
-    - **Tools**: NumPy, Matplotlib
 
 4. **Two is Better Than One**: 
     - Display two line graphs (C-14 and Ra-226) on the same plot with distinct styles and a legend.
-    - **Tools**: NumPy, Matplotlib
 
 5. **Frequency**: 
     - Create a histogram of student grades with specific axis labels and a title.
-    - **Tools**: NumPy, Matplotlib
 
 6. **All in One**: 
     - Combine all previous plots into a single figure with a specified grid layout and title.
-    - **Tools**: NumPy, Matplotlib
 
 7. **Stacking Bars**: 
     - Generate a stacked bar graph showing the quantity of various fruits owned by three individuals.
-    - **Tools**: NumPy, Matplotlib
