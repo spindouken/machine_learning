@@ -1,4 +1,4 @@
-# Calculus with Python
+# T3-3 Calculus with Python
 
 ## Table of Contents
 - [Project Overview](#project-overview)
@@ -26,34 +26,34 @@ This project focuses on calculus concepts including summation, products, derivat
 ## Task Summaries
 
 0. **Sigma is for Sum**: 
-    - Calculate the sum \( \sum_{i=2}^{5} i \).
+    - Calculate the sum from i=2 to 5 of i.
 
 1. **The Greeks pronounce it sEEgma**: 
-    - Evaluate the expression \( \sum_{k=1}^{4} (9i - 2k) \).
+    - Evaluate the expression from k=1 to 4 of (9i - 2k).
 
 2. **Pi is for Product**: 
-    - Compute the product \( \prod_{i=1}^{m} i \).
+    - Compute the product from i=1 to m of i.
 
 3. **The Greeks pronounce it pEE**: 
-    - Evaluate the product \( \prod_{i=0}^{10} i \).
+    - Evaluate the product from i=0 to 10 of i.
 
 4. **Hello, derivatives!**: 
-    - Find the derivative \( \frac{dy}{dx} \) for the function \( y = x^4 + 3x^3 - 5x + 1 \).
+    - Find the derivative dy/dx for the function y = x^4 + 3x^3 - 5x + 1.
 
 5. **A log on the fire**: 
-    - Differentiate \( x \ln(x) \) to find \( \frac{d (x \ln(x))}{dx} \).
+    - Differentiate x * ln(x) to find d(x * ln(x))/dx.
 
 6. **It is difficult to free fools from the chains they revere**: 
-    - Compute the derivative \( \frac{d (ln(x^2))}{dx} \).
+    - Compute the derivative d(ln(x^2))/dx.
 
 7. **Partial truths are often more insidious than total falsehoods**: 
-    - Evaluate the partial derivative \( \frac{\partial f(x, y)}{\partial y} \) for \( f(x, y) = e^{xy} \).
+    - Evaluate the partial derivative ∂f(x,y)/∂y for f(x,y) = e^(xy).
 
 8. **Put it all together and what do you get?**: 
-    - Calculate the mixed partial derivative \( \frac{\partial^2}{\partial y \partial x}(e^{x^2 y}) \).
+    - Calculate the mixed partial derivative ∂^2(e^(x^2y))/∂y∂x.
 
 9. **Our life is the sum total of all the decisions we make every day, and those decisions are determined by our priorities**: 
-    - Implement a function to calculate \( \sum_{i=1}^{n} i^2 \) without using loops.
+    - Implement a function to calculate the sum from i=1 to n of i^2 without using loops.
 
 10. **Derive happiness in oneself from a good day's work**: 
     - Write a function to compute the derivative of a polynomial represented by a list of coefficients.
@@ -62,7 +62,7 @@ This project focuses on calculus concepts including summation, products, derivat
     - Calculate the indefinite integral of a polynomial.
 
 12. **We are all an integral part of the web of life**: 
-    - Evaluate an integral expression related to \( e \).
+    - Evaluate an integral expression related to e.
 
 13. **Create a definite plan for carrying out your desire and begin at once**: 
     - Compute the output of a definite integral.
