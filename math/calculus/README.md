@@ -1,4 +1,4 @@
-# T3-3 Calculus with Python
+# Calculus with Python
 
 ## Table of Contents
 - [Project Overview](#project-overview)
