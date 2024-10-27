@@ -16,19 +16,19 @@ This project focuses on Hidden Markov Models (HMM) and covers various concepts r
 #### Task Summaries
 
 0. **Markov Chain**
-    - Implements a function to calculate the probability of a Markov chain being in a specific state after a given number of iterations using a transition matrix and initial state probabilities. Utilizes NumPy for matrix operations.
+    - Implements a function to calculate the probability of a Markov chain being in a specific state after a given number of iterations using a transition matrix and initial state probabilities.
 
 1. **Regular Chains**
-    - Implements a function to determine the steady state probabilities of a regular Markov chain based on the transition matrix. Uses NumPy for calculations.
+    - Implements a function to determine the steady state probabilities of a regular Markov chain based on the transition matrix.
 
 2. **Absorbing Chains**
-    - Implements a function to determine if a given Markov chain is absorbing by analyzing its transition matrix. Utilizes NumPy.
+    - Implements a function to determine if a given Markov chain is absorbing by analyzing its transition matrix.
 
 3. **The Forward Algorithm**
-    - Implements the forward algorithm for a hidden Markov model, calculating the likelihood of observations and the forward path probabilities using emission and transition probabilities. Utilizes NumPy.
+    - Implements the forward algorithm for a hidden Markov model, calculating the likelihood of observations and the forward path probabilities using emission and transition probabilities.
 
 4. **The Viterbi Algorithm**
-    - Implements the Viterbi algorithm to find the most likely sequence of hidden states given a series of observations, emission probabilities, and transition probabilities. Utilizes NumPy.
+    - Implements the Viterbi algorithm to find the most likely sequence of hidden states given a series of observations, emission probabilities, and transition probabilities.
 
 5. **The Backward Algorithm**
-    - Implements the backward algorithm for a hidden Markov model, calculating the likelihood of observations and backward path probabilities using the same foundational parameters as the forward algorithm. Utilizes NumPy.
+    - Implements the backward algorithm for a hidden Markov model, calculating the likelihood of observations and backward path probabilities using the same foundational parameters as the forward algorithm.
