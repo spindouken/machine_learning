@@ -1,7 +1,15 @@
 # Generative Adversarial Networks (From Scratch Using Tensorflow)
+
 ## Overview
 
 This repository contains from scratch implementations of Generative Adversarial Networks (GANs) focused on image generation, featuring both a standard Deep Convolutional GAN (DCGAN) and a Progressive Growing GAN. The projects leverage TensorFlow to build and train models capable of generating high-quality images from random noise, specifically utilizing the MNIST dataset for initial training and advanced datasets for further experimentation.
+
+## Supplementary Materials
+https://github.com/spindouken/holbertonschool-gan/tree/main/dcgan
+Medium Article:
+https://medium.com/@masonthecount/using-a-dcgan-to-learn-the-mnist-dataset-in-order-to-generate-images-1ca616e45463
+video presenting and explaining code:
+https://drive.google.com/file/d/1azUL8_RBQtCWhlkqQe2AgyOns2jkUS8D/view?usp=sharing
 
 ## Projects
 
