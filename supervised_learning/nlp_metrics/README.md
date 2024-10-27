@@ -15,7 +15,7 @@ This project focuses on calculating BLEU (Bilingual Evaluation Understudy) score
 - Python
 - NumPy (for numerical operations)
 
-## Task Summaries
+## File Summaries
 
 0. **Unigram BLEU Score**: 
    - File: `0-uni_bleu.py`
