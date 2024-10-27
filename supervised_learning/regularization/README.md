@@ -1,56 +1,46 @@
-REGULARIZATION
+# Regularization
 
-0-l2_reg_cost.py:
-Contains a function l2_reg_cost(cost, lambtha, weights, L, m) for calculating the cost of a neural network with L2 regularization. The L2 regularization cost is calculated using the formula:
+## Supplementary Medium Article
+https://medium.com/@masonthecount/why-regularization-is-important-9aed9ecc25e1
 
-J_reg = cost + (lambtha / (2 * m)) * sum(weights^2)
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Prerequisites](#prerequisites)
+- [Task Summaries](#task-summaries)
 
-where:
-cost is the original cost function
-lambtha is the regularization parameter
-m is the number of data points used
-weights are the weights of the neural network
+## Project Overview
 
-The function includes the descriptions:
-cost: cost of the network without L2 regularization
-lambtha: regularization parameter
-weights: dictionary of the weights and biases (numpy.ndarrays) of the neural network
-L: number of layers in the neural network
-m: number of data points used
-The function returns the cost of the network accounting for L2 regularization.
+This project focuses on implementing L2 regularization and dropout techniques in neural networks, aimed at improving model generalization and preventing overfitting. It covers functions for calculating costs with L2 regularization, updating weights with gradient descent, performing forward propagation with dropout, and incorporating early stopping in training.
 
-1-l2_reg_gradient_descent.py:
-Contains a function l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L) for updating the weights and biases of a neural network using gradient descent with L2 regularization. The weights are updated using the formula:
+## Prerequisites
 
-weights = weights - alpha * (dW + (lambtha / m) * weights)
-biases = biases - alpha * db
+- Python 3.x
+- TensorFlow
+- Keras
+- NumPy
 
-where:
+## Task Summaries
 
-weights are the weights of the neural network
-alpha is the learning rate
-dW is the gradient of the weights
-lambtha is the regularization parameter
-m is the number of data points used
-db is the gradient of the biases
-The function takes the following parameters:
+0. **L2 Regularization Cost**:  
+   Calculates the total cost of a neural network, including L2 regularization, based on the given cost, regularization parameter, weights, number of layers, and data points.
 
-Y: one-hot numpy.ndarray of shape (classes, m) that contains the correct labels for the data
-weights: dictionary of the weights and biases of the neural network
-cache: dictionary of the outputs of each layer of the neural network
-alpha: learning rate
-lambtha: L2 regularization parameter
-L: number of layers of the network
+1. **Gradient Descent with L2 Regularization**:  
+   Updates the weights and biases of a neural network using gradient descent while incorporating L2 regularization, adjusting for the learning rate and regularization parameter.
 
+2. **L2 Regularization Cost (Keras)**:  
+   Computes the total cost of a Keras model with L2 regularization applied, based on the cost tensor of the network without regularization.
 
-L2 Regularization Layer Creation
-2-l2_reg_create_layer.py: This file contains a function l2_reg_create_layer(prev, n, activation, lambtha) that creates a TensorFlow layer with L2 regularization.
+3. **Create a Layer with L2 Regularization**:  
+   Creates a neural network layer in TensorFlow with L2 regularization, specifying the number of nodes, activation function, and regularization parameter.
 
-The function takes the following parameters:
+4. **Forward Propagation with Dropout**:  
+   Conducts forward propagation using dropout regularization, returning the outputs of each layer and the dropout masks applied.
 
-prev: A tensor containing the output of the previous layer.
-n: The number of nodes the new layer should contain.
-activation: The activation function that should be used on the layer.
-lambtha: The L2 regularization parameter.
-The function returns the output of the new layer. The layer is created with the specified number of nodes, activation function, and L2 regularization. The weights of the layer are initialized using a variance scaling initializer.
+5. **Gradient Descent with Dropout**:  
+   Updates the weights of a neural network using gradient descent while considering dropout regularization, incorporating the learning rate and probability of keeping nodes.
 
+6. **Create a Layer with Dropout**:  
+   Constructs a neural network layer with dropout in TensorFlow, specifying the number of nodes, activation function, and whether the model is in training mode.
+
+7. **Early Stopping**:  
+   Determines if gradient descent should be halted based on the validation cost, optimal cost, threshold, patience count, and the current count of iterations without improvement.
