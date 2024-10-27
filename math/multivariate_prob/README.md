@@ -12,8 +12,8 @@ This project focuses on coding statistical operations related to multivariate no
 1. **Correlation**: 
    - Creates a function to compute the correlation matrix from a given covariance matrix. It includes input validation to ensure that the covariance matrix is a valid 2D square array.
 
-2. **Initialize**: 
+2. **Initialize (multinormal.py)**: 
    - Defines a `MultiNormal` class that represents a multivariate normal distribution. The class constructor initializes the mean and covariance from a provided 2D NumPy array, ensuring proper input format and dimensions.
 
-3. **PDF**: 
+3. **PDF (multinormal.py)**: 
    - Updates the `MultiNormal` class with a method to calculate the probability density function (PDF) at a given data point. It validates the input to ensure it is a NumPy array of the correct shape and returns the computed PDF value.
